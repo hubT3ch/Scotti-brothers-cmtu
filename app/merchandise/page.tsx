@@ -46,6 +46,14 @@ export default function MerchandisePage() {
 
       {/* CONTENT */}
       <div className="merch-content">
+        <div className="page-logo">
+  <Link href="/" aria-label="Can't Make This Up!">
+    <img
+      src="/images/logo.png"
+      alt="Can't Make This Up!"
+    />
+  </Link>
+</div>
 
         {/* NAVIGATION */}
         <header className="merch-header">
