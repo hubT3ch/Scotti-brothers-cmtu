@@ -75,7 +75,7 @@ export default function MerchandisePage() {
           <div className="merch-hero-copy">
 
             <p className="eyebrow">
-              Scotti Brothers Entertainment
+              Scotti Brothers
             </p>
 
             <h1>
