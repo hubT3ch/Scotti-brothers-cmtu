@@ -990,7 +990,7 @@ export default function EpisodesPage() {
             min-height: 105px;
           }
         }
-      `}</style>
-    </>
+      `      `}</style>
+    </main>
   );
 }
