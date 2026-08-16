@@ -5,168 +5,245 @@ import Link from "next/link";
 
 type Episode = {
   slug: string;
-  episodeNumber: string;
+  number: string;
   title: string;
-  guestName: string;
-  guestSubtitle: string;
-  guestImage: string;
+  guest: string;
+  subtitle: string;
+  image?: string;
   description: string;
-  videoUrl?: string;
-  audioUrl?: string;
 };
 
 const episodes: Episode[] = [
   {
     slug: "episode-1",
-    episodeNumber: "EPISODE 01",
+    number: "01",
     title: "Can’t Make This Up!",
-    guestName: "Jaheim",
-    guestSubtitle: "R&B Singer & Songwriter",
-    guestImage: "/images/episodes/jaheim.jpg",
+    guest: "Jaheim",
+    subtitle: "R&B Singer • Songwriter • Music Industry",
+    image: undefined,
     description:
-      "The Scotti Brothers sit down with Jaheim for an unforgettable conversation.",
-    videoUrl: "",
-    audioUrl: "",
+      "The Scotti Brothers sit down with Jaheim for a conversation filled with unbelievable moments, real stories, music, and plenty of things you simply can’t make up.",
   },
-
-  // Add future episodes here.
-  // Each episode gets its own guest photo, name, subtitle,
-  // description, video, and audio information.
 ];
 
 export default function EpisodesPage() {
   return (
     <main className="min-h-screen bg-black text-white">
       {/* HERO */}
-      <section className="relative flex min-h-[55vh] items-center justify-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/images/episodes/episodes-hero-bg.png')] bg-cover bg-center" />
-          <div className="absolute inset-0 bg-black/55" />
-        </div>
+      <section className="relative min-h-[70vh] overflow-hidden">
+        <Image
+          src="/images/hero/hero-background.png"
+          alt="Scotti Brothers"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+
+        <div className="absolute inset-0 bg-black/55" />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black" />
+
+        {/* Navigation */}
+        <header className="relative z-20">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
+            <Link href="/" className="relative h-14 w-40">
+              <Image
+                src="/images/logo/logo.png"
+                alt="Scotti Brothers"
+                fill
+                className="object-contain object-left"
+              />
+            </Link>
+
+            <nav className="hidden items-center gap-8 md:flex">
+              <Link
+                href="/"
+                className="text-sm font-black uppercase tracking-[0.18em] text-white/80 transition hover:text-white"
+              >
+                Home
+              </Link>
+
+              <Link
+                href="/episodes"
+                className="text-sm font-black uppercase tracking-[0.18em] text-white"
+              >
+                Episodes
+              </Link>
+
+              <Link
+                href="/guests"
+                className="text-sm font-black uppercase tracking-[0.18em] text-white/80 transition hover:text-white"
+              >
+                Guests
+              </Link>
+
+              <Link
+                href="/merchandise"
+                className="text-sm font-black uppercase tracking-[0.18em] text-white/80 transition hover:text-white"
+              >
+                Merchandise
+              </Link>
+
+              <Link
+                href="/contact"
+                className="text-sm font-black uppercase tracking-[0.18em] text-white/80 transition hover:text-white"
+              >
+                Contact
+              </Link>
+            </nav>
+          </div>
+        </header>
 
         {/* Hero Content */}
-        <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24 text-center">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-white/75">
-            The Scotti Brothers
-          </p>
+        <div className="relative z-10 mx-auto flex min-h-[55vh] max-w-6xl items-end px-6 pb-16 lg:px-10">
+          <div>
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.35em] text-[#f4b400]">
+              Scotti Brothers
+            </p>
 
-          <h1 className="text-5xl font-black uppercase tracking-tight sm:text-6xl md:text-7xl">
-            Episodes
-          </h1>
+            <h1 className="text-6xl font-black uppercase leading-[0.9] tracking-tight sm:text-7xl md:text-8xl">
+              Episodes
+            </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-white/85 sm:text-lg">
-            Real conversations. Real stories. No script. No filter.
-          </p>
+            <p className="mt-6 max-w-2xl text-base font-medium leading-7 text-white/80 sm:text-lg">
+              Unbelievable moments. Real stories. Music industry conversations.
+              And plenty of things you simply can’t make up.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* EPISODES */}
-      <section className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
-        <div className="mb-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/50">
-            Watch & Listen
-          </p>
+      <section className="relative bg-black px-6 py-20 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.3em] text-[#f4b400]">
+                Watch & Listen
+              </p>
 
-          <h2 className="mt-3 text-3xl font-black uppercase tracking-tight sm:text-4xl">
-            Latest Episodes
-          </h2>
-        </div>
+              <h2 className="mt-3 text-4xl font-black uppercase tracking-tight sm:text-5xl">
+                Latest Episodes
+              </h2>
+            </div>
 
-        {episodes.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
-            <p className="text-lg text-white/70">
-              Episodes coming soon.
+            <p className="max-w-md text-sm leading-6 text-white/50">
+              New conversations, new guests, and stories you won't hear
+              anywhere else.
             </p>
           </div>
-        ) : (
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+
+          <div className="grid gap-10">
             {episodes.map((episode) => (
               <article
                 key={episode.slug}
-                className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]"
+                className="overflow-hidden rounded-3xl border border-white/10 bg-[#0b0b0b] shadow-2xl"
               >
-                {/* Guest Image */}
-                <Link
-                  href={`/episodes/${episode.slug}`}
-                  className="block"
-                  aria-label={`View ${episode.title}`}
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-zinc-900">
-                    <Image
-                      src={episode.guestImage}
-                      alt={episode.guestName}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                    />
+                <div className="grid lg:grid-cols-[420px_1fr]">
+                  {/* Guest Photo */}
+                  <div className="relative min-h-[420px] overflow-hidden bg-[#151515]">
+                    {episode.image ? (
+                      <Image
+                        src={episode.image}
+                        alt={episode.guest}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 420px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full border border-[#f4b400]/40">
+                            <span className="text-3xl font-black text-[#f4b400]">
+                              {episode.number}
+                            </span>
+                          </div>
 
-                    {/* Episode Badge */}
-                    <div className="absolute left-4 top-4 rounded-full bg-black/80 px-4 py-2 text-xs font-bold tracking-[0.2em] backdrop-blur-sm">
-                      {episode.episodeNumber}
+                          <p className="text-xs font-black uppercase tracking-[0.25em] text-white/30">
+                            Guest Photo
+                          </p>
+
+                          <p className="mt-2 text-sm text-white/20">
+                            Jaheim photo will be added from Supabase
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="absolute left-5 top-5 rounded-full bg-[#d71920] px-5 py-2 text-xs font-black uppercase tracking-[0.18em]">
+                      Episode {episode.number}
                     </div>
                   </div>
-                </Link>
 
-                {/* Card Content */}
-                <div className="p-6">
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/50">
-                    {episode.guestSubtitle}
-                  </p>
+                  {/* Episode Information */}
+                  <div className="flex flex-col justify-center p-8 sm:p-10 lg:p-14">
+                    <p className="text-xs font-black uppercase tracking-[0.25em] text-[#f4b400]">
+                      Featured Guest
+                    </p>
 
-                  <h3 className="mt-2 text-2xl font-black">
-                    {episode.guestName}
-                  </h3>
+                    <h3 className="mt-3 text-5xl font-black uppercase leading-none sm:text-6xl">
+                      {episode.guest}
+                    </h3>
 
-                  <p className="mt-2 text-lg font-semibold text-white/85">
-                    {episode.title}
-                  </p>
+                    <p className="mt-4 text-sm font-bold uppercase tracking-[0.15em] text-white/50">
+                      {episode.subtitle}
+                    </p>
 
-                  <p className="mt-4 line-clamp-3 text-sm leading-6 text-white/60">
-                    {episode.description}
-                  </p>
+                    <div className="my-8 h-px w-full bg-white/10" />
 
-                  {/* Buttons */}
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <Link
-                      href={`/episodes/${episode.slug}`}
-                      className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-bold text-black transition hover:bg-white/85"
-                    >
-                      View Episode
-                    </Link>
+                    <p className="max-w-2xl text-base leading-7 text-white/65">
+                      {episode.description}
+                    </p>
 
-                    {episode.videoUrl && (
-                      <a
-                        href={episode.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10"
+                    {/* Actions */}
+                    <div className="mt-9 flex flex-wrap gap-4">
+                      <Link
+                        href={`/episodes/${episode.slug}`}
+                        className="rounded-full bg-[#d71920] px-7 py-4 text-sm font-black uppercase tracking-[0.12em] transition hover:bg-[#ef2027]"
                       >
-                        Watch
-                      </a>
-                    )}
+                        Watch Episode
+                      </Link>
 
-                    {episode.audioUrl && (
-                      <a
-                        href={episode.audioUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10"
+                      <Link
+                        href={`/episodes/${episode.slug}`}
+                        className="rounded-full border border-white/25 px-7 py-4 text-sm font-black uppercase tracking-[0.12em] transition hover:border-white hover:bg-white/10"
                       >
                         Listen
-                      </a>
-                    )}
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
             ))}
           </div>
-        )}
+        </div>
+      </section>
+
+      {/* COMING SOON */}
+      <section className="border-t border-white/10 bg-[#080808] px-6 py-20 lg:px-10">
+        <div className="mx-auto max-w-5xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.3em] text-[#d71920]">
+            More Coming Soon
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black uppercase sm:text-5xl">
+            More Guests.
+            <br />
+            More Stories.
+            <br />
+            More You Can’t Make Up.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-2xl text-white/50">
+            Episode 2 and beyond will appear here automatically as new
+            episodes are added.
+          </p>
+        </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 px-6 py-10 text-center">
-        <p className="text-sm text-white/40">
+      <footer className="border-t border-white/10 bg-black px-6 py-10 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">
           © {new Date().getFullYear()} Scotti Brothers Entertainment
         </p>
       </footer>
