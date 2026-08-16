@@ -776,3 +776,7 @@ a {
     transform-origin: bottom right;
   }
 }
+      </footer>
+    </main>
+  );
+}
