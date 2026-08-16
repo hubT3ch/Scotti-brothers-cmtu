@@ -6,356 +6,145 @@ type Episode = {
   title: string;
   guestName: string;
   guestSubtitle: string;
-  guestImage: string;
+  guestImage?: string;
   description: string;
   videoUrl?: string;
   audioUrl?: string;
 };
 
-const episodes: Episode[] = [
-  {
-    slug: "episode-1",
-    episodeNumber: "EPISODE 01",
-    title: "Can't Make This Up!",
-    guestName: "Jaheim",
-    guestSubtitle: "R&B Singer & Songwriter",
-    guestImage: "/images/episodes/jaheim.jpg",
-    description:
-      "The Scotti Brothers sit down with Jaheim for an unforgettable conversation.",
-    videoUrl: "",
-    audioUrl: "",
-  },
+/*
+ * NO GUEST IS CURRENTLY CONFIRMED.
+ *
+ * When the first guest is confirmed, we can add the episode here.
+ *
+ * Example:
+ *
+ * {
+ *   slug: "episode-1",
+ *   episodeNumber: "EPISODE 01",
+ *   title: "Can't Make This Up!",
+ *   guestName: "Guest Name",
+ *   guestSubtitle: "Guest Description",
+ *   guestImage: "/images/episodes/guest-name.jpg",
+ *   description: "Episode description.",
+ * }
+ */
+
+const episodes: Episode[] = [];
+
+/*
+ * These are placeholders until actual episodes are added.
+ * They make sure the Episode Reels section is visible now.
+ */
+const comingSoonEpisodes = [2, 3, 4];
+
+const navigation = [
+  { label: "Home", href: "/" },
+  { label: "Episodes", href: "/episodes" },
+  { label: "Guests", href: "/guests" },
+  { label: "Merchandise", href: "/merchandise" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function EpisodesPage() {
-  const currentEpisode = episodes[0];
+  const currentEpisode = episodes[0] ?? null;
   const additionalEpisodes = episodes.slice(1);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        position: "relative",
-        backgroundColor: "#d9b985",
-        color: "#111",
-        fontFamily: "Arial, Helvetica, sans-serif",
-        overflowX: "hidden",
-      }}
-    >
+    <main className="episodes-page">
       {/* BACKGROUND */}
       <div
+        className="episodes-background"
         aria-hidden="true"
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundImage: "url('/images/episodes/episodes-background.png')",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          zIndex: 0,
-        }}
-      />
-
-      {/* LIGHT OVERLAY */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(255,255,255,0.05)",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
       />
 
       {/* CONTENT */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 2,
-          width: "100%",
-        }}
-      >
+      <div className="episodes-content">
+
         {/* NAVIGATION */}
-        <header
-          style={{
-            width: "100%",
-            padding: "24px 34px",
-            boxSizing: "border-box",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
+        <header className="episodes-header">
           <nav
+            className="episodes-nav"
             aria-label="Main navigation"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "9px 12px",
-              borderRadius: "999px",
-              background: "rgba(0,0,0,0.45)",
-              backdropFilter: "blur(5px)",
-              WebkitBackdropFilter: "blur(5px)",
-            }}
           >
-            <Link href="/" style={navLink}>
-              Home
-            </Link>
-
-            <Link href="/episodes" style={activeNavLink}>
-              Episodes
-            </Link>
-
-            <Link href="/guests" style={navLink}>
-              Guests
-            </Link>
-
-            <Link href="/merchandise" style={navLink}>
-              Merchandise
-            </Link>
-
-            <Link href="/contact" style={navLink}>
-              Contact
-            </Link>
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={
+                  item.href === "/episodes"
+                    ? "episodes-nav-link active"
+                    : "episodes-nav-link"
+                }
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </header>
 
-        {/* EPISODES HERO */}
-        <section
-          style={{
-            width: "100%",
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "30px 32px 35px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(260px, 0.8fr) minmax(420px, 1.2fr)",
-              alignItems: "center",
-              gap: "55px",
-            }}
-          >
-            {/* LEFT SIDE */}
-            <div
-              style={{
-                minHeight: "230px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <img
-                src="/images/logo/logo.png"
-                alt="Scotti Brothers"
-                style={{
-                  width: "min(330px, 100%)",
-                  height: "auto",
-                  display: "block",
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.15))",
-                }}
-              />
-            </div>
+        {/* PAGE HERO */}
+        <section className="episodes-hero">
+          <div className="episodes-hero-copy">
+            <p className="eyebrow">
+              Scotti Brothers Entertainment
+            </p>
 
-            {/* RIGHT SIDE */}
-            <div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "13px",
-                  fontWeight: 800,
-                  letterSpacing: "4px",
-                  textTransform: "uppercase",
-                }}
-              >
-                Scotti Brothers Entertainment
-              </p>
+            <h1>Episodes</h1>
 
-              <h1
-                style={{
-                  margin: "10px 0 0",
-                  fontSize: "clamp(52px, 7vw, 82px)",
-                  lineHeight: 0.9,
-                  fontWeight: 900,
-                  letterSpacing: "-3px",
-                  textTransform: "uppercase",
-                }}
-              >
-                Episodes
-              </h1>
-
-              <p
-                style={{
-                  margin: "20px 0 0",
-                  maxWidth: "650px",
-                  fontSize: "19px",
-                  lineHeight: 1.45,
-                  fontWeight: 700,
-                }}
-              >
-                Real conversations. Real stories. No script. No filter.
-              </p>
-            </div>
+            <p className="hero-subtitle">
+              Real conversations. Real stories. No script. No filter.
+            </p>
           </div>
         </section>
 
         {/* CURRENT EPISODE */}
-        {currentEpisode && (
-          <section
-            style={{
-              width: "100%",
-              maxWidth: "1200px",
-              margin: "0 auto",
-              padding: "10px 32px 45px",
-              boxSizing: "border-box",
-            }}
-          >
-            <p
-              style={{
-                margin: "0 0 8px",
-                fontSize: "13px",
-                fontWeight: 900,
-                letterSpacing: "3px",
-                textTransform: "uppercase",
-              }}
-            >
-              Watch &amp; Listen
-            </p>
+        <section className="current-section">
+          <div className="section-heading">
+            <p className="eyebrow">Watch &amp; Listen</p>
 
-            <h2
-              style={{
-                margin: "0 0 18px",
-                fontSize: "34px",
-                lineHeight: 1,
-                fontWeight: 900,
-              }}
-            >
-              Current Episode
-            </h2>
+            <h2>Current Episode</h2>
+          </div>
 
-            <article
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(280px, 380px) 1fr",
-                minHeight: "300px",
-                overflow: "hidden",
-                borderRadius: "24px",
-                background: "rgba(20,20,20,0.96)",
-                boxShadow: "0 16px 40px rgba(0,0,0,0.20)",
-              }}
-            >
-              {/* GUEST IMAGE */}
-              <div
-                style={{
-                  position: "relative",
-                  minHeight: "300px",
-                  background: "#171717",
-                  overflow: "hidden",
-                }}
-              >
-                <img
-                  src={currentEpisode.guestImage}
-                  alt={currentEpisode.guestName}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    minHeight: "300px",
-                    objectFit: "cover",
-                    objectPosition: "center",
-                    display: "block",
-                  }}
-                />
+          {currentEpisode ? (
+            <article className="current-episode-card">
 
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "18px",
-                    left: "18px",
-                    padding: "8px 13px",
-                    borderRadius: "999px",
-                    background: "#050505",
-                    color: "#fff",
-                    fontSize: "11px",
-                    fontWeight: 900,
-                    letterSpacing: "2px",
-                  }}
-                >
+              <div className="current-episode-image">
+                {currentEpisode.guestImage ? (
+                  <img
+                    src={currentEpisode.guestImage}
+                    alt={currentEpisode.guestName}
+                  />
+                ) : (
+                  <div className="image-placeholder">
+                    Guest Image Coming Soon
+                  </div>
+                )}
+
+                <span className="episode-badge">
                   {currentEpisode.episodeNumber}
-                </div>
+                </span>
               </div>
 
-              {/* EPISODE CONTENT */}
-              <div
-                style={{
-                  padding: "34px 38px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <p
-                  style={{
-                    margin: 0,
-                    color: "#d9b985",
-                    fontSize: "12px",
-                    fontWeight: 900,
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                  }}
-                >
+              <div className="current-episode-content">
+                <p className="guest-subtitle">
                   {currentEpisode.guestSubtitle}
                 </p>
 
-                <h3
-                  style={{
-                    margin: "8px 0 0",
-                    color: "#fff",
-                    fontSize: "clamp(38px, 5vw, 58px)",
-                    lineHeight: 0.95,
-                    fontWeight: 900,
-                  }}
-                >
-                  {currentEpisode.guestName}
-                </h3>
+                <h3>{currentEpisode.guestName}</h3>
 
-                <p
-                  style={{
-                    margin: "10px 0 0",
-                    color: "#fff",
-                    fontSize: "20px",
-                    fontWeight: 800,
-                  }}
-                >
+                <p className="episode-title">
                   {currentEpisode.title}
                 </p>
 
-                <p
-                  style={{
-                    margin: "15px 0 0",
-                    maxWidth: "600px",
-                    color: "rgba(255,255,255,0.78)",
-                    fontSize: "15px",
-                    lineHeight: 1.6,
-                  }}
-                >
+                <p className="episode-description">
                   {currentEpisode.description}
                 </p>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "10px",
-                    marginTop: "22px",
-                  }}
-                >
+                <div className="episode-buttons">
                   <Link
                     href={`/episodes/${currentEpisode.slug}`}
-                    style={featuredButton}
+                    className="primary-button"
                   >
                     View Episode
                   </Link>
@@ -365,7 +154,7 @@ export default function EpisodesPage() {
                       href={currentEpisode.videoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={featuredSecondaryButton}
+                      className="secondary-button"
                     >
                       Watch
                     </a>
@@ -376,7 +165,7 @@ export default function EpisodesPage() {
                       href={currentEpisode.audioUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={featuredSecondaryButton}
+                      className="secondary-button"
                     >
                       Listen
                     </a>
@@ -384,195 +173,92 @@ export default function EpisodesPage() {
                 </div>
               </div>
             </article>
-          </section>
-        )}
+          ) : (
+            /*
+             * COMPACT PLACEHOLDER
+             *
+             * This replaces the oversized black Jaheim card
+             * until an actual episode is confirmed.
+             */
+            <div className="current-placeholder">
+              <div>
+                <span className="episode-badge">
+                  EPISODE 01
+                </span>
+
+                <h3>Coming Soon</h3>
+
+                <p>
+                  Our first episode is coming soon.
+                  Check back for the official guest announcement.
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
 
         {/* EPISODE REELS */}
-        <section
-          style={{
-            width: "100%",
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "0 32px 80px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "end",
-              justifyContent: "space-between",
-              marginBottom: "18px",
-            }}
-          >
+        <section className="reels-section">
+          <div className="section-heading reels-heading">
             <div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "12px",
-                  fontWeight: 900,
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
-                }}
-              >
+              <p className="eyebrow">
                 More From The Show
               </p>
 
-              <h2
-                style={{
-                  margin: "6px 0 0",
-                  fontSize: "32px",
-                  lineHeight: 1,
-                  fontWeight: 900,
-                }}
-              >
-                Episode Reels
-              </h2>
+              <h2>Episode Reels</h2>
             </div>
           </div>
 
           {additionalEpisodes.length > 0 ? (
-            <div
-              style={{
-                display: "flex",
-                gap: "20px",
-                overflowX: "auto",
-                paddingBottom: "12px",
-                scrollSnapType: "x mandatory",
-              }}
-            >
+            <div className="reels-row">
               {additionalEpisodes.map((episode) => (
                 <Link
                   key={episode.slug}
                   href={`/episodes/${episode.slug}`}
-                  style={{
-                    flex: "0 0 280px",
-                    scrollSnapAlign: "start",
-                    textDecoration: "none",
-                    color: "#111",
-                  }}
+                  className="reel-card"
                 >
-                  <article
-                    style={{
-                      overflow: "hidden",
-                      borderRadius: "18px",
-                      background: "rgba(255,255,255,0.88)",
-                      border: "1px solid rgba(0,0,0,0.12)",
-                      boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        height: "175px",
-                        overflow: "hidden",
-                        background: "#222",
-                      }}
-                    >
+                  <div className="reel-image">
+                    {episode.guestImage ? (
                       <img
                         src={episode.guestImage}
                         alt={episode.guestName}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                        }}
                       />
+                    ) : (
+                      <div className="reel-placeholder">
+                        Guest Image Coming Soon
+                      </div>
+                    )}
 
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "12px",
-                          left: "12px",
-                          padding: "7px 10px",
-                          borderRadius: "999px",
-                          background: "#111",
-                          color: "#fff",
-                          fontSize: "10px",
-                          fontWeight: 900,
-                          letterSpacing: "1.5px",
-                        }}
-                      >
-                        {episode.episodeNumber}
-                      </span>
-                    </div>
+                    <span className="episode-badge">
+                      {episode.episodeNumber}
+                    </span>
+                  </div>
 
-                    <div style={{ padding: "17px" }}>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize: "11px",
-                          fontWeight: 800,
-                          color: "#666",
-                          textTransform: "uppercase",
-                          letterSpacing: "1.5px",
-                        }}
-                      >
-                        {episode.guestSubtitle}
-                      </p>
-
-                      <h3
-                        style={{
-                          margin: "5px 0 0",
-                          fontSize: "25px",
-                          fontWeight: 900,
-                        }}
-                      >
-                        {episode.guestName}
-                      </h3>
-                    </div>
-                  </article>
+                  <div className="reel-content">
+                    <p>{episode.guestSubtitle}</p>
+                    <h3>{episode.guestName}</h3>
+                  </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div
-              style={{
-                display: "flex",
-                gap: "18px",
-                overflowX: "auto",
-                paddingBottom: "12px",
-              }}
-            >
-              {[2, 3, 4].map((number) => (
+            <div className="reels-row">
+              {comingSoonEpisodes.map((number) => (
                 <div
                   key={number}
-                  style={{
-                    flex: "0 0 280px",
-                    height: "210px",
-                    borderRadius: "18px",
-                    background:
-                      "linear-gradient(145deg, rgba(20,20,20,0.94), rgba(45,45,45,0.94))",
-                    boxShadow: "0 10px 25px rgba(0,0,0,0.14)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textAlign: "center",
-                    color: "#fff",
-                  }}
+                  className="reel-card coming-soon-card"
                 >
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      fontWeight: 900,
-                      letterSpacing: "2px",
-                      color: "#d9b985",
-                    }}
-                  >
-                    EPISODE {String(number).padStart(2, "0")}
-                  </span>
+                  <div className="reel-coming-soon">
+                    <span className="episode-badge">
+                      EPISODE {String(number).padStart(2, "0")}
+                    </span>
 
-                  <strong
-                    style={{
-                      marginTop: "10px",
-                      fontSize: "24px",
-                      fontWeight: 900,
-                    }}
-                  >
-                    Coming Soon
-                  </strong>
+                    <strong>Coming Soon</strong>
+
+                    <p>
+                      New episode
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -580,129 +266,518 @@ export default function EpisodesPage() {
         </section>
 
         {/* FOOTER */}
-        <footer
-          style={{
-            padding: "30px 25px",
-            textAlign: "center",
-            borderTop: "1px solid rgba(0,0,0,0.12)",
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontSize: "13px",
-              color: "#555",
-            }}
-          >
-            © {new Date().getFullYear()} Scotti Brothers Entertainment
-          </p>
+        <footer className="episodes-footer">
+          © {new Date().getFullYear()} Scotti Brothers Entertainment
         </footer>
       </div>
 
-      {/* RESPONSIVE */}
       <style>{`
+        * {
+          box-sizing: border-box;
+        }
+
+        .episodes-page {
+          min-height: 100vh;
+          position: relative;
+          overflow-x: hidden;
+          background: #d9b985;
+          color: #111;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .episodes-background {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          background-image:
+            linear-gradient(
+              rgba(255,255,255,0.035),
+              rgba(255,255,255,0.035)
+            ),
+            url("/images/episodes/episodes-background.png");
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+
+        .episodes-content {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+        }
+
+        /* NAVIGATION */
+
+        .episodes-header {
+          width: 100%;
+          padding: 24px 42px 0;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .episodes-nav {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 8px 10px;
+          border-radius: 999px;
+          background: rgba(0,0,0,0.48);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+        }
+
+        .episodes-nav-link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 8px 12px;
+          border-radius: 999px;
+          color: #fff;
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+
+        .episodes-nav-link.active {
+          background: rgba(255,255,255,0.18);
+        }
+
+        /* HERO */
+
+        .episodes-hero {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          min-height: 310px;
+          padding: 90px 32px 50px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        .episodes-hero-copy {
+          width: 58%;
+          padding-right: 30px;
+        }
+
+        .eyebrow {
+          margin: 0;
+          font-size: 13px;
+          font-weight: 900;
+          letter-spacing: 4px;
+          text-transform: uppercase;
+          color: #191919;
+        }
+
+        .episodes-hero h1 {
+          margin: 10px 0 0;
+          font-size: clamp(54px, 7vw, 86px);
+          line-height: 0.9;
+          font-weight: 900;
+          letter-spacing: -3px;
+          text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+          margin: 20px 0 0;
+          max-width: 650px;
+          font-size: 19px;
+          line-height: 1.45;
+          font-weight: 700;
+        }
+
+        /* CURRENT EPISODE */
+
+        .current-section {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 32px 45px;
+        }
+
+        .section-heading {
+          margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+          margin: 6px 0 0;
+          font-size: 34px;
+          line-height: 1;
+          font-weight: 900;
+        }
+
+        .current-episode-card {
+          display: grid;
+          grid-template-columns: 300px 1fr;
+          min-height: 250px;
+          overflow: hidden;
+          border-radius: 22px;
+          background: rgba(20,20,20,0.96);
+          box-shadow: 0 14px 32px rgba(0,0,0,0.18);
+        }
+
+        .current-episode-image {
+          position: relative;
+          min-height: 250px;
+          background: #191919;
+          overflow: hidden;
+        }
+
+        .current-episode-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .image-placeholder {
+          width: 100%;
+          height: 100%;
+          min-height: 250px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          text-align: center;
+          color: rgba(255,255,255,0.55);
+          font-size: 14px;
+          font-weight: 700;
+        }
+
+        .episode-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 7px 11px;
+          border-radius: 999px;
+          background: #050505;
+          color: #fff;
+          font-size: 10px;
+          font-weight: 900;
+          letter-spacing: 1.8px;
+          white-space: nowrap;
+        }
+
+        .current-episode-image .episode-badge {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+        }
+
+        .current-episode-content {
+          padding: 28px 34px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .guest-subtitle {
+          margin: 0;
+          color: #d9b985;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+        }
+
+        .current-episode-content h3 {
+          margin: 7px 0 0;
+          color: #fff;
+          font-size: clamp(36px, 4vw, 52px);
+          line-height: 0.95;
+          font-weight: 900;
+        }
+
+        .episode-title {
+          margin: 9px 0 0;
+          color: #fff;
+          font-size: 18px;
+          font-weight: 800;
+        }
+
+        .episode-description {
+          margin: 12px 0 0;
+          max-width: 650px;
+          color: rgba(255,255,255,0.75);
+          font-size: 14px;
+          line-height: 1.55;
+        }
+
+        .episode-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 9px;
+          margin-top: 18px;
+        }
+
+        .primary-button,
+        .secondary-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px 17px;
+          border-radius: 999px;
+          text-decoration: none;
+          font-size: 12px;
+          font-weight: 900;
+        }
+
+        .primary-button {
+          background: #d9b985;
+          color: #111;
+        }
+
+        .secondary-button {
+          color: #fff;
+          border: 1px solid rgba(255,255,255,0.35);
+        }
+
+        /* CURRENT PLACEHOLDER */
+
+        .current-placeholder {
+          min-height: 145px;
+          padding: 24px 30px;
+          display: flex;
+          align-items: center;
+          border-radius: 20px;
+          background: rgba(20,20,20,0.94);
+          box-shadow: 0 14px 32px rgba(0,0,0,0.16);
+          color: #fff;
+        }
+
+        .current-placeholder h3 {
+          margin: 10px 0 5px;
+          font-size: 30px;
+          line-height: 1;
+          font-weight: 900;
+        }
+
+        .current-placeholder p {
+          margin: 0;
+          color: rgba(255,255,255,0.7);
+          font-size: 14px;
+        }
+
+        /* REELS */
+
+        .reels-section {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 32px 80px;
+        }
+
+        .reels-heading {
+          margin-bottom: 16px;
+        }
+
+        .reels-row {
+          display: flex;
+          gap: 18px;
+          overflow-x: auto;
+          padding: 4px 2px 14px;
+          scroll-snap-type: x mandatory;
+        }
+
+        .reel-card {
+          flex: 0 0 280px;
+          min-width: 280px;
+          overflow: hidden;
+          border-radius: 18px;
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(0,0,0,0.12);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+          text-decoration: none;
+          color: #111;
+          scroll-snap-align: start;
+        }
+
+        .reel-image {
+          position: relative;
+          height: 165px;
+          overflow: hidden;
+          background: #222;
+        }
+
+        .reel-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .reel-image .episode-badge {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+        }
+
+        .reel-content {
+          padding: 15px 17px 18px;
+        }
+
+        .reel-content p {
+          margin: 0;
+          color: #666;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 1.4px;
+          text-transform: uppercase;
+        }
+
+        .reel-content h3 {
+          margin: 5px 0 0;
+          font-size: 24px;
+          font-weight: 900;
+        }
+
+        /* COMING SOON REELS */
+
+        .coming-soon-card {
+          height: 205px;
+          background: rgba(20,20,20,0.94);
+          color: #fff;
+        }
+
+        .reel-coming-soon {
+          height: 100%;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .reel-coming-soon strong {
+          margin-top: 12px;
+          font-size: 23px;
+          font-weight: 900;
+        }
+
+        .reel-coming-soon p {
+          margin: 6px 0 0;
+          color: rgba(255,255,255,0.6);
+          font-size: 13px;
+        }
+
+        /* FOOTER */
+
+        .episodes-footer {
+          padding: 28px 20px;
+          text-align: center;
+          border-top: 1px solid rgba(0,0,0,0.12);
+          color: #555;
+          font-size: 13px;
+        }
+
+        /* TABLET */
+
         @media (max-width: 850px) {
-          header {
-            padding: 18px 20px !important;
+          .episodes-header {
+            padding: 18px 20px 0;
           }
 
-          nav {
-            gap: 3px !important;
-            padding: 7px 8px !important;
+          .episodes-hero {
+            min-height: 280px;
+            padding: 70px 20px 40px;
           }
 
-          nav a {
-            font-size: 12px !important;
-            padding: 7px 8px !important;
+          .episodes-hero-copy {
+            width: 65%;
+            padding-right: 0;
           }
 
-          section {
-            padding-left: 20px !important;
-            padding-right: 20px !important;
+          .current-section,
+          .reels-section {
+            padding-left: 20px;
+            padding-right: 20px;
           }
 
-          article[style*="grid-template-columns: minmax(280px"] {
-            grid-template-columns: 1fr !important;
-          }
-
-          article[style*="grid-template-columns: minmax(280px"] > div:first-child {
-            height: 260px !important;
-            min-height: 260px !important;
-          }
-
-          article[style*="grid-template-columns: minmax(280px"] > div:first-child img {
-            min-height: 260px !important;
+          .current-episode-card {
+            grid-template-columns: 250px 1fr;
           }
         }
 
+        /* MOBILE */
+
         @media (max-width: 600px) {
-          header {
-            justify-content: center !important;
+          .episodes-header {
+            justify-content: center;
           }
 
-          nav {
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-            border-radius: 18px !important;
+          .episodes-nav {
+            flex-wrap: wrap;
+            justify-content: center;
+            border-radius: 18px;
           }
 
-          nav a {
-            font-size: 11px !important;
-            padding: 6px 7px !important;
+          .episodes-nav-link {
+            font-size: 11px;
+            padding: 6px 8px;
           }
 
-          section {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
+          .episodes-hero {
+            min-height: 250px;
+            padding: 55px 16px 35px;
+            justify-content: center;
           }
 
-          article[style*="grid-template-columns: minmax(280px"] > div:last-child {
-            padding: 26px 22px !important;
+          .episodes-hero-copy {
+            width: 100%;
+            text-align: center;
+          }
+
+          .episodes-hero h1 {
+            font-size: 58px;
+          }
+
+          .hero-subtitle {
+            font-size: 16px;
+          }
+
+          .current-section,
+          .reels-section {
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+
+          .section-heading h2 {
+            font-size: 30px;
+          }
+
+          .current-episode-card {
+            grid-template-columns: 1fr;
+          }
+
+          .current-episode-image {
+            min-height: 220px;
+          }
+
+          .image-placeholder {
+            min-height: 220px;
+          }
+
+          .current-episode-content {
+            padding: 24px 22px;
+          }
+
+          .current-placeholder {
+            min-height: 135px;
+            padding: 22px;
+          }
+
+          .current-placeholder h3 {
+            font-size: 27px;
+          }
+
+          .reel-card {
+            flex-basis: 260px;
+            min-width: 260px;
           }
         }
       `}</style>
     </main>
   );
 }
-
-const navLink = {
-  color: "#fff",
-  textDecoration: "none",
-  fontSize: "14px",
-  fontWeight: 800,
-  whiteSpace: "nowrap",
-  padding: "8px 12px",
-  borderRadius: "999px",
-};
-
-const activeNavLink = {
-  ...navLink,
-  background: "rgba(255,255,255,0.16)",
-};
-
-const featuredButton = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "11px 19px",
-  borderRadius: "999px",
-  background: "#d9b985",
-  color: "#111",
-  textDecoration: "none",
-  fontSize: "13px",
-  fontWeight: 900,
-};
-
-const featuredSecondaryButton = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "11px 19px",
-  borderRadius: "999px",
-  background: "transparent",
-  color: "#fff",
-  border: "1px solid rgba(255,255,255,0.35)",
-  textDecoration: "none",
-  fontSize: "13px",
-  fontWeight: 800,
-};
