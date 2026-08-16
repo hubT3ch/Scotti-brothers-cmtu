@@ -283,7 +283,18 @@ export default function MerchandisePage() {
       </div>
 
       <style>{`
+.page-logo {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  z-index: 20;
+}
 
+.page-logo img {
+  display: block;
+  width: 180px;
+  height: auto;
+}
         * {
           box-sizing: border-box;
         }
@@ -1115,8 +1126,14 @@ export default function MerchandisePage() {
             width: 60px;
             height: 1px;
           }
+.page-logo {
+  top: 18px;
+  left: 18px;
+}
 
-        }
+.page-logo img {
+  width: 130px;
+}
 
       `}</style>
 
