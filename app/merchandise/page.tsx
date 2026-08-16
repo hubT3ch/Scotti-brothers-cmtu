@@ -49,7 +49,7 @@ export default function MerchandisePage() {
         <div className="page-logo">
   <Link href="/" aria-label="Can't Make This Up!">
     <img
-      src="/images/logo/logo.png"
+      src="/images/logo.png"
       alt="Can't Make This Up!"
     />
   </Link>
