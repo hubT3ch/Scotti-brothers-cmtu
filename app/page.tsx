@@ -12,18 +12,18 @@ export default function HomePage() {
   return (
     <main
       style={{
-        minHeight: "100vh",
+        minHeight: "100svh",
         width: "100%",
         position: "relative",
         overflow: "hidden",
         backgroundColor: "#d9b985",
         color: "#111",
-        fontFamily:
-          "Arial, Helvetica, sans-serif",
+        fontFamily: "Arial, Helvetica, sans-serif",
       }}
     >
-      {/* Hero background */}
+      {/* HERO ARTWORK */}
       <div
+        aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
@@ -35,67 +35,55 @@ export default function HomePage() {
         }}
       />
 
-      {/* Subtle overlay */}
+      {/* LIGHT READABILITY OVERLAY */}
       <div
+        aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(0,0,0,0.08))",
+            "linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.02) 45%, rgba(0,0,0,0.12))",
           zIndex: 1,
+          pointerEvents: "none",
         }}
       />
 
-      {/* Page content */}
+      {/* CONTENT */}
       <div
         style={{
           position: "relative",
           zIndex: 2,
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
+          minHeight: "100svh",
+          width: "100%",
         }}
       >
-        {/* Header */}
+        {/* NAVIGATION */}
         <header
           style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
             width: "100%",
-            padding: "24px 42px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            padding: "24px 34px",
             boxSizing: "border-box",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "flex-start",
           }}
         >
-          {/* Logo */}
-          <Link
-            href="/"
-            aria-label="Scotti Brothers Entertainment"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              textDecoration: "none",
-            }}
-          >
-            <img
-              src="/images/logo/logo.png"
-              alt="Scotti Brothers"
-              style={{
-                display: "block",
-                width: "115px",
-                height: "auto",
-                objectFit: "contain",
-              }}
-            />
-          </Link>
-
-          {/* Navigation */}
           <nav
             aria-label="Main navigation"
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "28px",
+              justifyContent: "center",
+              gap: "8px",
+              padding: "9px 12px",
+              borderRadius: "999px",
+              background: "rgba(0,0,0,0.48)",
+              backdropFilter: "blur(5px)",
+              WebkitBackdropFilter: "blur(5px)",
+              boxShadow: "0 5px 20px rgba(0,0,0,0.18)",
             }}
           >
             {navigation.map((item) => (
@@ -103,12 +91,14 @@ export default function HomePage() {
                 key={item.href}
                 href={item.href}
                 style={{
-                  color: "#111",
+                  color: "#fff",
                   textDecoration: "none",
-                  fontSize: "15px",
-                  fontWeight: 700,
-                  letterSpacing: "0.2px",
+                  fontSize: "14px",
+                  fontWeight: 800,
+                  letterSpacing: "0.1px",
                   whiteSpace: "nowrap",
+                  padding: "8px 12px",
+                  borderRadius: "999px",
                 }}
               >
                 {item.label}
@@ -117,19 +107,18 @@ export default function HomePage() {
           </nav>
         </header>
 
-        {/* Hero content */}
-        <section
+        {/* WATCH & LISTEN */}
+        <div
           style={{
-            flex: 1,
+            position: "absolute",
+            left: "50%",
+            bottom: "7.5%",
+            transform: "translateX(-50%)",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            paddingTop: "42vh",
-            paddingLeft: "24px",
-            paddingRight: "24px",
+            justifyContent: "center",
+            width: "100%",
+            padding: "0 20px",
             boxSizing: "border-box",
-            textAlign: "center",
           }}
         >
           <Link
@@ -138,56 +127,60 @@ export default function HomePage() {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: "13px 24px",
-              minWidth: "150px",
+              minWidth: "160px",
+              padding: "13px 25px",
               borderRadius: "999px",
               background: "#111",
               color: "#fff",
               textDecoration: "none",
               fontSize: "14px",
-              fontWeight: 800,
+              fontWeight: 900,
               letterSpacing: "0.2px",
-              boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+              boxShadow: "0 7px 22px rgba(0,0,0,0.28)",
             }}
           >
             Watch &amp; Listen
           </Link>
-        </section>
+        </div>
       </div>
 
-      {/* Mobile navigation adjustment */}
+      {/* RESPONSIVE NAVIGATION */}
       <style>{`
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
           header {
             padding: 18px 20px !important;
-            align-items: flex-start !important;
           }
 
           nav {
-            gap: 12px !important;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+            gap: 3px !important;
+            padding: 7px 8px !important;
           }
 
           nav a {
             font-size: 12px !important;
+            padding: 7px 8px !important;
           }
         }
 
-        @media (max-width: 560px) {
+        @media (max-width: 650px) {
           header {
-            flex-direction: column !important;
-            gap: 16px !important;
+            justify-content: center !important;
           }
 
           nav {
-            width: 100%;
+            width: calc(100% - 10px) !important;
             justify-content: center !important;
-            gap: 14px !important;
+            flex-wrap: wrap !important;
+            border-radius: 18px !important;
           }
 
-          section {
-            padding-top: 38vh !important;
+          nav a {
+            font-size: 11px !important;
+            padding: 6px 7px !important;
+          }
+
+          div[style*="bottom: 7.5%"] {
+            bottom: 5% !important;
           }
         }
       `}</style>
