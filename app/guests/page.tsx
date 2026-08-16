@@ -41,6 +41,14 @@ export default function GuestsPage() {
 
       {/* CONTENT */}
       <div className="guests-content">
+        <div className="page-logo">
+  <Link href="/" aria-label="Can't Make This Up!">
+    <img
+      src="/images/logo.png"
+      alt="Can't Make This Up!"
+    />
+  </Link>
+</div>
 
         {/* NAVIGATION */}
         <header className="guests-header">
@@ -179,6 +187,18 @@ export default function GuestsPage() {
       <style>{`
         * {
           box-sizing: border-box;
+          .page-logo {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  z-index: 20;
+}
+
+.page-logo img {
+  display: block;
+  width: 180px;
+  height: auto;
+}
         }
 
         /* =========================================
