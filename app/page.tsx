@@ -25,17 +25,18 @@ export default function HomePage() {
           Top of artwork is kept visible on laptop/desktop screens.
           ========================================================= */}
       <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url('/images/hero/hero-background.png')",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          zIndex: 0,
-        }}
-      />
+  aria-hidden="true"
+  style={{
+    position: "absolute",
+    inset: 0,
+    backgroundImage: "url('/images/hero/hero-background.png')",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundColor: "#000",
+    zIndex: 0,
+  }}
+/>
 
       {/* =========================================================
           NAVIGATION
