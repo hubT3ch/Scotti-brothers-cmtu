@@ -31,19 +31,15 @@ const episodes = [
   },
 ];
 
+const GOLD = "#F2C94C";
+
 export default function EpisodesPage() {
   return (
     <main className="episodes-page">
-      {/* =====================================================
-          BACKGROUND
-      ===================================================== */}
       <div className="episodes-bg" aria-hidden="true" />
       <div className="episodes-overlay" aria-hidden="true" />
 
-      {/* =====================================================
-          HEADER / NAVIGATION
-          NO LOGO HERE
-      ===================================================== */}
+      {/* HEADER / NAVIGATION */}
       <header className="site-header">
         <nav className="site-nav" aria-label="Main navigation">
           {navigation.map((item) => (
@@ -58,10 +54,7 @@ export default function EpisodesPage() {
         </nav>
       </header>
 
-      {/* =====================================================
-          HERO
-          LOGO LEFT / CONTENT RIGHT
-      ===================================================== */}
+      {/* HERO */}
       <section className="episodes-hero">
         <div className="hero-logo">
           <img
@@ -92,9 +85,7 @@ export default function EpisodesPage() {
         </div>
       </section>
 
-      {/* =====================================================
-          CURRENT EPISODE
-      ===================================================== */}
+      {/* CURRENT EPISODE */}
       <section className="current-section">
         <div className="section-inner">
           <div className="section-heading">
@@ -107,11 +98,8 @@ export default function EpisodesPage() {
             <div className="current-art">
               <div className="art-inner">
                 <span>EPISODE 01</span>
-
                 <div className="mic-mark">🎙</div>
-
                 <h3>COMING SOON</h3>
-
                 <p>CAN&apos;T MAKE THIS UP!</p>
               </div>
             </div>
@@ -139,9 +127,7 @@ export default function EpisodesPage() {
         </div>
       </section>
 
-      {/* =====================================================
-          EPISODE ARCHIVE
-      ===================================================== */}
+      {/* EPISODE ARCHIVE */}
       <section className="archive-section">
         <div className="section-inner">
           <div className="section-heading centered">
@@ -172,9 +158,7 @@ export default function EpisodesPage() {
         </div>
       </section>
 
-      {/* =====================================================
-          WATCH / LISTEN
-      ===================================================== */}
+      {/* WATCH / LISTEN */}
       <section className="watch-section">
         <div className="watch-content">
           <p className="eyebrow">WATCH • LISTEN • EXPERIENCE</p>
@@ -192,9 +176,7 @@ export default function EpisodesPage() {
         </div>
       </section>
 
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
+      {/* FOOTER */}
       <footer className="site-footer">
         <img
           src="/images/logo.png"
@@ -202,17 +184,15 @@ export default function EpisodesPage() {
         />
 
         <p>
-          © 2026 Scotti Brothers Entertainment. All rights reserved.
+          © 2026 Scotti Brothers Ent. All rights reserved.
         </p>
 
         <span>CAN&apos;T MAKE THIS UP!</span>
       </footer>
 
-      {/* =====================================================
-          PAGE STYLES
-      ===================================================== */}
       <style>{`
         .episodes-page {
+          --gold: ${GOLD};
           position: relative;
           min-height: 100vh;
           overflow-x: hidden;
@@ -224,7 +204,7 @@ export default function EpisodesPage() {
             ),
             radial-gradient(
               circle at 80% 55%,
-              rgba(216, 184, 135, 0.10),
+              rgba(242, 201, 76, 0.10),
               transparent 30%
             ),
             linear-gradient(
@@ -250,7 +230,7 @@ export default function EpisodesPage() {
             ),
             radial-gradient(
               circle at 75% 65%,
-              rgba(216, 184, 135, 0.08),
+              rgba(242, 201, 76, 0.08),
               transparent 32%
             );
         }
@@ -284,9 +264,7 @@ export default function EpisodesPage() {
           z-index: 2;
         }
 
-        /* =====================================================
-           HEADER
-        ===================================================== */
+        /* HEADER */
 
         .site-header {
           display: flex;
@@ -314,12 +292,10 @@ export default function EpisodesPage() {
 
         .site-nav a:hover,
         .site-nav a.active {
-          color: #d8b887;
+          color: var(--gold);
         }
 
-        /* =====================================================
-           HERO
-        ===================================================== */
+        /* HERO */
 
         .episodes-hero {
           position: relative;
@@ -333,11 +309,11 @@ export default function EpisodesPage() {
 
         .hero-logo {
           position: absolute;
-          left: 5%;
+          left: 4%;
           top: 50%;
           transform: translateY(-50%);
-          width: 38%;
-          max-width: 430px;
+          width: 44%;
+          max-width: 500px;
           z-index: 2;
         }
 
@@ -387,11 +363,11 @@ export default function EpisodesPage() {
         .gold-line span {
           flex: 1;
           height: 1px;
-          background: rgba(216,184,135,0.55);
+          background: rgba(242,201,76,0.7);
         }
 
         .gold-line b {
-          color: #d8b887;
+          color: var(--gold);
           font-size: 14px;
         }
 
@@ -404,13 +380,11 @@ export default function EpisodesPage() {
         }
 
         .hero-copy strong {
-          color: #d8b887;
+          color: var(--gold);
           font-weight: 900;
         }
 
-        /* =====================================================
-           SHARED SECTION
-        ===================================================== */
+        /* SHARED SECTION */
 
         .section-inner {
           width: min(1200px, calc(100% - 70px));
@@ -419,7 +393,7 @@ export default function EpisodesPage() {
 
         .current-section {
           padding: 85px 0 100px;
-          border-top: 1px solid rgba(216,184,135,0.15);
+          border-top: 1px solid rgba(242,201,76,0.15);
         }
 
         .section-heading p {
@@ -456,16 +430,14 @@ export default function EpisodesPage() {
           margin-right: auto;
         }
 
-        /* =====================================================
-           CURRENT EPISODE
-        ===================================================== */
+        /* CURRENT EPISODE */
 
         .current-card {
           display: grid;
           grid-template-columns: 1fr 1fr;
           margin-top: 48px;
           overflow: hidden;
-          border: 1px solid rgba(216,184,135,0.28);
+          border: 1px solid rgba(242,201,76,0.28);
           border-radius: 4px;
           background: #050505;
           box-shadow: 0 25px 70px rgba(0,0,0,0.45);
@@ -480,7 +452,7 @@ export default function EpisodesPage() {
           background:
             radial-gradient(
               circle at center,
-              rgba(216,184,135,0.17),
+              rgba(242,201,76,0.17),
               transparent 58%
             ),
             linear-gradient(135deg, #151515, #030303);
@@ -493,7 +465,7 @@ export default function EpisodesPage() {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          border: 1px solid rgba(216,184,135,0.25);
+          border: 1px solid rgba(242,201,76,0.25);
           text-align: center;
         }
 
@@ -519,7 +491,7 @@ export default function EpisodesPage() {
 
         .art-inner p {
           margin-top: 12px;
-          color: #d8b887;
+          color: var(--gold);
           font-size: 11px;
           font-weight: 800;
           letter-spacing: 0.3em;
@@ -569,29 +541,27 @@ export default function EpisodesPage() {
         }
 
         .current-info strong {
-          color: #d8b887;
+          color: var(--gold);
         }
 
         .coming-soon {
           align-self: flex-start;
           margin-top: 28px;
           padding: 13px 22px;
-          border: 1px solid rgba(216,184,135,0.45);
-          color: #d8b887;
+          border: 1px solid rgba(242,201,76,0.55);
+          color: var(--gold);
           font-size: 10px;
           font-weight: 900;
           letter-spacing: 0.25em;
         }
 
-        /* =====================================================
-           ARCHIVE
-        ===================================================== */
+        /* ARCHIVE */
 
         .archive-section {
           padding: 100px 0;
           background: rgba(0,0,0,0.28);
-          border-top: 1px solid rgba(216,184,135,0.12);
-          border-bottom: 1px solid rgba(216,184,135,0.12);
+          border-top: 1px solid rgba(242,201,76,0.12);
+          border-bottom: 1px solid rgba(242,201,76,0.12);
         }
 
         .episode-grid {
@@ -605,7 +575,7 @@ export default function EpisodesPage() {
           min-height: 360px;
           position: relative;
           overflow: hidden;
-          border: 1px solid rgba(216,184,135,0.22);
+          border: 1px solid rgba(242,201,76,0.22);
           background: #0b0b0b;
           transition:
             transform 0.25s ease,
@@ -621,7 +591,7 @@ export default function EpisodesPage() {
           position: absolute;
           top: 20px;
           right: 22px;
-          color: rgba(216,184,135,0.18);
+          color: rgba(242,201,76,0.18);
           font-size: 75px;
           font-weight: 900;
           line-height: 1;
@@ -664,19 +634,17 @@ export default function EpisodesPage() {
         .card-bottom {
           margin-top: auto;
           padding-top: 22px;
-          border-top: 1px solid rgba(216,184,135,0.14);
+          border-top: 1px solid rgba(242,201,76,0.14);
         }
 
         .card-bottom span {
-          color: #d8b887;
+          color: var(--gold);
           font-size: 9px;
           font-weight: 900;
           letter-spacing: 0.25em;
         }
 
-        /* =====================================================
-           WATCH / LISTEN
-        ===================================================== */
+        /* WATCH / LISTEN */
 
         .watch-section {
           padding: 110px 30px;
@@ -713,8 +681,8 @@ export default function EpisodesPage() {
           display: inline-flex;
           margin-top: 35px;
           padding: 15px 28px;
-          border: 1px solid #d8b887;
-          color: #d8b887;
+          border: 1px solid var(--gold);
+          color: var(--gold);
           text-decoration: none;
           font-size: 11px;
           font-weight: 900;
@@ -728,9 +696,7 @@ export default function EpisodesPage() {
           color: #fff;
         }
 
-        /* =====================================================
-           FOOTER
-        ===================================================== */
+        /* FOOTER */
 
         .site-footer {
           display: flex;
@@ -738,7 +704,7 @@ export default function EpisodesPage() {
           justify-content: space-between;
           gap: 25px;
           padding: 28px 42px;
-          border-top: 1px solid rgba(216,184,135,0.15);
+          border-top: 1px solid rgba(242,201,76,0.15);
           background: #050505;
         }
 
@@ -761,12 +727,10 @@ export default function EpisodesPage() {
         }
 
         .site-footer span {
-          color: rgba(216,184,135,0.65);
+          color: rgba(242,201,76,0.8);
         }
 
-        /* =====================================================
-           RESPONSIVE
-        ===================================================== */
+        /* RESPONSIVE */
 
         @media (max-width: 900px) {
           .site-header {
@@ -787,8 +751,8 @@ export default function EpisodesPage() {
           }
 
           .hero-logo {
-            left: 3%;
-            width: 36%;
+            left: 2%;
+            width: 42%;
           }
 
           .hero-content {
@@ -838,12 +802,12 @@ export default function EpisodesPage() {
           }
 
           .hero-logo {
-            left: 2%;
-            width: 38%;
+            left: 1%;
+            width: 40%;
           }
 
           .hero-content {
-            width: 58%;
+            width: 59%;
             margin-right: 0;
           }
 
