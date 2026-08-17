@@ -22,21 +22,17 @@ export default function HomePage() {
     >
       {/* =========================================================
           HERO ARTWORK
-          Top of artwork is kept visible on laptop/desktop screens.
+          Desktop/tablet:
+          Entire artwork remains visible.
+
+          Portrait phone:
+          Artwork fills the height so it remains large enough
+          to read and see the podcast title.
           ========================================================= */}
       <div
-  aria-hidden="true"
-  style={{
-    position: "absolute",
-    inset: 0,
-    backgroundImage: "url('/images/hero/hero-background.png')",
-    backgroundPosition: "center top",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
-    backgroundColor: "#000",
-    zIndex: 0,
-  }}
-/>
+        aria-hidden="true"
+        className="home-hero-background"
+      />
 
       {/* =========================================================
           NAVIGATION
@@ -115,51 +111,138 @@ export default function HomePage() {
       </div>
 
       {/* =========================================================
-          RESPONSIVE
+          RESPONSIVE STYLES
           ========================================================= */}
       <style>{`
+        /* =====================================================
+           HERO BACKGROUND — DESKTOP / DEFAULT
+           ===================================================== */
+
+        .home-hero-background {
+          position: absolute;
+          inset: 0;
+
+          background-image:
+            url('/images/hero/hero-background.png');
+
+          background-position:
+            center top;
+
+          background-repeat:
+            no-repeat;
+
+          /*
+           * Keep the entire artwork visible.
+           * This prevents the podcast title at the bottom
+           * from being cropped on laptop screens.
+           */
+          background-size:
+            contain;
+
+          background-color:
+            #000;
+
+          z-index:
+            0;
+        }
+
+        /* =====================================================
+           TABLET
+           ===================================================== */
+
         @media (max-width: 900px) {
+
           header {
-            padding: 24px 24px !important;
+            padding:
+              24px
+              24px !important;
           }
 
           header nav {
-            gap: 18px !important;
+            gap:
+              18px !important;
           }
 
           header nav a {
-            font-size: 13px !important;
+            font-size:
+              13px !important;
           }
+
         }
+
+        /* =====================================================
+           PORTRAIT PHONE
+           ===================================================== */
 
         @media (max-width: 650px) {
+
+          /*
+           * On a portrait phone, contain would make the
+           * landscape artwork too small.
+           *
+           * Instead, make the artwork fill the height.
+           * This keeps the important top/bottom content
+           * visible while allowing some side cropping.
+           */
+          .home-hero-background {
+            background-size:
+              auto 100%;
+
+            background-position:
+              center center;
+
+            background-repeat:
+              no-repeat;
+
+            background-color:
+              #000;
+          }
+
           header {
-            padding: 20px 18px !important;
+            padding:
+              20px
+              18px !important;
           }
 
           header nav {
-            gap: 12px !important;
+            gap:
+              12px !important;
           }
 
           header nav a {
-            font-size: 11px !important;
+            font-size:
+              11px !important;
           }
+
         }
 
+        /* =====================================================
+           SMALL PHONE
+           ===================================================== */
+
         @media (max-width: 520px) {
+
           header {
-            top: 8px !important;
-            right: 8px !important;
-            padding: 12px !important;
+            top:
+              8px !important;
+
+            right:
+              8px !important;
+
+            padding:
+              12px !important;
           }
 
           header nav {
-            gap: 9px !important;
+            gap:
+              9px !important;
           }
 
           header nav a {
-            font-size: 10px !important;
+            font-size:
+              10px !important;
           }
+
         }
       `}</style>
     </main>
