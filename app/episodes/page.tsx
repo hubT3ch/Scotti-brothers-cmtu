@@ -40,9 +40,25 @@ const reels = [
 
 export default function EpisodesPage() {
   return (
-    <main className="min-h-screen bg-[#d8b887] text-black">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-black/20 bg-black">
+    <main className="relative min-h-screen overflow-hidden text-black">
+      {/* =========================================================
+          CMTU BACKGROUND
+      ========================================================= */}
+      <div
+        className="fixed inset-0 -z-20 bg-[#d8b887] bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            "url('/images/episodes/episodes-background.png')",
+        }}
+      />
+
+      {/* Subtle readability layer */}
+      <div className="fixed inset-0 -z-10 bg-black/[0.03]" />
+
+      {/* =========================================================
+          HEADER
+      ========================================================= */}
+      <header className="sticky top-0 z-50 border-b border-black/20 bg-black/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8 lg:px-12">
           <Link href="/" className="shrink-0">
             <img
@@ -91,12 +107,13 @@ export default function EpisodesPage() {
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-black/20 bg-[#d8b887]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.16),transparent_35%)]" />
-
-        <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+      {/* =========================================================
+          HERO
+      ========================================================= */}
+      <section className="relative overflow-hidden border-b border-black/20 bg-transparent">
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
           <div className="mx-auto max-w-5xl text-center">
+
             <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
               Scotti Brothers Entertainment
             </p>
@@ -105,7 +122,7 @@ export default function EpisodesPage() {
               Episodes
             </h1>
 
-            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/65 sm:text-lg">
+            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/70 sm:text-lg">
               Unbelievable moments. Real stories.
               Conversations from the music and entertainment
               industry that you simply{" "}
@@ -125,9 +142,12 @@ export default function EpisodesPage() {
         </div>
       </section>
 
-      {/* CURRENT EPISODE */}
-      <section className="bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+      {/* =========================================================
+          CURRENT EPISODE
+      ========================================================= */}
+      <section className="bg-transparent px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
         <div className="mx-auto max-w-7xl">
+
           <SectionHeading
             eyebrow="Now Playing"
             title="Current Episode"
@@ -135,11 +155,13 @@ export default function EpisodesPage() {
 
           <div className="mt-10 overflow-hidden rounded-3xl border-2 border-black bg-black shadow-[0_20px_55px_rgba(0,0,0,0.30)]">
             <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+
               {/* CURRENT EPISODE VISUAL */}
-              <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden bg-[#111111] p-8 sm:min-h-[420px]">
+              <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden bg-black p-8 sm:min-h-[420px]">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(216,184,135,0.10),transparent_55%)]" />
 
                 <div className="relative z-10 text-center">
+
                   <p className="text-xs font-black uppercase tracking-[0.4em] text-[#c62828]">
                     Current Episode
                   </p>
@@ -153,11 +175,13 @@ export default function EpisodesPage() {
                   <p className="mt-4 text-sm uppercase tracking-[0.25em] text-[#d8b887]">
                     Scotti Brothers
                   </p>
+
                 </div>
               </div>
 
               {/* CURRENT EPISODE DETAILS */}
               <div className="flex flex-col justify-center p-8 sm:p-10 lg:p-12">
+
                 <EpisodeLabel number="01" />
 
                 <h3 className="mt-6 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
@@ -171,7 +195,7 @@ export default function EpisodesPage() {
                   </span>{" "}
                   is coming soon. Get ready for another
                   unforgettable conversation filled with
-                  stories, music, and moments you won't
+                  stories, music, and moments you won&apos;t
                   believe.
                 </p>
 
@@ -180,30 +204,37 @@ export default function EpisodesPage() {
                     Coming Soon
                   </span>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* COMING SOON EPISODES */}
-      <section className="border-y border-black/15 bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+      {/* =========================================================
+          COMING SOON EPISODES
+      ========================================================= */}
+      <section className="border-y border-black/15 bg-transparent px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
         <div className="mx-auto max-w-7xl">
+
           <SectionHeading
             eyebrow="What's Next"
             title="Coming Soon"
           />
 
           <div className="mt-10 grid gap-7 md:grid-cols-3">
+
             {comingSoonEpisodes.map((episode) => (
               <article
                 key={episode.number}
                 className="group overflow-hidden rounded-3xl border-2 border-black bg-black shadow-[0_16px_40px_rgba(0,0,0,0.28)] transition duration-300 hover:-translate-y-1 hover:border-[#c62828]"
               >
-                {/* CARD BACK — BLACK */}
+                {/* BLACK CARD BACK */}
                 <div className="relative flex min-h-[330px] flex-col justify-between bg-black p-7">
+
                   <div>
-                    {/* RED EPISODE LABEL */}
+
+                    {/* RED EPISODE LABEL / WHITE TEXT */}
                     <EpisodeLabel number={episode.number} />
 
                     <h3 className="mt-7 text-2xl font-black uppercase text-white">
@@ -213,32 +244,40 @@ export default function EpisodesPage() {
                     <p className="mt-4 leading-7 text-white/55">
                       {episode.description}
                     </p>
+
                   </div>
 
                   <div className="mt-8">
+
                     <div className="h-px w-full bg-[#d8b887]/20" />
 
                     <p className="mt-5 text-xs font-bold uppercase tracking-[0.28em] text-[#d8b887]">
                       Episode {episode.number}
                     </p>
+
                   </div>
                 </div>
               </article>
             ))}
+
           </div>
         </div>
       </section>
 
-      {/* EPISODE REELS */}
+      {/* =========================================================
+          EPISODE REELS
+      ========================================================= */}
       <section className="bg-black px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
         <div className="mx-auto max-w-7xl">
+
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
+
               <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
                 Watch
               </p>
 
-              {/* RED EPISODE REELS HEADING */}
+              {/* RED EPISODE REELS */}
               <h2 className="mt-3 text-4xl font-black uppercase tracking-tight text-[#c62828] sm:text-5xl">
                 Episode Reels
               </h2>
@@ -247,17 +286,22 @@ export default function EpisodesPage() {
                 Short clips and memorable moments from
                 Can&apos;t Make This Up!
               </p>
+
             </div>
           </div>
 
           <div className="mt-10 grid gap-7 md:grid-cols-3">
+
             {reels.map((reel) => (
               <article
                 key={reel.number}
                 className="group overflow-hidden rounded-2xl border border-[#d8b887]/20 bg-[#0d0d0d]"
               >
+
                 <div className="flex aspect-video items-center justify-center bg-black">
+
                   <div className="text-center">
+
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#c62828] text-[#c62828] transition group-hover:bg-[#c62828] group-hover:text-white">
                       <span className="ml-1 text-xl">
                         ▶
@@ -267,26 +311,34 @@ export default function EpisodesPage() {
                     <p className="mt-4 text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
                       Coming Soon
                     </p>
+
                   </div>
                 </div>
 
                 <div className="p-6">
+
                   <EpisodeLabel number={reel.number} />
 
                   <h3 className="mt-4 text-xl font-black uppercase text-white">
                     {reel.title}
                   </h3>
+
                 </div>
               </article>
             ))}
+
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* =========================================================
+          FOOTER
+      ========================================================= */}
       <footer className="border-t border-[#d8b887]/15 bg-black px-5 py-9">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
+
           <div className="flex items-center gap-4">
+
             <img
               src="/images/logo.png"
               alt="Scotti Brothers Entertainment"
@@ -297,20 +349,22 @@ export default function EpisodesPage() {
               © 2026 Scotti Brothers Entertainment.
               All rights reserved.
             </p>
+
           </div>
 
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d8b887]/70">
             Can&apos;t Make This Up!
           </p>
+
         </div>
       </footer>
     </main>
   );
 }
 
-/* -------------------------------------------------
+/* =========================================================
    SECTION HEADING
-------------------------------------------------- */
+========================================================= */
 
 function SectionHeading({
   eyebrow,
@@ -321,6 +375,7 @@ function SectionHeading({
 }) {
   return (
     <div>
+
       <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
         {eyebrow}
       </p>
@@ -330,13 +385,14 @@ function SectionHeading({
       </h2>
 
       <div className="mt-5 h-1 w-16 bg-black" />
+
     </div>
   );
 }
 
-/* -------------------------------------------------
+/* =========================================================
    EPISODE LABEL
-------------------------------------------------- */
+========================================================= */
 
 function EpisodeLabel({
   number,
