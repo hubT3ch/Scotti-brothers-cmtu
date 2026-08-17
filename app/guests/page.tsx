@@ -110,10 +110,10 @@ export default function GuestsPage() {
             </div>
 
             <p className="hero-subtitle">
-              Meet the artists, entertainers, creators, and
-              personalities with unbelievable stories of their
-              industry encounters.
-            </p>
+  Meet the artists, entertainers, creators, and personalities
+  <br />
+  with unbelievable stories of their industry encounters.
+</p>
 
           </div>
         </section>
