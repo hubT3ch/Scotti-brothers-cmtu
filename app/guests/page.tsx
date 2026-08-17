@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 type Guest = {
@@ -30,27 +32,29 @@ const navigation = [
   { label: "Contact", href: "/contact" },
 ];
 
+const GOLD = "#F2C94C";
+
 export default function GuestsPage() {
   return (
     <main className="guests-page">
-      {/* BACKGROUND */}
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
       <div
         className="guests-background"
         aria-hidden="true"
       />
 
-      {/* CONTENT */}
-      <div className="guests-content">
-        <div className="page-logo">
-  <Link href="/" aria-label="Can't Make This Up!">
-    <img
-      src="/images/logo.png"
-      alt="Can't Make This Up!"
-    />
-  </Link>
-</div>
+      <div
+        className="guests-overlay"
+        aria-hidden="true"
+      />
 
-        {/* NAVIGATION */}
+      <div className="guests-content">
+
+        {/* =====================================================
+            NAVIGATION
+        ===================================================== */}
         <header className="guests-header">
           <nav
             className="guests-nav"
@@ -72,33 +76,65 @@ export default function GuestsPage() {
           </nav>
         </header>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
         <section className="guests-hero">
+
+          {/* HERO LOGO — LEFT SIDE */}
+          <div className="hero-logo">
+            <Link
+              href="/"
+              aria-label="Scotti Brothers Can't Make This Up!"
+            >
+              <img
+                src="/images/logo.png"
+                alt="Scotti Brothers Can't Make This Up!"
+              />
+            </Link>
+          </div>
+
+          {/* HERO CONTENT — RIGHT SIDE */}
           <div className="guests-hero-copy">
 
             <p className="eyebrow">
-              Scotti Brothers Entertainment
+              Scotti Brothers
             </p>
 
             <h1>Guests</h1>
 
+            <div className="gold-line">
+              <span />
+              <b>◆</b>
+              <span />
+            </div>
+
             <p className="hero-subtitle">
-              Meet the artists, entertainers, creators, and personalities
-              with unbelievable stories of their industry encounters
+              Meet the artists, entertainers, creators, and
+              personalities with unbelievable stories of their
+              industry encounters.
             </p>
 
           </div>
         </section>
 
-        {/* GUEST GALLERY */}
+        {/* =====================================================
+            GUEST GALLERY
+        ===================================================== */}
         <section className="gallery-section">
 
           <div className="section-heading">
+
             <p className="eyebrow">
               The People Behind The Stories
             </p>
 
-            <h2>Guest Gallery</h2>
+            <h2>
+              Guest Gallery
+            </h2>
+
+            <div className="heading-line" />
+
           </div>
 
           {guests.length > 0 ? (
@@ -177,28 +213,22 @@ export default function GuestsPage() {
 
         </section>
 
-        {/* FOOTER */}
+        {/* =====================================================
+            FOOTER
+        ===================================================== */}
         <footer className="guests-footer">
-          © {new Date().getFullYear()} Scotti Brothers Entertainment
+          © {new Date().getFullYear()} Scotti Brothers Ent
         </footer>
 
       </div>
 
+      {/* =====================================================
+          PAGE STYLES
+      ===================================================== */}
       <style>{`
+
         * {
           box-sizing: border-box;
-          .page-logo {
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  z-index: 20;
-}
-
-.page-logo img {
-  display: block;
-  width: 180px;
-  height: auto;
-}
         }
 
         /* =========================================
@@ -206,31 +236,76 @@ export default function GuestsPage() {
         ========================================= */
 
         .guests-page {
+          --gold: ${GOLD};
+
           min-height: 100vh;
           position: relative;
           overflow-x: hidden;
-          background: #050505;
+
+          background:
+            radial-gradient(
+              circle at 20% 20%,
+              rgba(139, 0, 0, 0.18),
+              transparent 30%
+            ),
+            radial-gradient(
+              circle at 80% 60%,
+              rgba(242, 201, 76, 0.08),
+              transparent 32%
+            ),
+            linear-gradient(
+              180deg,
+              #050505 0%,
+              #090909 50%,
+              #050505 100%
+            );
+
           color: #fff;
-          font-family: Arial, Helvetica, sans-serif;
+
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
         }
 
         .guests-background {
           position: fixed;
           inset: 0;
           z-index: 0;
+          pointer-events: none;
 
           background:
             radial-gradient(
-              circle at 20% 15%,
-              rgba(130, 0, 0, 0.14),
-              transparent 28%
+              circle at 20% 25%,
+              rgba(130, 0, 0, 0.13),
+              transparent 30%
             ),
             radial-gradient(
               circle at 80% 65%,
-              rgba(184, 134, 11, 0.08),
-              transparent 30%
+              rgba(242, 201, 76, 0.07),
+              transparent 32%
+            );
+        }
+
+        .guests-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+
+          background-image:
+            linear-gradient(
+              rgba(255,255,255,0.012) 1px,
+              transparent 1px
             ),
-            #050505;
+            linear-gradient(
+              90deg,
+              rgba(255,255,255,0.012) 1px,
+              transparent 1px
+            );
+
+          background-size: 42px 42px;
+          opacity: 0.35;
         }
 
         .guests-content {
@@ -245,7 +320,12 @@ export default function GuestsPage() {
 
         .guests-header {
           width: 100%;
-          padding: 24px 42px 0;
+
+          padding:
+            24px
+            42px
+            0;
+
           display: flex;
           justify-content: flex-end;
         }
@@ -254,10 +334,18 @@ export default function GuestsPage() {
           display: flex;
           align-items: center;
           gap: 4px;
+
           padding: 8px 10px;
+
           border-radius: 999px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.12);
+
+          background:
+            rgba(255,255,255,0.08);
+
+          border:
+            1px solid
+            rgba(255,255,255,0.12);
+
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
         }
@@ -266,13 +354,27 @@ export default function GuestsPage() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
+
           padding: 8px 12px;
+
           border-radius: 999px;
+
           color: #fff;
+
           text-decoration: none;
+
           font-size: 14px;
           font-weight: 800;
+
           white-space: nowrap;
+
+          transition:
+            color 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .guests-nav-link:hover {
+          color: var(--gold);
         }
 
         .guests-nav-link.active {
@@ -285,62 +387,181 @@ export default function GuestsPage() {
         ========================================= */
 
         .guests-hero {
+          position: relative;
+
           width: 100%;
-          max-width: 1200px;
+          max-width: 1250px;
+
+          min-height: 430px;
+
           margin: 0 auto;
-          min-height: 330px;
-          padding: 90px 32px 55px;
+
+          padding:
+            55px
+            45px
+            70px;
 
           display: flex;
           align-items: center;
-          justify-content: center;
 
-          text-align: center;
+          overflow: hidden;
         }
 
-        .guests-hero-copy {
+        /* =========================================
+           HERO LOGO
+        ========================================= */
+
+        .hero-logo {
+          position: absolute;
+
+          left: 3%;
+
+          top: 50%;
+
+          transform:
+            translateY(-50%);
+
+          width: 43%;
+
+          max-width: 500px;
+
+          z-index: 2;
+        }
+
+        .hero-logo a {
+          display: block;
+          line-height: 0;
+        }
+
+        .hero-logo img {
+          display: block;
+
           width: 100%;
-          max-width: 950px;
+          height: auto;
+
+          object-fit: contain;
+        }
+
+        /* =========================================
+           HERO COPY
+        ========================================= */
+
+        .guests-hero-copy {
+          position: relative;
+
+          z-index: 3;
+
+          width: 55%;
+
+          max-width: 690px;
+
+          margin-left: auto;
+          margin-right: 2%;
+
+          text-align: center;
         }
 
         .eyebrow {
           margin: 0;
 
-          font-size: 13px;
-          font-weight: 900;
-          letter-spacing: 4px;
-          text-transform: uppercase;
+          color: var(--gold);
 
-          color: #d4af37;
+          font-size: 12px;
+
+          font-weight: 900;
+
+          letter-spacing:
+            0.45em;
+
+          text-transform:
+            uppercase;
         }
 
         .guests-hero h1 {
-          margin: 12px 0 0;
-
-          font-size: clamp(60px, 9vw, 100px);
-          line-height: 0.9;
-
-          font-weight: 900;
-          letter-spacing: -4px;
-          text-transform: uppercase;
+          margin: 17px 0 0;
 
           color: #fff;
 
+          font-size:
+            clamp(
+              60px,
+              8vw,
+              100px
+            );
+
+          line-height: 0.9;
+
+          font-weight: 900;
+
+          letter-spacing:
+            -0.045em;
+
+          text-transform:
+            uppercase;
+
           text-shadow:
             4px 4px 0 #8b0000,
-            8px 8px 0 rgba(212,175,55,0.35);
+            8px 8px 0
+            rgba(242,201,76,0.30);
+        }
+
+        .gold-line {
+          display: flex;
+          align-items: center;
+
+          gap: 16px;
+
+          width:
+            min(
+              500px,
+              85%
+            );
+
+          margin:
+            28px
+            auto;
+        }
+
+        .gold-line span {
+          flex: 1;
+
+          height: 1px;
+
+          background:
+            rgba(
+              242,
+              201,
+              76,
+              0.7
+            );
+        }
+
+        .gold-line b {
+          color: var(--gold);
+
+          font-size: 14px;
         }
 
         .hero-subtitle {
-          margin: 24px auto 0;
+          max-width: 650px;
 
-          max-width: 850px;
+          margin:
+            0
+            auto;
 
-          color: rgba(255,255,255,0.82);
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.78
+            );
 
-          font-size: 19px;
-          line-height: 1.55;
-          font-weight: 700;
+          font-size: 17px;
+
+          line-height: 1.8;
+
+          font-weight: 600;
         }
 
         /* =========================================
@@ -353,25 +574,51 @@ export default function GuestsPage() {
 
           margin: 0 auto;
 
-          padding: 0 32px 90px;
+          padding:
+            20px
+            32px
+            90px;
         }
 
         .section-heading {
-          margin-bottom: 28px;
+          margin-bottom: 32px;
+
           text-align: center;
         }
 
         .section-heading h2 {
-          margin: 7px 0 0;
+          margin:
+            8px
+            0
+            0;
 
           color: #fff;
 
-          font-size: 38px;
+          font-size: 42px;
+
           line-height: 1;
 
           font-weight: 900;
-          text-transform: uppercase;
-          letter-spacing: -1px;
+
+          text-transform:
+            uppercase;
+
+          letter-spacing:
+            -1px;
+        }
+
+        .heading-line {
+          width: 65px;
+
+          height: 4px;
+
+          margin:
+            20px
+            auto
+            0;
+
+          background:
+            #c62828;
         }
 
         /* =========================================
@@ -382,7 +629,10 @@ export default function GuestsPage() {
           display: grid;
 
           grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+            repeat(
+              4,
+              minmax(0, 1fr)
+            );
 
           gap: 30px;
 
@@ -398,8 +648,11 @@ export default function GuestsPage() {
         }
 
         .guest-card:hover {
-          transform: translateY(-8px);
-          filter: brightness(1.08);
+          transform:
+            translateY(-8px);
+
+          filter:
+            brightness(1.08);
         }
 
         /* =========================================
@@ -415,15 +668,18 @@ export default function GuestsPage() {
             linear-gradient(
               135deg,
               #fff0a3 0%,
-              #d4af37 18%,
-              #8f6b16 45%,
-              #f5d76e 65%,
-              #9b7418 100%
+              #f2c94c 18%,
+              #9f7612 45%,
+              #f7d85d 65%,
+              #a67b12 100%
             );
 
           box-shadow:
-            0 12px 30px rgba(0,0,0,0.65),
-            inset 0 0 0 1px rgba(255,255,255,0.35);
+            0 12px 30px
+            rgba(0,0,0,0.65),
+
+            inset 0 0 0 1px
+            rgba(255,255,255,0.35);
         }
 
         /* =========================================
@@ -442,7 +698,8 @@ export default function GuestsPage() {
             );
 
           box-shadow:
-            inset 0 0 0 2px rgba(0,0,0,0.5);
+            inset 0 0 0 2px
+            rgba(0,0,0,0.5);
         }
 
         /* =========================================
@@ -453,11 +710,14 @@ export default function GuestsPage() {
           position: relative;
 
           width: 100%;
-          aspect-ratio: 4 / 5;
+
+          aspect-ratio:
+            4 / 5;
 
           overflow: hidden;
 
-          background: #151515;
+          background:
+            #151515;
         }
 
         .guest-photo img {
@@ -472,8 +732,10 @@ export default function GuestsPage() {
             transform 0.5s ease;
         }
 
-        .guest-card:hover .guest-photo img {
-          transform: scale(1.05);
+        .guest-card:hover
+        .guest-photo img {
+          transform:
+            scale(1.05);
         }
 
         /* =========================================
@@ -481,39 +743,62 @@ export default function GuestsPage() {
         ========================================= */
 
         .guest-info {
-          padding: 18px 12px 16px;
+          padding:
+            18px
+            12px
+            16px;
 
-          text-align: center;
+          text-align:
+            center;
 
-          background: #750000;
+          background:
+            #750000;
         }
 
         .guest-info h3 {
           margin: 0;
 
-          color: #f5d76e;
+          color:
+            var(--gold);
 
           font-size: 21px;
+
           line-height: 1.05;
 
           font-weight: 900;
 
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          text-transform:
+            uppercase;
+
+          letter-spacing:
+            0.5px;
         }
 
         .guest-info p {
-          margin: 7px 0 0;
+          margin:
+            7px
+            0
+            0;
 
-          color: rgba(255,255,255,0.82);
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.82
+            );
 
           font-size: 11px;
+
           line-height: 1.3;
 
           font-weight: 800;
 
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
+          letter-spacing:
+            1.5px;
+
+          text-transform:
+            uppercase;
         }
 
         /* =========================================
@@ -524,14 +809,20 @@ export default function GuestsPage() {
           width: 100%;
 
           display: flex;
-          justify-content: center;
 
-          padding: 10px 0 20px;
+          justify-content:
+            center;
+
+          padding:
+            10px
+            0
+            20px;
         }
 
         .empty-frame {
           width: 100%;
-          max-width: 520px;
+
+          max-width: 540px;
 
           padding: 8px;
 
@@ -539,28 +830,37 @@ export default function GuestsPage() {
             linear-gradient(
               135deg,
               #fff0a3,
-              #d4af37,
+              #f2c94c,
               #80600e,
-              #f5d76e,
+              #f7d85d,
               #987318
             );
 
           box-shadow:
-            0 18px 45px rgba(0,0,0,0.55);
+            0 18px 45px
+            rgba(0,0,0,0.55);
         }
 
         .empty-frame-inner {
           min-height: 280px;
 
-          padding: 45px 30px;
+          padding:
+            45px
+            30px;
 
           display: flex;
-          flex-direction: column;
 
-          align-items: center;
-          justify-content: center;
+          flex-direction:
+            column;
 
-          text-align: center;
+          align-items:
+            center;
+
+          justify-content:
+            center;
+
+          text-align:
+            center;
 
           background:
             linear-gradient(
@@ -569,7 +869,10 @@ export default function GuestsPage() {
               #4f0000
             );
 
-          border: 7px solid #8b0000;
+          border:
+            7px
+            solid
+            #8b0000;
         }
 
         .empty-icon {
@@ -577,38 +880,64 @@ export default function GuestsPage() {
           height: 52px;
 
           display: flex;
-          align-items: center;
-          justify-content: center;
 
-          border-radius: 50%;
+          align-items:
+            center;
 
-          border: 2px solid #d4af37;
+          justify-content:
+            center;
 
-          color: #d4af37;
+          border-radius:
+            50%;
+
+          border:
+            2px
+            solid
+            var(--gold);
+
+          color:
+            var(--gold);
 
           font-size: 32px;
+
           font-weight: 300;
         }
 
         .empty-frame-inner h3 {
-          margin: 18px 0 0;
+          margin:
+            18px
+            0
+            0;
 
-          color: #f5d76e;
+          color:
+            var(--gold);
 
           font-size: 27px;
+
           font-weight: 900;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
         }
 
         .empty-frame-inner p {
           max-width: 350px;
 
-          margin: 10px 0 0;
+          margin:
+            10px
+            0
+            0;
 
-          color: rgba(255,255,255,0.72);
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.72
+            );
 
           font-size: 14px;
+
           line-height: 1.5;
         }
 
@@ -617,14 +946,30 @@ export default function GuestsPage() {
         ========================================= */
 
         .guests-footer {
-          padding: 28px 20px;
+          padding:
+            28px
+            20px;
 
-          text-align: center;
+          text-align:
+            center;
 
           border-top:
-            1px solid rgba(255,255,255,0.1);
+            1px
+            solid
+            rgba(
+              242,
+              201,
+              76,
+              0.15
+            );
 
-          color: rgba(255,255,255,0.45);
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.45
+            );
 
           font-size: 13px;
         }
@@ -637,34 +982,48 @@ export default function GuestsPage() {
 
           .guest-gallery {
             grid-template-columns:
-              repeat(3, minmax(0, 1fr));
+              repeat(
+                3,
+                minmax(0, 1fr)
+              );
 
             gap: 24px;
           }
 
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
 
           .guests-header {
-            padding: 18px 20px 0;
+            padding:
+              20px
+              25px
+              0;
           }
 
-          .guests-hero {
-            min-height: 280px;
-            padding: 65px 20px 40px;
+          .guests-nav {
+            gap: 2px;
           }
 
-          .gallery-section {
-            padding-left: 20px;
-            padding-right: 20px;
+          .guests-nav-link {
+            font-size: 12px;
+            padding:
+              7px
+              10px;
           }
 
-          .guest-gallery {
-            grid-template-columns:
-              repeat(2, minmax(0, 1fr));
+          .episodes-hero {
+            min-height: 400px;
+          }
 
-            gap: 22px;
+          .hero-logo {
+            left: 2%;
+            width: 42%;
+          }
+
+          .guests-hero-copy {
+            width: 58%;
+            margin-right: 0;
           }
 
         }
@@ -673,41 +1032,95 @@ export default function GuestsPage() {
            MOBILE
         ========================================= */
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
 
           .guests-header {
-            justify-content: center;
+            padding:
+              18px
+              12px
+              0;
+
+            justify-content:
+              center;
           }
 
           .guests-nav {
-            flex-wrap: wrap;
-            justify-content: center;
-            border-radius: 18px;
+            flex-wrap:
+              wrap;
+
+            justify-content:
+              center;
+
+            border-radius:
+              18px;
           }
 
           .guests-nav-link {
-            font-size: 11px;
-            padding: 6px 8px;
+            font-size: 10px;
+
+            padding:
+              6px
+              8px;
           }
 
           .guests-hero {
-            min-height: 270px;
-            padding: 55px 16px 35px;
+            min-height: 400px;
+
+            padding:
+              40px
+              16px
+              55px;
+          }
+
+          .hero-logo {
+            left: 0;
+
+            width: 39%;
+          }
+
+          .guests-hero-copy {
+            width: 60%;
+
+            margin-left:
+              auto;
+
+            margin-right: 0;
+          }
+
+          .eyebrow {
+            font-size: 8px;
+
+            letter-spacing:
+              0.25em;
           }
 
           .guests-hero h1 {
-            font-size: 58px;
-            letter-spacing: -2px;
+            font-size: 48px;
+
+            letter-spacing:
+              -2px;
           }
 
           .hero-subtitle {
-            font-size: 16px;
-            line-height: 1.5;
+            font-size: 12px;
+
+            line-height:
+              1.6;
+          }
+
+          .gold-line {
+            width: 90%;
+
+            margin:
+              20px
+              auto;
           }
 
           .gallery-section {
-            padding-left: 16px;
-            padding-right: 16px;
+            padding:
+              10px
+              16px
+              70px;
           }
 
           .section-heading h2 {
@@ -715,23 +1128,36 @@ export default function GuestsPage() {
           }
 
           .guest-gallery {
-            grid-template-columns: 1fr;
+            grid-template-columns:
+              1fr;
+
             gap: 30px;
+
             max-width: 430px;
-            margin: 0 auto;
+
+            margin:
+              0
+              auto;
           }
 
           .guest-card {
             max-width: 430px;
-            margin: 0 auto;
+
+            margin:
+              0
+              auto;
           }
 
           .empty-frame-inner {
             min-height: 240px;
-            padding: 35px 20px;
+
+            padding:
+              35px
+              20px;
           }
 
         }
+
       `}</style>
     </main>
   );
