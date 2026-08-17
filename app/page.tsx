@@ -11,21 +11,22 @@ const navigation = [
 export default function HomePage() {
   return (
     <main className="home-page">
-      {/* =========================================================
+
+      {/* =====================================================
           HERO ARTWORK
-          ========================================================= */}
+          ===================================================== */}
       <div
         aria-hidden="true"
-        className="home-hero-background"
+        className="home-artwork"
       />
 
-      {/* =========================================================
+      {/* =====================================================
           NAVIGATION
-          ========================================================= */}
+          ===================================================== */}
       <header className="home-header">
         <nav
-          aria-label="Main navigation"
           className="home-nav"
+          aria-label="Main navigation"
         >
           {navigation.map((item) => (
             <Link
@@ -39,10 +40,10 @@ export default function HomePage() {
         </nav>
       </header>
 
-      {/* =========================================================
+      {/* =====================================================
           WATCH & LISTEN
-          ========================================================= */}
-      <div className="watch-listen-position">
+          ===================================================== */}
+      <div className="watch-listen-area">
         <Link
           href="/episodes"
           className="watch-listen-button"
@@ -51,16 +52,14 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* =========================================================
+      {/* =====================================================
           PAGE STYLES
-          ========================================================= */}
+          ===================================================== */}
       <style>{`
-        /* =====================================================
-           IMPORTANT:
-           Keep the browser/overscroll area BLACK.
-           This prevents the tan color from appearing when the
-           page is pulled sideways on iPhone/iPad.
-           ===================================================== */
+
+        /* ===================================================
+           DOCUMENT / OVERSCROLL
+           =================================================== */
 
         :global(html) {
           background: #000000 !important;
@@ -76,15 +75,14 @@ export default function HomePage() {
           overscroll-behavior-y: none;
         }
 
-        /* =====================================================
+        /* ===================================================
            PAGE
-           ===================================================== */
+           =================================================== */
 
         .home-page {
           position: relative;
 
           width: 100%;
-          min-width: 100%;
           min-height: 100vh;
           min-height: 100svh;
 
@@ -98,50 +96,41 @@ export default function HomePage() {
             Arial,
             Helvetica,
             sans-serif;
-
-          overscroll-behavior-x: none;
         }
 
-        /* =====================================================
-           HERO BACKGROUND
-           ===================================================== */
+        /* ===================================================
+           ARTWORK — DESKTOP
+           =================================================== */
 
-        .home-hero-background {
+        .home-artwork {
           position: absolute;
 
-          top: 0;
-          left: 0;
+          inset: 0;
 
-          width: 100%;
-          height: 100%;
+          z-index: 0;
 
           background-image:
             url('/images/hero/hero-background.png');
 
-          background-position:
-            center top;
-
           background-repeat:
             no-repeat;
 
-          /*
-           * Desktop/tablet:
-           * Keep the complete artwork visible.
-           */
+          background-position:
+            center center;
+
           background-size:
             contain;
 
           background-color:
             #000000;
 
-          z-index: 0;
-
-          pointer-events: none;
+          pointer-events:
+            none;
         }
 
-        /* =====================================================
+        /* ===================================================
            NAVIGATION
-           ===================================================== */
+           =================================================== */
 
         .home-header {
           position: absolute;
@@ -162,22 +151,28 @@ export default function HomePage() {
           align-items: center;
           justify-content: flex-end;
 
-          gap: 30px;
+          gap:
+            30px;
         }
 
         .home-nav-link {
-          color: #ffffff;
+          color:
+            #ffffff;
 
-          text-decoration: none;
+          text-decoration:
+            none;
 
-          font-size: 15px;
+          font-size:
+            15px;
 
-          font-weight: 700;
+          font-weight:
+            700;
 
           letter-spacing:
             0.2px;
 
-          white-space: nowrap;
+          white-space:
+            nowrap;
 
           text-shadow:
             0 2px 5px
@@ -188,14 +183,15 @@ export default function HomePage() {
         }
 
         .home-nav-link:hover {
-          opacity: 0.75;
+          opacity:
+            0.75;
         }
 
-        /* =====================================================
-           WATCH & LISTEN
-           ===================================================== */
+        /* ===================================================
+           WATCH / LISTEN — DESKTOP
+           =================================================== */
 
-        .watch-listen-position {
+        .watch-listen-area {
           position: absolute;
 
           left: 50%;
@@ -213,7 +209,8 @@ export default function HomePage() {
           align-items: center;
           justify-content: center;
 
-          min-width: 155px;
+          min-width:
+            155px;
 
           padding:
             13px
@@ -222,7 +219,7 @@ export default function HomePage() {
           border-radius:
             999px;
 
-          background-color:
+          background:
             #111111;
 
           color:
@@ -232,11 +229,14 @@ export default function HomePage() {
             2px solid
             rgba(255,255,255,0.9);
 
-          text-decoration: none;
+          text-decoration:
+            none;
 
-          font-size: 15px;
+          font-size:
+            15px;
 
-          font-weight: 800;
+          font-weight:
+            800;
 
           letter-spacing:
             0.2px;
@@ -244,23 +244,11 @@ export default function HomePage() {
           box-shadow:
             0 6px 20px
             rgba(0,0,0,0.5);
-
-          transition:
-            transform 0.2s ease,
-            background-color 0.2s ease;
         }
 
-        .watch-listen-button:hover {
-          background-color:
-            #222222;
-
-          transform:
-            translateY(-1px);
-        }
-
-        /* =====================================================
+        /* ===================================================
            TABLET
-           ===================================================== */
+           =================================================== */
 
         @media (max-width: 900px) {
 
@@ -282,89 +270,307 @@ export default function HomePage() {
 
         }
 
-        /* =====================================================
+        /* ===================================================
            PORTRAIT PHONE
-           ===================================================== */
+           
+           Artwork occupies the upper portion.
+           Dark area occupies the bottom.
+           Watch & Listen sits in the dark area.
+           =================================================== */
 
-        @media (max-width: 650px) {
+        @media (max-width: 650px) and (orientation: portrait) {
 
-          /*
-           * Slightly smaller than the previous version.
-           *
-           * 94% gives us a little breathing room while keeping
-           * the artwork large enough to read.
-           */
-          .home-hero-background {
-            width: 100%;
-            height: 100%;
+          .home-page {
+            min-height:
+              100svh;
+
+            background:
+              #000000;
+          }
+
+          .home-artwork {
+            top:
+              0;
+
+            left:
+              0;
+
+            right:
+              0;
+
+            bottom:
+              auto;
+
+            width:
+              100%;
+
+            height:
+              72svh;
 
             background-size:
-              auto 94%;
+              contain;
 
             background-position:
-              center center;
-
-            background-repeat:
-              no-repeat;
+              center top;
 
             background-color:
               #000000;
           }
 
           .home-header {
+            top:
+              0;
+
+            right:
+              0;
+
             padding:
-              20px
+              14px
+              12px;
+          }
+
+          .home-nav {
+            gap:
+              8px;
+          }
+
+          .home-nav-link {
+            font-size:
+              9px;
+
+            letter-spacing:
+              0;
+
+            text-shadow:
+              0 2px 5px
+              rgba(0,0,0,0.95);
+          }
+
+          .watch-listen-area {
+            left:
+              0;
+
+            right:
+              0;
+
+            top:
+              auto;
+
+            bottom:
+              8svh;
+
+            transform:
+              none;
+
+            width:
+              100%;
+
+            display:
+              flex;
+
+            justify-content:
+              center;
+
+            align-items:
+              center;
+          }
+
+          .watch-listen-button {
+            min-width:
+              155px;
+
+            padding:
+              12px
+              24px;
+
+            font-size:
+              14px;
+          }
+
+        }
+
+        /* ===================================================
+           LANDSCAPE PHONE
+           
+           Artwork moves left.
+           Dark area occupies the right.
+           Watch & Listen sits on the right.
+           =================================================== */
+
+        @media (max-width: 900px) and (orientation: landscape) {
+
+          .home-page {
+            min-height:
+              100svh;
+
+            background:
+              #000000;
+          }
+
+          .home-artwork {
+            top:
+              0;
+
+            left:
+              0;
+
+            right:
+              auto;
+
+            bottom:
+              0;
+
+            width:
+              72vw;
+
+            height:
+              100svh;
+
+            background-size:
+              contain;
+
+            background-position:
+              left center;
+
+            background-color:
+              #000000;
+          }
+
+          .home-header {
+            top:
+              0;
+
+            right:
+              0;
+
+            padding:
+              12px
               18px;
           }
 
           .home-nav {
             gap:
-              12px;
+              11px;
           }
 
           .home-nav-link {
+            font-size:
+              10px;
+
+            letter-spacing:
+              0;
+
+            text-shadow:
+              0 2px 5px
+              rgba(0,0,0,0.95);
+          }
+
+          .watch-listen-area {
+            left:
+              auto;
+
+            right:
+              7vw;
+
+            top:
+              50%;
+
+            bottom:
+              auto;
+
+            transform:
+              translateY(-50%);
+
+            width:
+              20vw;
+
+            display:
+              flex;
+
+            align-items:
+              center;
+
+            justify-content:
+              center;
+          }
+
+          .watch-listen-button {
+            min-width:
+              145px;
+
+            padding:
+              11px
+              18px;
+
+            font-size:
+              12px;
+          }
+
+        }
+
+        /* ===================================================
+           VERY SMALL PORTRAIT PHONE
+           =================================================== */
+
+        @media (max-width: 390px) and (orientation: portrait) {
+
+          .home-artwork {
+            height:
+              69svh;
+
+            background-size:
+              contain;
+
+            background-position:
+              center top;
+          }
+
+          .watch-listen-area {
+            bottom:
+              9svh;
+          }
+
+          .home-nav {
+            gap:
+              6px;
+          }
+
+          .home-nav-link {
+            font-size:
+              8px;
+          }
+
+        }
+
+        /* ===================================================
+           VERY SMALL LANDSCAPE PHONE
+           =================================================== */
+
+        @media (max-width: 700px) and (orientation: landscape) {
+
+          .home-artwork {
+            width:
+              68vw;
+          }
+
+          .watch-listen-area {
+            right:
+              5vw;
+
+            width:
+              25vw;
+          }
+
+          .watch-listen-button {
+            min-width:
+              135px;
+
             font-size:
               11px;
           }
 
         }
 
-        /* =====================================================
-           SMALL PHONE
-           ===================================================== */
-
-        @media (max-width: 520px) {
-
-          .home-header {
-            top:
-              8px;
-
-            right:
-              8px;
-
-            padding:
-              12px;
-          }
-
-          .home-nav {
-            gap:
-              9px;
-          }
-
-          .home-nav-link {
-            font-size:
-              10px;
-          }
-
-          /*
-           * Slightly more breathing room on very small phones.
-           */
-          .home-hero-background {
-            background-size:
-              auto 92%;
-          }
-
-        }
       `}</style>
     </main>
   );
