@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 
+const GOLD = "#F2C94C";
+
 type GuestProposal = {
   guestName: string;
   email: string;
@@ -15,17 +17,25 @@ type GuestProposal = {
   managementEmail: string;
   managementPhone: string;
 
+  availabilityOne: string;
+  availabilityOneVirtual: boolean;
+  availabilityOneInPerson: boolean;
+
+  availabilityTwo: string;
+  availabilityTwoVirtual: boolean;
+  availabilityTwoInPerson: boolean;
+
+  availabilityThree: string;
+  availabilityThreeVirtual: boolean;
+  availabilityThreeInPerson: boolean;
+
   segmentHeading: string;
   discussion: string;
 
-  availabilityOne: string;
-  availabilityTwo: string;
-  availabilityThree: string;
-
   anonymousNames: boolean;
 
-  termsVersion: string;
-  termsRead: boolean;
+  guestTerms: string;
+  guestTermsRead: boolean;
 
   consent: boolean;
 };
@@ -42,30 +52,28 @@ const initialProposal: GuestProposal = {
   managementEmail: "",
   managementPhone: "",
 
+  availabilityOne: "",
+  availabilityOneVirtual: false,
+  availabilityOneInPerson: false,
+
+  availabilityTwo: "",
+  availabilityTwoVirtual: false,
+  availabilityTwoInPerson: false,
+
+  availabilityThree: "",
+  availabilityThreeVirtual: false,
+  availabilityThreeInPerson: false,
+
   segmentHeading: "",
   discussion: "",
 
-  availabilityOne: "",
-  availabilityTwo: "",
-  availabilityThree: "",
-
   anonymousNames: false,
 
-  termsVersion: "",
-  termsRead: false,
+  guestTerms: "",
+  guestTermsRead: false,
 
   consent: false,
 };
-
-const GOLD = "#F2C94C";
-
-const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Episodes", href: "/episodes" },
-  { label: "Guests", href: "/guests" },
-  { label: "Merchandise", href: "/merchandise" },
-  { label: "Contact", href: "/contact" },
-];
 
 export default function ContactPage() {
   const [proposal, setProposal] =
@@ -90,8 +98,7 @@ export default function ContactPage() {
 
     if (
       !proposal.consent ||
-      !proposal.termsRead ||
-      !proposal.termsVersion
+      !proposal.guestTermsRead
     ) {
       return;
     }
@@ -105,19 +112,24 @@ export default function ContactPage() {
         "SCOTTI BROTHERS CAN'T MAKE THIS UP! PODCAST",
         "GUEST PROPOSAL",
         "",
+        "========================================",
+        "GUEST INFORMATION",
+        "========================================",
+        "",
         `Guest/Artist Name: ${proposal.guestName}`,
         `Email: ${proposal.email}`,
         `Phone: ${proposal.phone}`,
         `Company/Organization: ${
           proposal.company || "Not provided"
         }`,
-        "",
-        "REPRESENTATION",
         `Self-Representing: ${
           proposal.selfRepresenting ? "Yes" : "No"
         }`,
         "",
-        "MANAGEMENT / CONTACT INFORMATION",
+        "========================================",
+        "MANAGEMENT / CONTACT",
+        "========================================",
+        "",
         `Management/Contact Name: ${
           proposal.managementName || "Not provided"
         }`,
@@ -128,35 +140,88 @@ export default function ContactPage() {
           proposal.managementPhone || "Not provided"
         }`,
         "",
+        "========================================",
+        "PROPOSED TAPING AVAILABILITY",
+        "========================================",
+        "",
+        `Preferred Date 1: ${
+          proposal.availabilityOne || "Not provided"
+        }`,
+        `Date 1 - Virtual: ${
+          proposal.availabilityOneVirtual
+            ? "Yes"
+            : "No"
+        }`,
+        `Date 1 - In-Person: ${
+          proposal.availabilityOneInPerson
+            ? "Yes"
+            : "No"
+        }`,
+        "",
+        `Preferred Date 2: ${
+          proposal.availabilityTwo || "Not provided"
+        }`,
+        `Date 2 - Virtual: ${
+          proposal.availabilityTwoVirtual
+            ? "Yes"
+            : "No"
+        }`,
+        `Date 2 - In-Person: ${
+          proposal.availabilityTwoInPerson
+            ? "Yes"
+            : "No"
+        }`,
+        "",
+        `Preferred Date 3: ${
+          proposal.availabilityThree || "Not provided"
+        }`,
+        `Date 3 - Virtual: ${
+          proposal.availabilityThreeVirtual
+            ? "Yes"
+            : "No"
+        }`,
+        `Date 3 - In-Person: ${
+          proposal.availabilityThreeInPerson
+            ? "Yes"
+            : "No"
+        }`,
+        "",
+        "========================================",
         "PROPOSED PODCAST SEGMENT",
+        "========================================",
+        "",
         `Proposed Segment Heading: ${proposal.segmentHeading}`,
         "",
         "Proposed Discussion:",
         proposal.discussion,
         "",
-        "PROPOSED TAPING AVAILABILITY",
-        `Preferred Date 1: ${
-          proposal.availabilityOne || "Not provided"
-        }`,
-        `Preferred Date 2: ${
-          proposal.availabilityTwo || "Not provided"
-        }`,
-        `Preferred Date 3: ${
-          proposal.availabilityThree || "Not provided"
+        "========================================",
+        "PRIVACY / ANONYMITY",
+        "========================================",
+        "",
+        `Names or Organizations to Remain Anonymous: ${
+          proposal.anonymousNames
+            ? "Yes"
+            : "No"
         }`,
         "",
-        "CONFIDENTIALITY",
-        `Keep names/organizations anonymous: ${
-          proposal.anonymousNames ? "Yes" : "No"
-        }`,
-        "",
+        "========================================",
         "GUEST TERMS",
-        `Terms selected: ${proposal.termsVersion}`,
-        `Terms Read: ${
-          proposal.termsRead ? "Yes" : "No"
+        "========================================",
+        "",
+        `Guest Terms Selection: ${
+          proposal.guestTerms || "Not selected"
+        }`,
+        `Guest Terms Read: ${
+          proposal.guestTermsRead
+            ? "Yes"
+            : "No"
         }`,
         "",
-        "ACKNOWLEDGEMENT",
+        "========================================",
+        "ACKNOWLEDGMENT",
+        "========================================",
+        "",
         "The applicant acknowledges that submitting this proposal does not guarantee an appearance.",
       ].join("\n")
     );
@@ -170,67 +235,117 @@ export default function ContactPage() {
 
   return (
     <main className="contact-page">
+
       {/* =====================================================
-          HEADER
+          BACKGROUND
       ===================================================== */}
-      <header className="site-header">
-        <nav
-          className="site-nav"
-          aria-label="Main navigation"
-        >
-          {navigation.map((item) => (
+
+      <div
+        className="contact-background"
+        aria-hidden="true"
+      />
+
+      <div
+        className="contact-overlay"
+        aria-hidden="true"
+      />
+
+      <div className="contact-content">
+
+        {/* =====================================================
+            HEADER / NAVIGATION
+        ===================================================== */}
+
+        <header className="contact-header">
+
+          <nav
+            className="contact-nav"
+            aria-label="Main navigation"
+          >
+
             <Link
-              key={item.href}
-              href={item.href}
-              className={
-                item.href === "/contact"
-                  ? "site-nav-link active"
-                  : "site-nav-link"
-              }
+              href="/"
+              className="contact-nav-link"
             >
-              {item.label}
+              Home
             </Link>
-          ))}
-        </nav>
-      </header>
 
-      {/* =====================================================
-          HERO
-      ===================================================== */}
-      <section className="contact-hero">
-        <div className="hero-light hero-light-left" />
-        <div className="hero-light hero-light-right" />
+            <Link
+              href="/episodes"
+              className="contact-nav-link"
+            >
+              Episodes
+            </Link>
 
-        <div className="hero-inner">
+            <Link
+              href="/guests"
+              className="contact-nav-link"
+            >
+              Guests
+            </Link>
 
-          {/* LEFT — LOGO */}
+            <Link
+              href="/merchandise"
+              className="contact-nav-link"
+            >
+              Merchandise
+            </Link>
+
+            <Link
+              href="/contact"
+              className="contact-nav-link active"
+            >
+              Contact
+            </Link>
+
+          </nav>
+
+        </header>
+
+        {/* =====================================================
+            HERO
+        ===================================================== */}
+
+        <section className="contact-hero">
+
+          {/* HERO LOGO — LEFT */}
+
           <div className="hero-logo">
+
             <Link
               href="/"
               aria-label="Scotti Brothers Can't Make This Up!"
             >
+
               <img
                 src="/images/logo.png"
                 alt="Scotti Brothers Can't Make This Up!"
               />
+
             </Link>
+
           </div>
 
-          {/* RIGHT — CONTENT */}
-          <div className="hero-copy">
+          {/* HERO CONTENT — RIGHT */}
+
+          <div className="contact-hero-copy">
 
             <p className="eyebrow">
-              Scotti Brothers
+              Scotti Brothers Entertainment
             </p>
 
             <h1>
+
               Contact
+
               <span className="red-text">
                 Can&apos;t Make
               </span>
+
               <span className="gold-text">
                 This Up!
               </span>
+
             </h1>
 
             <p className="podcast-label">
@@ -238,9 +353,13 @@ export default function ContactPage() {
             </p>
 
             <div className="gold-line">
+
               <span />
+
               <b>◆</b>
+
               <span />
+
             </div>
 
             <p className="hero-description">
@@ -254,6 +373,7 @@ export default function ContactPage() {
             </p>
 
             <div className="hero-buttons">
+
               <a
                 href="#guest-signup"
                 className="primary-button"
@@ -267,86 +387,95 @@ export default function ContactPage() {
               >
                 Marketing Inquiries
               </a>
+
             </div>
 
           </div>
-        </div>
-      </section>
 
-      {/* =====================================================
-          PROMOTIONS & MARKETING
-      ===================================================== */}
-      <section className="marketing-section">
-        <div className="section-inner">
+        </section>
 
-          <div className="marketing-grid">
+        {/* =====================================================
+            PROMOTIONS & MARKETING
+        ===================================================== */}
 
-            <div>
-              <p className="section-eyebrow">
-                Promotions & Marketing
-              </p>
+        <section className="marketing-section">
 
-              <h2>
-                Media & Business
-                <span>Inquiries</span>
-              </h2>
+          <div className="section-inner">
 
-              <p className="section-copy">
-                Scotti Brothers Ent welcomes
-                opportunities to collaborate with artists,
-                brands, businesses, media organizations,
-                entertainment companies, and strategic
-                partners.
-              </p>
+            <div className="marketing-grid">
 
-              <p className="section-copy">
-                Contact the Marketing & Promotions office
-                for podcast promotions, marketing campaigns,
-                sponsorship opportunities, media requests,
-                partnerships, publicity, interviews, and
-                other entertainment-related business
-                inquiries.
-              </p>
+              <div>
 
-              <div className="marketing-cards">
+                <p className="section-eyebrow">
+                  Promotions & Marketing
+                </p>
 
-                <div className="marketing-card">
-                  <div className="red-rule" />
+                <h2>
+                  Media & Business
+                  <span>
+                    Inquiries
+                  </span>
+                </h2>
 
-                  <p className="card-title">
-                    Promotions
-                  </p>
+                <p className="section-description">
+                  Scotti Brothers Entertainment welcomes
+                  opportunities to collaborate with artists,
+                  brands, businesses, media organizations,
+                  entertainment companies, and strategic
+                  partners.
+                </p>
 
-                  <p>
-                    Podcast promotion, artist promotion,
-                    campaigns, publicity, and audience
-                    engagement.
-                  </p>
-                </div>
+                <p className="section-description">
+                  Contact the Marketing & Promotions office
+                  for podcast promotions, marketing campaigns,
+                  sponsorship opportunities, media requests,
+                  partnerships, publicity, interviews, and
+                  other entertainment-related business
+                  inquiries.
+                </p>
 
-                <div className="marketing-card">
-                  <div className="red-rule" />
+                <div className="marketing-cards">
 
-                  <p className="card-title">
-                    Partnerships
-                  </p>
+                  <div className="marketing-card">
 
-                  <p>
-                    Sponsorships, brand partnerships,
-                    collaborations, and media opportunities.
-                  </p>
+                    <div className="red-rule" />
+
+                    <p className="card-title">
+                      Promotions
+                    </p>
+
+                    <p>
+                      Podcast promotion, artist promotion,
+                      campaigns, publicity, and audience
+                      engagement.
+                    </p>
+
+                  </div>
+
+                  <div className="marketing-card">
+
+                    <div className="red-rule" />
+
+                    <p className="card-title">
+                      Partnerships
+                    </p>
+
+                    <p>
+                      Sponsorships, brand partnerships,
+                      collaborations, and media opportunities.
+                    </p>
+
+                  </div>
+
                 </div>
 
               </div>
-            </div>
 
-            {/* MARKETING CONTACT */}
-            <aside className="marketing-contact">
-              <div className="contact-glow" />
+              {/* MARKETING CONTACT */}
 
-              <div className="contact-box-content">
+              <aside className="marketing-contact">
 
-                <p className="contact-label">
+                <p className="contact-card-eyebrow">
                   Contact
                 </p>
 
@@ -378,502 +507,600 @@ export default function ContactPage() {
                   Email Marketing
                 </a>
 
+              </aside>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* =====================================================
+            GUEST SIGN-UP
+        ===================================================== */}
+
+        <section
+          id="guest-signup"
+          className="guest-section"
+        >
+
+          <div className="guest-section-inner">
+
+            <div className="guest-intro">
+
+              <p className="section-eyebrow">
+                Guest Sign-Up
+              </p>
+
+              <h2>
+                Share Your Story
+              </h2>
+
+              <p>
+                Submit a guest proposal for consideration.
+                Tell us who you are, what you would like to
+                discuss, and why your story belongs on{" "}
+                <span>
+                  Can&apos;t Make This Up!
+                </span>
+              </p>
+
+            </div>
+
+            {/* =================================================
+                FORM
+            ================================================= */}
+
+            <form
+              onSubmit={handleSubmit}
+              className="guest-form"
+            >
+
+              {/* 01 */}
+
+              <FormSectionHeading
+                number="01"
+                title="Guest Information"
+              />
+
+              <div className="form-grid">
+
+                <FormField
+                  label="Guest or Artist Name"
+                  required
+                  value={proposal.guestName}
+                  onChange={(value) =>
+                    updateField(
+                      "guestName",
+                      value
+                    )
+                  }
+                />
+
+                <FormField
+                  label="Email Address"
+                  type="email"
+                  required
+                  value={proposal.email}
+                  onChange={(value) =>
+                    updateField(
+                      "email",
+                      value
+                    )
+                  }
+                />
+
+                <FormField
+                  label="Phone Number"
+                  type="tel"
+                  required
+                  value={proposal.phone}
+                  onChange={(value) =>
+                    updateField(
+                      "phone",
+                      value
+                    )
+                  }
+                />
+
+                <FormField
+                  label="Company / Organization"
+                  value={proposal.company}
+                  onChange={(value) =>
+                    updateField(
+                      "company",
+                      value
+                    )
+                  }
+                />
+
               </div>
-            </aside>
 
-          </div>
-        </div>
-      </section>
+              {/* 02 */}
 
-      {/* =====================================================
-          GUEST SIGN-UP
-      ===================================================== */}
-      <section
-        id="guest-signup"
-        className="guest-section"
-      >
-        <div className="form-container">
+              <div className="form-section-spacing">
 
-          <div className="form-intro">
+                <FormSectionHeading
+                  number="02"
+                  title="Management / Contact"
+                />
 
-            <p className="section-eyebrow">
-              Guest Sign-Up
-            </p>
+              </div>
 
-            <h2>
-              Share Your Story
-            </h2>
+              <div className="self-representing">
 
-            <p>
-              Submit a guest proposal for consideration.
-              Tell us who you are, what you would like to
-              discuss, and why your story belongs on{" "}
-              <span>
-                Can&apos;t Make This Up!
-              </span>
-            </p>
+                <CheckBoxField
+                  checked={
+                    proposal.selfRepresenting
+                  }
+                  onChange={(checked) =>
+                    updateField(
+                      "selfRepresenting",
+                      checked
+                    )
+                  }
+                  label="I am self-representing"
+                />
 
-          </div>
+                <p>
+                  Check this box if you are submitting
+                  this proposal on your own behalf and do
+                  not have a management or representative
+                  contact.
+                </p>
 
-          {/* =================================================
-              FORM
-          ================================================= */}
-          <form
-            onSubmit={handleSubmit}
-            className="guest-form"
-          >
+              </div>
 
-            {/* =============================================
-                01 GUEST INFORMATION
-            ============================================= */}
-            <FormSectionHeading
-              number="01"
-              title="Guest Information"
-            />
+              <div className="form-grid management-grid">
 
-            <div className="form-grid">
+                <FormField
+                  label="Management / Contact Name"
+                  value={
+                    proposal.managementName
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "managementName",
+                      value
+                    )
+                  }
+                />
 
-              <FormField
-                label="Guest or Artist Name"
-                required
-                value={proposal.guestName}
-                onChange={(value) =>
-                  updateField(
-                    "guestName",
-                    value
-                  )
-                }
-              />
+                <FormField
+                  label="Management / Contact Email"
+                  type="email"
+                  value={
+                    proposal.managementEmail
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "managementEmail",
+                      value
+                    )
+                  }
+                />
 
-              <FormField
-                label="Email Address"
-                type="email"
-                required
-                value={proposal.email}
-                onChange={(value) =>
-                  updateField(
-                    "email",
-                    value
-                  )
-                }
-              />
+                <FormField
+                  label="Management / Contact Phone"
+                  type="tel"
+                  value={
+                    proposal.managementPhone
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "managementPhone",
+                      value
+                    )
+                  }
+                />
 
-              <FormField
-                label="Phone Number"
-                type="tel"
-                required
-                value={proposal.phone}
-                onChange={(value) =>
-                  updateField(
-                    "phone",
-                    value
-                  )
-                }
-              />
+              </div>
 
-              <FormField
-                label="Company / Organization (Optional)"
-                value={proposal.company}
-                onChange={(value) =>
-                  updateField(
-                    "company",
-                    value
-                  )
-                }
-              />
+              {/* 03 */}
 
-            </div>
+              <div className="form-section-spacing">
 
-            {/* SELF REPRESENTING */}
-            <CheckBoxField
-              checked={
-                proposal.selfRepresenting
-              }
-              onChange={(checked) =>
-                updateField(
-                  "selfRepresenting",
-                  checked
-                )
-              }
-              label="I am self-representing and do not have management or a representative."
-            />
+                <FormSectionHeading
+                  number="03"
+                  title="Proposed Taping Availability"
+                />
 
-            {/* =============================================
-                02 MANAGEMENT / CONTACT
-            ============================================= */}
-            <div className="form-section-spacing">
-              <FormSectionHeading
-                number="02"
-                title="Management / Contact"
-              />
-            </div>
+              </div>
 
-            <div className="form-grid">
+              <p className="form-help">
+                Please provide up to three preferred
+                taping dates. For each date, indicate
+                whether you are requesting a virtual or
+                in-person recording.
+              </p>
 
-              <FormField
-                label="Management / Contact Name"
-                value={
-                  proposal.managementName
-                }
-                onChange={(value) =>
-                  updateField(
-                    "managementName",
-                    value
-                  )
-                }
-              />
+              <div className="availability-grid">
 
-              <FormField
-                label="Management / Contact Email"
-                type="email"
-                value={
-                  proposal.managementEmail
-                }
-                onChange={(value) =>
-                  updateField(
-                    "managementEmail",
-                    value
-                  )
-                }
-              />
+                <TapingDateField
+                  label="Preferred Taping Date 1"
+                  value={
+                    proposal.availabilityOne
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "availabilityOne",
+                      value
+                    )
+                  }
+                  virtual={
+                    proposal.availabilityOneVirtual
+                  }
+                  inPerson={
+                    proposal.availabilityOneInPerson
+                  }
+                  onVirtualChange={(checked) =>
+                    updateField(
+                      "availabilityOneVirtual",
+                      checked
+                    )
+                  }
+                  onInPersonChange={(checked) =>
+                    updateField(
+                      "availabilityOneInPerson",
+                      checked
+                    )
+                  }
+                />
 
-              <FormField
-                label="Management / Contact Phone"
-                type="tel"
-                value={
-                  proposal.managementPhone
-                }
-                onChange={(value) =>
-                  updateField(
-                    "managementPhone",
-                    value
-                  )
-                }
-              />
+                <TapingDateField
+                  label="Preferred Taping Date 2"
+                  value={
+                    proposal.availabilityTwo
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "availabilityTwo",
+                      value
+                    )
+                  }
+                  virtual={
+                    proposal.availabilityTwoVirtual
+                  }
+                  inPerson={
+                    proposal.availabilityTwoInPerson
+                  }
+                  onVirtualChange={(checked) =>
+                    updateField(
+                      "availabilityTwoVirtual",
+                      checked
+                    )
+                  }
+                  onInPersonChange={(checked) =>
+                    updateField(
+                      "availabilityTwoInPerson",
+                      checked
+                    )
+                  }
+                />
 
-            </div>
+                <TapingDateField
+                  label="Preferred Taping Date 3"
+                  value={
+                    proposal.availabilityThree
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "availabilityThree",
+                      value
+                    )
+                  }
+                  virtual={
+                    proposal.availabilityThreeVirtual
+                  }
+                  inPerson={
+                    proposal.availabilityThreeInPerson
+                  }
+                  onVirtualChange={(checked) =>
+                    updateField(
+                      "availabilityThreeVirtual",
+                      checked
+                    )
+                  }
+                  onInPersonChange={(checked) =>
+                    updateField(
+                      "availabilityThreeInPerson",
+                      checked
+                    )
+                  }
+                />
 
-            {/* =============================================
-                03 SEGMENT
-            ============================================= */}
-            <div className="form-section-spacing">
-              <FormSectionHeading
-                number="03"
-                title="Proposed Podcast Segment"
-              />
-            </div>
+              </div>
 
-            <div className="single-field">
+              {/* 04 */}
 
-              <FormField
-                label="Proposed Segment Heading"
-                required
-                placeholder="Example: The Record Deal That Almost Never Happened"
-                value={
-                  proposal.segmentHeading
-                }
-                onChange={(value) =>
-                  updateField(
-                    "segmentHeading",
-                    value
-                  )
-                }
-              />
+              <div className="form-section-spacing">
 
-            </div>
+                <FormSectionHeading
+                  number="04"
+                  title="Proposed Podcast Segment"
+                />
 
-            <label className="textarea-field">
+              </div>
 
-              <span className="field-label">
-                Proposed Discussion
-                <span className="required-mark">
-                  *
+              <div className="single-field">
+
+                <FormField
+                  label="Proposed Segment Heading"
+                  required
+                  placeholder="Example: The Record Deal That Almost Never Happened"
+                  value={
+                    proposal.segmentHeading
+                  }
+                  onChange={(value) =>
+                    updateField(
+                      "segmentHeading",
+                      value
+                    )
+                  }
+                />
+
+              </div>
+
+              <label className="textarea-field">
+
+                <span className="field-label">
+
+                  Proposed Discussion
+
+                  <span className="required-mark">
+                    *
+                  </span>
+
                 </span>
-              </span>
 
-              <textarea
-                required
-                rows={8}
-                maxLength={1500}
-                value={
-                  proposal.discussion
-                }
-                onChange={(event) =>
-                  updateField(
-                    "discussion",
-                    event.target.value
-                  )
-                }
-                placeholder="Provide a short paragraph describing your proposed topic, the story you would like to share, and why it would be compelling for the podcast audience."
-              />
+                <textarea
+                  required
+                  rows={8}
+                  maxLength={1500}
+                  value={
+                    proposal.discussion
+                  }
+                  onChange={(event) =>
+                    updateField(
+                      "discussion",
+                      event.target.value
+                    )
+                  }
+                  placeholder="Provide a short paragraph describing your proposed topic, the story you would like to share, and why it would be compelling for the podcast audience."
+                  className="form-textarea"
+                />
 
-              <span className="character-count">
-                {proposal.discussion.length}/1500
-              </span>
-
-            </label>
-
-            {/* =============================================
-                04 AVAILABILITY
-            ============================================= */}
-            <div className="form-section-spacing">
-              <FormSectionHeading
-                number="04"
-                title="Proposed Taping Availability"
-              />
-            </div>
-
-            <p className="availability-intro">
-              Please provide up to three preferred dates
-              for recording your podcast appearance.
-            </p>
-
-            <div className="form-grid">
-
-              <DateField
-                label="Preferred Taping Date 1"
-                value={
-                  proposal.availabilityOne
-                }
-                onChange={(value) =>
-                  updateField(
-                    "availabilityOne",
-                    value
-                  )
-                }
-              />
-
-              <DateField
-                label="Preferred Taping Date 2"
-                value={
-                  proposal.availabilityTwo
-                }
-                onChange={(value) =>
-                  updateField(
-                    "availabilityTwo",
-                    value
-                  )
-                }
-              />
-
-              <DateField
-                label="Preferred Taping Date 3"
-                value={
-                  proposal.availabilityThree
-                }
-                onChange={(value) =>
-                  updateField(
-                    "availabilityThree",
-                    value
-                  )
-                }
-              />
-
-            </div>
-
-            {/* =============================================
-                05 CONFIDENTIALITY
-            ============================================= */}
-            <div className="form-section-spacing">
-              <FormSectionHeading
-                number="05"
-                title="Conversation Confidentiality"
-              />
-            </div>
-
-            <CheckBoxField
-              checked={
-                proposal.anonymousNames
-              }
-              onChange={(checked) =>
-                updateField(
-                  "anonymousNames",
-                  checked
-                )
-              }
-              label="Names or organizations mentioned during the conversation should remain anonymous."
-            />
-
-            <p className="helper-text">
-              Select this option if any names, companies,
-              organizations, or other identifying information
-              discussed during the recording should not be
-              publicly identified.
-            </p>
-
-            {/* =============================================
-                06 TERMS
-            ============================================= */}
-            <div className="form-section-spacing">
-              <FormSectionHeading
-                number="06"
-                title="Guest Terms of Agreement"
-              />
-            </div>
-
-            <label className="block">
-              <span className="field-label">
-                Guest Terms of Agreement
-                <span className="required-mark">
-                  *
+                <span className="character-count">
+                  {proposal.discussion.length}
+                  /1500
                 </span>
-              </span>
 
-              <select
-                required
-                value={
-                  proposal.termsVersion
-                }
-                onChange={(event) =>
-                  updateField(
-                    "termsVersion",
-                    event.target.value
-                  )
-                }
-                className="form-input"
-              >
-                <option value="">
-                  Select Guest Terms of Agreement
-                </option>
+              </label>
 
-                <option value="Guest Terms of Agreement - Current">
+              {/* 05 */}
+
+              <div className="form-section-spacing">
+
+                <FormSectionHeading
+                  number="05"
+                  title="Privacy & Anonymity"
+                />
+
+              </div>
+
+              <div className="privacy-box">
+
+                <CheckBoxField
+                  checked={
+                    proposal.anonymousNames
+                  }
+                  onChange={(checked) =>
+                    updateField(
+                      "anonymousNames",
+                      checked
+                    )
+                  }
+                  label="Keep names or organizations anonymous"
+                />
+
+                <p>
+                  Check this box if you want any names,
+                  companies, organizations, or other
+                  identifying information discussed during
+                  the conversation to remain anonymous.
+                </p>
+
+              </div>
+
+              {/* 06 */}
+
+              <div className="form-section-spacing">
+
+                <FormSectionHeading
+                  number="06"
+                  title="Guest Terms of Agreement"
+                />
+
+              </div>
+
+              <div className="terms-section">
+
+                <label className="field-label">
                   Guest Terms of Agreement
-                </option>
-              </select>
-            </label>
+                </label>
 
-            <label className="checkbox-card">
+                <select
+                  required
+                  value={
+                    proposal.guestTerms
+                  }
+                  onChange={(event) =>
+                    updateField(
+                      "guestTerms",
+                      event.target.value
+                    )
+                  }
+                  className="form-select"
+                >
 
-              <input
-                type="checkbox"
-                required
-                checked={
-                  proposal.termsRead
-                }
-                onChange={(event) =>
-                  updateField(
-                    "termsRead",
-                    event.target.checked
-                  )
-                }
-              />
+                  <option value="">
+                    Select Guest Terms of Agreement
+                  </option>
 
-              <span>
-                <strong>
-                  Read
-                </strong>
+                  <option value="Guest Terms of Agreement — Version 1.0">
+                    Guest Terms of Agreement — Version 1.0
+                  </option>
 
-                <small>
-                  I confirm that I have read and reviewed
-                  the selected Guest Terms of Agreement.
-                </small>
-              </span>
+                </select>
 
-            </label>
+                <p className="terms-note">
+                  The Guest Terms of Agreement will be
+                  provided for review before a guest
+                  proposal can be submitted.
+                </p>
 
-            {/* =============================================
-                FINAL ACKNOWLEDGEMENT
-            ============================================= */}
-            <label className="checkbox-card">
+                <label className="checkbox-panel">
 
-              <input
-                type="checkbox"
-                required
-                checked={
-                  proposal.consent
-                }
-                onChange={(event) =>
-                  updateField(
-                    "consent",
-                    event.target.checked
-                  )
-                }
-              />
+                  <input
+                    type="checkbox"
+                    required
+                    checked={
+                      proposal.guestTermsRead
+                    }
+                    onChange={(event) =>
+                      updateField(
+                        "guestTermsRead",
+                        event.target.checked
+                      )
+                    }
+                  />
 
-              <span>
-                <strong>
-                  Submission Acknowledgement
-                </strong>
+                  <span>
+                    I Have Read the Guest Terms of
+                    Agreement
+                  </span>
 
-                <small>
+                </label>
+
+              </div>
+
+              {/* FINAL ACKNOWLEDGMENT */}
+
+              <label className="checkbox-panel final-consent">
+
+                <input
+                  type="checkbox"
+                  required
+                  checked={
+                    proposal.consent
+                  }
+                  onChange={(event) =>
+                    updateField(
+                      "consent",
+                      event.target.checked
+                    )
+                  }
+                />
+
+                <span>
                   I understand that submitting a guest
                   proposal does not guarantee an appearance
                   on the podcast. Scotti Brothers
-                  Ent. may contact me or my
+                  Entertainment may contact me or my
                   representative for additional information.
-                </small>
-              </span>
+                </span>
 
-            </label>
+              </label>
 
-            <button
-              type="submit"
-              className="submit-button"
-            >
-              Submit Guest Proposal
-            </button>
+              <button
+                type="submit"
+                className="submit-button"
+              >
+                Submit Guest Proposal
+              </button>
 
-            {submitted && (
-              <p className="submitted-message">
-                Your email application should now open
-                with the proposal information prepared.
-                Review the message and press Send.
+              {submitted && (
+                <p className="submitted-message">
+                  Your email application should now open
+                  with the proposal information prepared.
+                  Review the message and press Send.
+                </p>
+              )}
+
+            </form>
+
+          </div>
+
+        </section>
+
+        {/* =====================================================
+            FOOTER
+        ===================================================== */}
+
+        <footer className="contact-footer">
+
+          <div className="footer-inner">
+
+            <div className="footer-brand">
+
+              <img
+                src="/images/logo.png"
+                alt="Scotti Brothers Entertainment"
+              />
+
+              <p>
+                © 2026 Scotti Brothers Entertainment.
+                All rights reserved.
               </p>
-            )}
 
-          </form>
-        </div>
-      </section>
+            </div>
 
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
-      <footer className="site-footer">
-
-        <div className="footer-inner">
-
-          <div className="footer-brand">
-
-            <img
-              src="/images/logo.png"
-              alt="Scotti Brothers Entertainment"
-            />
-
-            <p>
-              © 2026 Scotti Brothers Ent.
-              All rights reserved.
+            <p className="footer-title">
+              Can&apos;t Make This Up!
             </p>
 
           </div>
 
-          <p className="footer-title">
-            Can&apos;t Make This Up!
-          </p>
+        </footer>
 
-        </div>
-
-      </footer>
+      </div>
 
       {/* =====================================================
           PAGE STYLES
       ===================================================== */}
+
       <style>{`
 
         * {
           box-sizing: border-box;
         }
 
+        /* =========================================
+           PAGE
+        ========================================= */
+
         .contact-page {
           --gold: ${GOLD};
 
           min-height: 100vh;
+          position: relative;
           overflow-x: hidden;
 
           background:
+            radial-gradient(
+              circle at 20% 20%,
+              rgba(139,0,0,0.17),
+              transparent 30%
+            ),
+            radial-gradient(
+              circle at 80% 60%,
+              rgba(242,201,76,0.07),
+              transparent 32%
+            ),
             linear-gradient(
               180deg,
               #050505 0%,
-              #090909 48%,
+              #090909 50%,
               #050505 100%
             );
 
@@ -885,38 +1112,69 @@ export default function ContactPage() {
             sans-serif;
         }
 
+        .contact-background {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+
+          background:
+            radial-gradient(
+              circle at 15% 25%,
+              rgba(139,0,0,0.12),
+              transparent 30%
+            ),
+            radial-gradient(
+              circle at 82% 68%,
+              rgba(242,201,76,0.05),
+              transparent 30%
+            );
+        }
+
+        .contact-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+
+          background-image:
+            linear-gradient(
+              rgba(255,255,255,0.01) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(255,255,255,0.01) 1px,
+              transparent 1px
+            );
+
+          background-size: 42px 42px;
+          opacity: 0.3;
+        }
+
+        .contact-content {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+        }
+
         /* =========================================
            HEADER
         ========================================= */
 
-        .site-header {
-          position: relative;
-          z-index: 20;
-
+        .contact-header {
           width: 100%;
 
           padding:
             24px
-            42px;
+            42px
+            0;
 
           display: flex;
           justify-content: flex-end;
-
-          background:
-            rgba(5,5,5,0.96);
-
-          border-bottom:
-            1px solid
-            rgba(242,201,76,0.12);
-
-          backdrop-filter:
-            blur(12px);
-
-          -webkit-backdrop-filter:
-            blur(12px);
         }
 
-        .site-nav {
+        .contact-nav {
           display: flex;
           align-items: center;
 
@@ -929,14 +1187,17 @@ export default function ContactPage() {
           border-radius: 999px;
 
           background:
-            rgba(255,255,255,0.07);
+            rgba(255,255,255,0.08);
 
           border:
             1px solid
             rgba(255,255,255,0.12);
+
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
         }
 
-        .site-nav-link {
+        .contact-nav-link {
           display: inline-flex;
 
           align-items: center;
@@ -948,8 +1209,7 @@ export default function ContactPage() {
 
           border-radius: 999px;
 
-          color:
-            rgba(255,255,255,0.78);
+          color: #fff;
 
           text-decoration: none;
 
@@ -963,11 +1223,11 @@ export default function ContactPage() {
             background 0.2s ease;
         }
 
-        .site-nav-link:hover {
+        .contact-nav-link:hover {
           color: var(--gold);
         }
 
-        .site-nav-link.active {
+        .contact-nav-link.active {
           background: #8b0000;
           color: #fff;
         }
@@ -979,104 +1239,43 @@ export default function ContactPage() {
         .contact-hero {
           position: relative;
 
-          min-height: 520px;
+          width: 100%;
+          max-width: 1250px;
 
-          overflow: hidden;
-
-          border-bottom:
-            1px solid
-            rgba(242,201,76,0.15);
-
-          background:
-            radial-gradient(
-              circle at 18% 50%,
-              rgba(242,201,76,0.09),
-              transparent 35%
-            ),
-            radial-gradient(
-              circle at 82% 50%,
-              rgba(139,0,0,0.11),
-              transparent 35%
-            ),
-            #050505;
-        }
-
-        .hero-light {
-          position: absolute;
-
-          pointer-events: none;
-
-          border-radius: 50%;
-
-          filter: blur(70px);
-        }
-
-        .hero-light-left {
-          left: -120px;
-          top: 40px;
-
-          width: 420px;
-          height: 420px;
-
-          background:
-            rgba(242,201,76,0.035);
-        }
-
-        .hero-light-right {
-          right: -100px;
-          top: 50px;
-
-          width: 420px;
-          height: 420px;
-
-          background:
-            rgba(198,40,40,0.055);
-        }
-
-        .hero-inner {
-          position: relative;
-          z-index: 2;
-
-          width: min(
-            1250px,
-            calc(100% - 70px)
-          );
-
-          min-height: 520px;
+          min-height: 500px;
 
           margin: 0 auto;
 
-          display: grid;
+          padding:
+            45px
+            45px
+            75px;
 
-          grid-template-columns:
-            0.9fr
-            1.1fr;
-
+          display: flex;
           align-items: center;
 
-          gap: 60px;
+          overflow: hidden;
         }
 
-        /* =========================================
-           HERO LOGO
-        ========================================= */
-
         .hero-logo {
-          display: flex;
+          position: absolute;
 
-          align-items: center;
-          justify-content: center;
+          left: 2%;
 
-          min-height: 380px;
+          top: 50%;
+
+          transform:
+            translateY(-50%);
+
+          width: 44%;
+
+          max-width: 540px;
+
+          z-index: 2;
         }
 
         .hero-logo a {
           display: block;
-
-          width: 100%;
-
-          max-width: 480px;
-
           line-height: 0;
         }
 
@@ -1091,21 +1290,28 @@ export default function ContactPage() {
           filter:
             drop-shadow(
               0 0 35px
-              rgba(0,0,0,0.7)
+              rgba(0,0,0,0.75)
             );
         }
 
-        /* =========================================
-           HERO COPY
-        ========================================= */
+        .contact-hero-copy {
+          position: relative;
 
-        .hero-copy {
-          padding:
-            30px
-            0;
+          z-index: 3;
+
+          width: 55%;
+
+          max-width: 690px;
+
+          margin-left: auto;
+          margin-right: 1%;
+
+          padding-top: 20px;
         }
 
-        .eyebrow {
+        .eyebrow,
+        .section-eyebrow,
+        .contact-card-eyebrow {
           margin: 0;
 
           color: var(--gold);
@@ -1121,20 +1327,23 @@ export default function ContactPage() {
             uppercase;
         }
 
-        .hero-copy h1 {
+        .contact-hero h1 {
           margin:
             18px
             0
             0;
 
+          color: #fff;
+
           font-size:
             clamp(
-              52px,
+              58px,
               7vw,
-              90px
+              92px
             );
 
-          line-height: 0.92;
+          line-height:
+            0.9;
 
           font-weight: 900;
 
@@ -1145,39 +1354,33 @@ export default function ContactPage() {
             uppercase;
         }
 
-        .red-text {
+        .contact-hero h1 span {
           display: block;
+          margin-top: 8px;
+        }
 
-          color:
-            #c62828;
+        .red-text {
+          color: #c62828;
         }
 
         .gold-text {
-          display: block;
-
-          color:
-            var(--gold);
-
-          text-shadow:
-            0 2px 0
-            rgba(0,0,0,0.45);
+          color: var(--gold);
         }
 
         .podcast-label {
           margin:
-            18px
+            24px
             0
             0;
 
-          color:
-            #c62828;
+          color: #c62828;
 
-          font-size: 13px;
+          font-size: 12px;
 
           font-weight: 900;
 
           letter-spacing:
-            0.4em;
+            0.38em;
 
           text-transform:
             uppercase;
@@ -1192,8 +1395,8 @@ export default function ContactPage() {
 
           width:
             min(
-              530px,
-              100%
+              520px,
+              90%
             );
 
           margin:
@@ -1216,14 +1419,12 @@ export default function ContactPage() {
         }
 
         .gold-line b {
-          color:
-            var(--gold);
-
+          color: var(--gold);
           font-size: 14px;
         }
 
         .hero-description {
-          max-width: 620px;
+          max-width: 650px;
 
           margin: 0;
 
@@ -1237,12 +1438,11 @@ export default function ContactPage() {
 
           font-size: 17px;
 
-          line-height: 1.8;
+          line-height: 1.85;
         }
 
         .hero-description strong {
-          color:
-            var(--gold);
+          color: var(--gold);
         }
 
         .hero-buttons {
@@ -1252,8 +1452,7 @@ export default function ContactPage() {
 
           gap: 15px;
 
-          margin-top:
-            30px;
+          margin-top: 30px;
         }
 
         .primary-button,
@@ -1285,47 +1484,39 @@ export default function ContactPage() {
 
         .primary-button {
           border:
-            1px solid
+            1px
+            solid
             #c62828;
 
           background:
             #c62828;
 
-          color:
-            #fff;
+          color: #fff;
         }
 
         .primary-button:hover {
-          background:
-            transparent;
-
-          color:
-            #c62828;
+          background: transparent;
+          color: #c62828;
         }
 
         .secondary-button {
           border:
-            1px solid
+            1px
+            solid
             rgba(
               242,
               201,
               76,
-              0.55
+              0.5
             );
 
-          color:
-            var(--gold);
+          color: var(--gold);
         }
 
         .secondary-button:hover {
-          background:
-            var(--gold);
-
-          border-color:
-            var(--gold);
-
-          color:
-            #050505;
+          background: var(--gold);
+          border-color: var(--gold);
+          color: #000;
         }
 
         /* =========================================
@@ -1337,8 +1528,15 @@ export default function ContactPage() {
             90px
             0;
 
-          background:
-            #050505;
+          border-top:
+            1px
+            solid
+            rgba(
+              242,
+              201,
+              76,
+              0.12
+            );
         }
 
         .section-inner {
@@ -1348,9 +1546,7 @@ export default function ContactPage() {
               calc(100% - 70px)
             );
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
         }
 
         .marketing-grid {
@@ -1360,48 +1556,28 @@ export default function ContactPage() {
             1.35fr
             0.65fr;
 
-          gap:
-            50px;
+          gap: 55px;
         }
 
-        .section-eyebrow {
-          margin: 0;
-
-          color:
-            #c62828;
-
-          font-size: 11px;
-
-          font-weight: 900;
-
-          letter-spacing:
-            0.42em;
-
-          text-transform:
-            uppercase;
-        }
-
-        .marketing-grid h2 {
+        .marketing-section h2 {
           margin:
             15px
             0
             0;
 
-          color:
-            #fff;
+          color: #fff;
 
           font-size:
             clamp(
-              40px,
+              38px,
               5vw,
               62px
             );
 
           line-height:
-            1;
+            0.95;
 
-          font-weight:
-            300;
+          font-weight: 300;
 
           text-transform:
             uppercase;
@@ -1410,19 +1586,12 @@ export default function ContactPage() {
             0.02em;
         }
 
-        .marketing-grid h2 span {
+        .marketing-section h2 span {
           display: block;
-
-          color:
-            rgba(
-              255,
-              255,
-              255,
-              0.35
-            );
+          color: rgba(255,255,255,0.32);
         }
 
-        .section-copy {
+        .section-description {
           max-width: 780px;
 
           margin:
@@ -1435,10 +1604,10 @@ export default function ContactPage() {
               255,
               255,
               255,
-              0.64
+              0.62
             );
 
-          font-size: 16px;
+          font-size: 15px;
 
           line-height: 1.9;
         }
@@ -1454,16 +1623,15 @@ export default function ContactPage() {
 
           gap: 20px;
 
-          margin-top:
-            32px;
+          margin-top: 35px;
         }
 
         .marketing-card {
-          padding:
-            28px;
+          padding: 28px;
 
           border:
-            1px solid
+            1px
+            solid
             rgba(
               242,
               201,
@@ -1471,8 +1639,7 @@ export default function ContactPage() {
               0.18
             );
 
-          border-radius:
-            16px;
+          border-radius: 18px;
 
           background:
             #0d0d0d;
@@ -1484,44 +1651,38 @@ export default function ContactPage() {
 
           background:
             #c62828;
-
-          margin-bottom:
-            20px;
         }
 
         .card-title {
-          margin: 0;
+          margin-top: 18px;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 13px;
 
           font-weight: 900;
 
           letter-spacing:
-            0.28em;
+            0.25em;
 
           text-transform:
             uppercase;
         }
 
         .marketing-card > p:last-child {
-          margin:
-            15px
-            0
-            0;
+          margin-top: 15px;
 
           color:
             rgba(
               255,
               255,
               255,
-              0.55
+              0.5
             );
 
-          line-height:
-            1.8;
+          font-size: 14px;
+
+          line-height: 1.8;
         }
 
         .marketing-contact {
@@ -1529,33 +1690,31 @@ export default function ContactPage() {
 
           overflow: hidden;
 
-          min-height:
-            430px;
-
-          padding:
-            35px;
+          padding: 35px;
 
           border:
-            1px solid
+            1px
+            solid
             rgba(
               242,
               201,
               76,
-              0.28
+              0.3
             );
 
-          border-radius:
-            24px;
+          border-radius: 24px;
 
           background:
             #111;
         }
 
-        .contact-glow {
+        .marketing-contact::after {
+          content: "";
+
           position: absolute;
 
-          right: -40px;
-          top: -40px;
+          right: -70px;
+          top: -70px;
 
           width: 180px;
           height: 180px;
@@ -1567,152 +1726,104 @@ export default function ContactPage() {
               198,
               40,
               40,
-              0.10
+              0.1
             );
 
-          filter:
-            blur(45px);
-        }
-
-        .contact-box-content {
-          position: relative;
-        }
-
-        .contact-label {
-          margin: 0;
-
-          color:
-            #c62828;
-
-          font-size: 11px;
-
-          font-weight: 900;
-
-          letter-spacing:
-            0.38em;
-
-          text-transform:
-            uppercase;
+          filter: blur(30px);
         }
 
         .marketing-contact h3 {
-          margin:
-            18px
-            0
-            0;
+          margin-top: 20px;
 
-          color:
-            #fff;
+          color: #fff;
 
-          font-size: 28px;
+          font-size: 27px;
 
-          line-height:
-            1.15;
+          line-height: 1.05;
 
-          font-weight:
-            300;
+          font-weight: 300;
 
           text-transform:
             uppercase;
+
+          letter-spacing:
+            0.03em;
         }
 
         .marketing-contact h3 span {
           display: block;
-
-          margin-top: 4px;
-
-          color:
-            var(--gold);
+          color: var(--gold);
         }
 
-        .marketing-contact p:not(.contact-label) {
-          margin:
-            22px
-            0
-            0;
+        .marketing-contact > p:not(.contact-card-eyebrow) {
+          margin-top: 20px;
 
           color:
             rgba(
               255,
               255,
               255,
-              0.55
+              0.52
             );
 
-          line-height:
-            1.8;
+          line-height: 1.8;
         }
 
         .email-link {
           display: block;
 
-          margin-top:
-            25px;
+          margin-top: 24px;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
-          font-size:
-            14px;
+          font-size: 14px;
 
-          font-weight:
-            700;
+          font-weight: 700;
 
-          text-decoration:
-            none;
+          word-break: break-word;
 
-          word-break:
-            break-word;
+          text-decoration: none;
         }
 
         .email-link:hover {
-          color:
-            #c62828;
+          color: #c62828;
         }
 
         .email-button {
-          display:
-            inline-flex;
+          display: inline-flex;
 
-          margin-top:
-            25px;
+          margin-top: 24px;
 
           padding:
             13px
             20px;
 
           border:
-            1px solid
+            1px
+            solid
             #c62828;
 
           background:
             #c62828;
 
-          color:
-            #fff;
+          color: #fff;
 
-          text-decoration:
-            none;
+          text-decoration: none;
 
-          font-size:
-            10px;
+          font-size: 10px;
 
-          font-weight:
-            900;
+          font-weight: 900;
 
           letter-spacing:
-            0.25em;
+            0.22em;
 
           text-transform:
             uppercase;
         }
 
         .email-button:hover {
-          background:
-            transparent;
-
-          color:
-            #c62828;
+          background: transparent;
+          color: #c62828;
         }
 
         /* =========================================
@@ -1724,68 +1835,67 @@ export default function ContactPage() {
             100px
             0;
 
+          background:
+            #090909;
+
           border-top:
-            1px solid
+            1px
+            solid
             rgba(
               242,
               201,
               76,
-              0.14
+              0.12
             );
 
-          background:
-            #090909;
+          border-bottom:
+            1px
+            solid
+            rgba(
+              242,
+              201,
+              76,
+              0.12
+            );
         }
 
-        .form-container {
+        .guest-section-inner {
           width:
             min(
               1100px,
-              calc(100% - 40px)
+              calc(100% - 50px)
             );
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
         }
 
-        .form-intro {
-          text-align:
-            center;
+        .guest-intro {
+          text-align: center;
         }
 
-        .form-intro h2 {
-          margin:
-            15px
-            0
-            0;
+        .guest-intro h2 {
+          margin-top: 15px;
 
-          color:
-            #fff;
+          color: #fff;
 
           font-size:
             clamp(
-              42px,
-              6vw,
-              62px
+              40px,
+              5vw,
+              58px
             );
 
-          line-height:
-            1;
-
-          font-weight:
-            300;
+          font-weight: 300;
 
           text-transform:
             uppercase;
 
           letter-spacing:
-            0.02em;
+            0.03em;
         }
 
-        .form-intro > p:last-child {
-          max-width:
-            760px;
+        .guest-intro > p:last-child {
+          max-width: 780px;
 
           margin:
             25px
@@ -1800,42 +1910,44 @@ export default function ContactPage() {
               0.55
             );
 
-          font-size:
-            16px;
+          font-size: 15px;
 
-          line-height:
-            1.9;
+          line-height: 1.9;
         }
 
-        .form-intro > p:last-child span {
-          color:
-            var(--gold);
+        .guest-intro > p:last-child span {
+          color: var(--gold);
         }
+
+        /* =========================================
+           FORM
+        ========================================= */
 
         .guest-form {
-          margin-top:
-            55px;
+          margin-top: 50px;
 
           padding:
             45px;
 
           border:
-            1px solid
+            1px
+            solid
             rgba(
               242,
               201,
               76,
-              0.24
+              0.25
             );
 
-          border-radius:
-            24px;
+          border-radius: 24px;
 
           background:
             #050505;
 
           box-shadow:
-            0 25px 70px
+            0
+            25px
+            70px
             rgba(
               0,
               0,
@@ -1844,58 +1956,43 @@ export default function ContactPage() {
             );
         }
 
-        /* =========================================
-           FORM HEADINGS
-        ========================================= */
-
         .form-section-heading {
-          display:
-            flex;
+          display: flex;
 
-          align-items:
-            center;
+          align-items: center;
 
-          gap:
-            16px;
+          gap: 16px;
 
-          padding-bottom:
-            15px;
+          padding-bottom: 15px;
 
           border-bottom:
-            1px solid
+            1px
+            solid
             rgba(
               255,
               255,
               255,
-              0.10
+              0.1
             );
         }
 
         .form-section-number {
-          color:
-            #c62828;
+          color: #c62828;
 
-          font-size:
-            11px;
+          font-size: 11px;
 
-          font-weight:
-            900;
+          font-weight: 900;
 
           letter-spacing:
             0.3em;
         }
 
         .form-section-title {
-          margin: 0;
+          color: var(--gold);
 
-          color:
-            var(--gold);
+          font-size: 17px;
 
-          font-size:
-            16px;
-
-          font-weight:
-            300;
+          font-weight: 300;
 
           letter-spacing:
             0.22em;
@@ -1904,52 +2001,33 @@ export default function ContactPage() {
             uppercase;
         }
 
-        .form-section-spacing {
-          margin-top:
-            48px;
-        }
-
         .form-grid {
-          display:
-            grid;
+          display: grid;
 
           grid-template-columns:
             repeat(
               2,
-              minmax(
-                0,
-                1fr
-              )
+              minmax(0,1fr)
             );
 
           gap:
             24px;
 
-          margin-top:
-            28px;
+          margin-top: 28px;
         }
 
-        .single-field {
-          margin-top:
-            28px;
+        .form-section-spacing {
+          margin-top: 48px;
         }
-
-        /* =========================================
-           FORM FIELDS
-        ========================================= */
 
         .field-label {
-          display:
-            block;
+          display: block;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
-          font-size:
-            10px;
+          font-size: 10px;
 
-          font-weight:
-            900;
+          font-weight: 900;
 
           letter-spacing:
             0.25em;
@@ -1959,237 +2037,388 @@ export default function ContactPage() {
         }
 
         .required-mark {
-          margin-left:
-            4px;
-
-          color:
-            #c62828;
+          margin-left: 5px;
+          color: #c62828;
         }
 
-        .form-input {
-          width:
-            100%;
+        .form-input,
+        .form-textarea,
+        .form-select {
+          width: 100%;
 
-          margin-top:
-            10px;
+          margin-top: 11px;
+
+          border:
+            1px
+            solid
+            rgba(
+              255,
+              255,
+              255,
+              0.15
+            );
+
+          border-radius: 12px;
+
+          background:
+            #fff;
+
+          color: #000;
+
+          outline: none;
+
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+          transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+        }
+
+        .form-input,
+        .form-select {
+          min-height: 52px;
 
           padding:
             14px
             16px;
-
-          border:
-            1px solid
-            rgba(
-              255,
-              255,
-              255,
-              0.15
-            );
-
-          border-radius:
-            12px;
-
-          outline:
-            none;
-
-          background:
-            #fff;
-
-          color:
-            #000;
-
-          font-size:
-            15px;
         }
 
-        .form-input:focus {
-          border-color:
-            #c62828;
-
-          box-shadow:
-            0 0 0 3px
-            rgba(
-              198,
-              40,
-              40,
-              0.18
-            );
-        }
-
-        .form-input::placeholder {
-          color:
-            #999;
-        }
-
-        .textarea-field {
-          display:
-            block;
-
-          margin-top:
-            28px;
-        }
-
-        .textarea-field textarea {
-          width:
-            100%;
-
-          min-height:
-            190px;
-
-          margin-top:
-            10px;
-
+        .form-textarea {
           padding:
+            15px
             16px;
 
-          resize:
-            vertical;
-
-          border:
-            1px solid
-            rgba(
-              255,
-              255,
-              255,
-              0.15
-            );
-
-          border-radius:
-            12px;
-
-          outline:
-            none;
-
-          background:
-            #fff;
-
-          color:
-            #000;
-
-          font-size:
-            15px;
-
-          line-height:
-            1.6;
+          resize: vertical;
         }
 
-        .textarea-field textarea:focus {
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
           border-color:
             #c62828;
 
           box-shadow:
-            0 0 0 3px
+            0
+            0
+            0
+            3px
             rgba(
               198,
               40,
               40,
-              0.18
+              0.15
             );
         }
 
-        .textarea-field textarea::placeholder {
-          color:
-            #999;
-        }
+        .form-help {
+          margin-top: 22px;
 
-        .character-count {
-          display:
-            block;
-
-          margin-top:
-            7px;
+          max-width: 800px;
 
           color:
             rgba(
               255,
               255,
               255,
-              0.30
+              0.45
             );
 
-          font-size:
-            11px;
+          font-size: 13px;
 
-          text-align:
-            right;
+          line-height: 1.7;
         }
 
-        .availability-intro {
-          margin:
-            20px
-            0
-            0;
+        .self-representing {
+          display: flex;
+
+          align-items: flex-start;
+
+          gap: 18px;
+
+          margin-top: 25px;
+
+          padding:
+            18px
+            20px;
+
+          border:
+            1px
+            solid
+            rgba(
+              242,
+              201,
+              76,
+              0.16
+            );
+
+          border-radius: 14px;
+
+          background:
+            rgba(
+              255,
+              255,
+              255,
+              0.025
+            );
+        }
+
+        .self-representing > p {
+          margin: 0;
 
           color:
             rgba(
               255,
               255,
               255,
-              0.50
+              0.4
             );
 
-          font-size:
-            14px;
+          font-size: 12px;
 
-          line-height:
-            1.7;
+          line-height: 1.6;
         }
 
-        .helper-text {
-          margin:
-            12px
-            0
-            0;
-
-          padding-left:
-            40px;
-
-          color:
-            rgba(
-              255,
-              255,
-              255,
-              0.38
-            );
-
-          font-size:
-            12px;
-
-          line-height:
-            1.7;
+        .management-grid {
+          margin-top: 22px;
         }
 
         /* =========================================
-           CHECKBOXES
+           AVAILABILITY
         ========================================= */
 
-        .checkbox-card {
-          display:
-            flex;
+        .availability-grid {
+          display: grid;
 
-          align-items:
-            flex-start;
+          grid-template-columns:
+            repeat(
+              3,
+              minmax(0,1fr)
+            );
 
-          gap:
-            15px;
+          gap: 20px;
 
-          margin-top:
-            25px;
+          margin-top: 28px;
+        }
+
+        .taping-date-field {
+          width: 100%;
 
           padding:
-            18px;
+            22px;
 
           border:
-            1px solid
+            1px
+            solid
+            rgba(
+              242,
+              201,
+              76,
+              0.14
+            );
+
+          border-radius: 16px;
+
+          background:
+            #0b0b0b;
+        }
+
+        .taping-format-options {
+          display: flex;
+
+          flex-wrap: wrap;
+
+          align-items: center;
+
+          gap: 18px;
+
+          margin-top: 15px;
+        }
+
+        .format-option {
+          display: inline-flex;
+
+          align-items: center;
+
+          gap: 8px;
+
+          color:
             rgba(
               255,
               255,
               255,
-              0.10
+              0.62
             );
 
-          border-radius:
-            12px;
+          font-size: 10px;
+
+          font-weight: 900;
+
+          letter-spacing:
+            0.12em;
+
+          text-transform:
+            uppercase;
+
+          cursor: pointer;
+        }
+
+        .format-option input,
+        .checkbox-panel input,
+        .self-representing input,
+        .privacy-box input {
+          width: 17px;
+          height: 17px;
+
+          margin: 0;
+
+          accent-color:
+            #c62828;
+
+          cursor: pointer;
+
+          flex-shrink: 0;
+        }
+
+        .format-option input:checked + span {
+          color: var(--gold);
+        }
+
+        /* =========================================
+           SEGMENT
+        ========================================= */
+
+        .single-field {
+          margin-top: 28px;
+        }
+
+        .textarea-field {
+          display: block;
+
+          margin-top: 25px;
+        }
+
+        .character-count {
+          display: block;
+
+          margin-top: 7px;
+
+          text-align: right;
+
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.25
+            );
+
+          font-size: 11px;
+        }
+
+        /* =========================================
+           PRIVACY
+        ========================================= */
+
+        .privacy-box {
+          display: flex;
+
+          align-items: flex-start;
+
+          gap: 16px;
+
+          margin-top: 25px;
+
+          padding:
+            20px;
+
+          border:
+            1px
+            solid
+            rgba(
+              242,
+              201,
+              76,
+              0.16
+            );
+
+          border-radius: 14px;
+
+          background:
+            rgba(
+              255,
+              255,
+              255,
+              0.025
+            );
+        }
+
+        .privacy-box > p {
+          margin: 0;
+
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.42
+            );
+
+          font-size: 12px;
+
+          line-height: 1.7;
+        }
+
+        /* =========================================
+           TERMS
+        ========================================= */
+
+        .terms-section {
+          margin-top: 28px;
+        }
+
+        .terms-note {
+          margin-top: 12px;
+
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.35
+            );
+
+          font-size: 12px;
+
+          line-height: 1.6;
+        }
+
+        .checkbox-panel {
+          display: flex;
+
+          align-items: flex-start;
+
+          gap: 15px;
+
+          margin-top: 20px;
+
+          padding:
+            18px
+            20px;
+
+          border:
+            1px
+            solid
+            rgba(
+              255,
+              255,
+              255,
+              0.1
+            );
+
+          border-radius: 12px;
 
           background:
             rgba(
@@ -2199,86 +2428,31 @@ export default function ContactPage() {
               0.025
             );
 
-          cursor:
-            pointer;
-        }
-
-        .checkbox-card input {
-          flex:
-            0 0 auto;
-
-          width:
-            18px;
-
-          height:
-            18px;
-
-          margin-top:
-            2px;
-
-          accent-color:
-            #c62828;
-
-          cursor:
-            pointer;
-        }
-
-        .checkbox-card span {
-          display:
-            flex;
-
-          flex-direction:
-            column;
-
-          gap:
-            5px;
-
           color:
             rgba(
               255,
               255,
               255,
-              0.58
+              0.57
             );
 
-          font-size:
-            13px;
+          font-size: 13px;
 
-          line-height:
-            1.7;
+          line-height: 1.7;
+
+          cursor: pointer;
         }
 
-        .checkbox-card strong {
-          color:
-            var(--gold);
-
-          font-size:
-            11px;
-
-          font-weight:
-            900;
-
-          letter-spacing:
-            0.20em;
-
-          text-transform:
-            uppercase;
+        .checkbox-panel span {
+          flex: 1;
         }
 
-        .checkbox-card small {
-          color:
-            rgba(
-              255,
-              255,
-              255,
-              0.52
-            );
+        .checkbox-panel input:checked + span {
+          color: var(--gold);
+        }
 
-          font-size:
-            13px;
-
-          line-height:
-            1.7;
+        .final-consent {
+          margin-top: 35px;
         }
 
         /* =========================================
@@ -2286,31 +2460,27 @@ export default function ContactPage() {
         ========================================= */
 
         .submit-button {
-          width:
-            100%;
+          width: 100%;
 
-          margin-top:
-            32px;
+          margin-top: 28px;
 
           padding:
             17px
             25px;
 
           border:
-            1px solid
+            1px
+            solid
             #c62828;
 
           background:
             #c62828;
 
-          color:
-            #fff;
+          color: #fff;
 
-          font-size:
-            10px;
+          font-size: 11px;
 
-          font-weight:
-            900;
+          font-weight: 900;
 
           letter-spacing:
             0.32em;
@@ -2318,56 +2488,50 @@ export default function ContactPage() {
           text-transform:
             uppercase;
 
-          cursor:
-            pointer;
+          cursor: pointer;
 
           transition:
             all 0.2s ease;
         }
 
         .submit-button:hover {
-          background:
-            transparent;
-
-          color:
-            #c62828;
+          background: transparent;
+          color: #c62828;
         }
 
         .submitted-message {
-          margin:
-            25px
-            0
-            0;
+          margin-top: 22px;
 
-          text-align:
-            center;
+          text-align: center;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
-          font-size:
-            14px;
+          font-size: 13px;
 
-          line-height:
-            1.7;
+          line-height: 1.8;
         }
 
         /* =========================================
            FOOTER
         ========================================= */
 
-        .site-footer {
+        .contact-footer {
+          padding:
+            30px
+            20px;
+
           border-top:
-            1px solid
+            1px
+            solid
             rgba(
               242,
               201,
               76,
-              0.15
+              0.12
             );
 
           background:
-            #000;
+            #050505;
         }
 
         .footer-inner {
@@ -2377,47 +2541,31 @@ export default function ContactPage() {
               calc(100% - 40px)
             );
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
-          padding:
-            28px
-            0;
+          display: flex;
 
-          display:
-            flex;
+          align-items: center;
 
-          align-items:
-            center;
+          justify-content: space-between;
 
-          justify-content:
-            space-between;
-
-          gap:
-            25px;
+          gap: 25px;
         }
 
         .footer-brand {
-          display:
-            flex;
+          display: flex;
 
-          align-items:
-            center;
+          align-items: center;
 
-          gap:
-            15px;
+          gap: 16px;
         }
 
         .footer-brand img {
-          width:
-            95px;
+          display: block;
 
-          height:
-            auto;
+          width: 95px;
 
-          object-fit:
-            contain;
+          height: auto;
         }
 
         .footer-brand p,
@@ -2432,14 +2580,12 @@ export default function ContactPage() {
               0.35
             );
 
-          font-size:
-            9px;
+          font-size: 9px;
 
-          font-weight:
-            700;
+          font-weight: 700;
 
           letter-spacing:
-            0.20em;
+            0.2em;
 
           text-transform:
             uppercase;
@@ -2451,7 +2597,7 @@ export default function ContactPage() {
               242,
               201,
               76,
-              0.70
+              0.65
             );
         }
 
@@ -2461,18 +2607,21 @@ export default function ContactPage() {
 
         @media (max-width: 950px) {
 
-          .hero-inner {
-            grid-template-columns:
-              0.8fr
-              1.2fr;
+          .contact-hero {
+            min-height: 450px;
 
-            gap:
-              30px;
+            padding:
+              40px
+              25px
+              60px;
           }
 
-          .hero-logo a {
-            max-width:
-              380px;
+          .hero-logo {
+            width: 42%;
+          }
+
+          .contact-hero-copy {
+            width: 58%;
           }
 
           .marketing-grid {
@@ -2480,110 +2629,12 @@ export default function ContactPage() {
               1fr;
           }
 
-        }
-
-        @media (max-width: 800px) {
-
-          .site-header {
-            padding:
-              18px
-              20px;
-
-            justify-content:
-              center;
-          }
-
-          .site-nav {
-            flex-wrap:
-              wrap;
-
-            justify-content:
-              center;
-
-            border-radius:
-              18px;
-          }
-
-          .site-nav-link {
-            font-size:
-              11px;
-
-            padding:
-              7px
-              9px;
-          }
-
-          .hero-inner {
-            width:
-              calc(
-                100% - 40px
+          .availability-grid {
+            grid-template-columns:
+              repeat(
+                2,
+                minmax(0,1fr)
               );
-
-            min-height:
-              600px;
-
-            grid-template-columns:
-              1fr;
-
-            gap:
-              5px;
-
-            padding:
-              40px
-              0
-              55px;
-          }
-
-          .hero-logo {
-            min-height:
-              280px;
-
-            order:
-              1;
-          }
-
-          .hero-logo a {
-            max-width:
-              330px;
-          }
-
-          .hero-copy {
-            order:
-              2;
-
-            text-align:
-              center;
-          }
-
-          .gold-line {
-            margin-left:
-              auto;
-
-            margin-right:
-              auto;
-          }
-
-          .hero-description {
-            margin-left:
-              auto;
-
-            margin-right:
-              auto;
-          }
-
-          .hero-buttons {
-            justify-content:
-              center;
-          }
-
-          .marketing-cards {
-            grid-template-columns:
-              1fr;
-          }
-
-          .form-grid {
-            grid-template-columns:
-              1fr;
           }
 
         }
@@ -2592,147 +2643,174 @@ export default function ContactPage() {
            MOBILE
         ========================================= */
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
 
-          .site-header {
+          .contact-header {
             padding:
-              14px
-              10px;
+              18px
+              12px
+              0;
+
+            justify-content: center;
           }
 
-          .site-nav {
-            gap:
-              2px;
+          .contact-nav {
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            border-radius: 18px;
           }
 
-          .site-nav-link {
-            font-size:
-              9px;
-
+          .contact-nav-link {
             padding:
               6px
-              7px;
+              8px;
 
-            letter-spacing:
-              0;
+            font-size: 10px;
           }
 
           .contact-hero {
-            min-height:
-              auto;
-          }
-
-          .hero-inner {
-            width:
-              calc(
-                100% - 32px
-              );
-
-            min-height:
-              auto;
+            min-height: 400px;
 
             padding:
-              35px
-              0
+              40px
+              16px
               55px;
           }
 
           .hero-logo {
-            min-height:
-              220px;
+            left: 0;
+
+            width: 39%;
           }
 
-          .hero-logo a {
-            max-width:
-              275px;
-          }
+          .contact-hero-copy {
+            width: 60%;
 
-          .hero-copy h1 {
-            font-size:
-              50px;
+            margin-left: auto;
+            margin-right: 0;
+
+            padding-top: 10px;
           }
 
           .eyebrow {
-            font-size:
-              9px;
+            font-size: 8px;
+            letter-spacing: 0.25em;
+          }
 
-            letter-spacing:
-              0.28em;
+          .contact-hero h1 {
+            font-size: 45px;
+
+            letter-spacing: -2px;
+          }
+
+          .podcast-label {
+            font-size: 8px;
+
+            letter-spacing: 0.2em;
           }
 
           .hero-description {
-            font-size:
-              14px;
+            font-size: 12px;
 
-            line-height:
-              1.7;
+            line-height: 1.6;
           }
 
           .hero-buttons {
-            flex-direction:
-              column;
+            flex-direction: column;
 
-            align-items:
-              stretch;
+            gap: 8px;
           }
 
           .primary-button,
           .secondary-button {
-            width:
-              100%;
+            width: 100%;
+
+            padding:
+              11px
+              10px;
+
+            font-size: 8px;
+
+            letter-spacing:
+              0.14em;
           }
 
-          .marketing-section,
+          .section-inner {
+            width:
+              calc(
+                100% - 36px
+              );
+          }
+
+          .marketing-section {
+            padding:
+              70px
+              0;
+          }
+
+          .marketing-cards {
+            grid-template-columns:
+              1fr;
+          }
+
           .guest-section {
             padding:
               70px
               0;
           }
 
-          .section-inner {
+          .guest-section-inner {
             width:
               calc(
-                100% - 32px
-              );
-          }
-
-          .form-container {
-            width:
-              calc(
-                100% - 28px
+                100% - 30px
               );
           }
 
           .guest-form {
             padding:
               28px
-              20px;
+              18px;
+          }
+
+          .form-grid {
+            grid-template-columns:
+              1fr;
+          }
+
+          .availability-grid {
+            grid-template-columns:
+              1fr;
           }
 
           .form-section-title {
-            font-size:
-              12px;
+            font-size: 13px;
 
             letter-spacing:
               0.14em;
           }
 
-          .footer-inner {
-            flex-direction:
-              column;
+          .self-representing {
+            flex-direction: column;
 
-            text-align:
-              center;
+            gap: 12px;
+          }
+
+          .footer-inner {
+            flex-direction: column;
+
+            text-align: center;
           }
 
           .footer-brand {
-            flex-direction:
-              column;
+            flex-direction: column;
           }
 
         }
 
       `}</style>
+
     </main>
   );
 }
@@ -2750,6 +2828,7 @@ function FormSectionHeading({
 }) {
   return (
     <div className="form-section-heading">
+
       <span className="form-section-number">
         {number}
       </span>
@@ -2757,6 +2836,7 @@ function FormSectionHeading({
       <h3 className="form-section-title">
         {title}
       </h3>
+
     </div>
   );
 }
@@ -2782,7 +2862,9 @@ function FormField({
 }) {
   return (
     <label className="block">
+
       <span className="field-label">
+
         {label}
 
         {required && (
@@ -2790,6 +2872,7 @@ function FormField({
             *
           </span>
         )}
+
       </span>
 
       <input
@@ -2802,37 +2885,7 @@ function FormField({
         }
         className="form-input"
       />
-    </label>
-  );
-}
 
-/* =========================================================
-   DATE FIELD
-========================================================= */
-
-function DateField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label className="block">
-      <span className="field-label">
-        {label}
-      </span>
-
-      <input
-        type="date"
-        value={value}
-        onChange={(event) =>
-          onChange(event.target.value)
-        }
-        className="form-input"
-      />
     </label>
   );
 }
@@ -2851,7 +2904,8 @@ function CheckBoxField({
   label: string;
 }) {
   return (
-    <label className="checkbox-card">
+    <label className="checkbox-panel">
+
       <input
         type="checkbox"
         checked={checked}
@@ -2861,10 +2915,90 @@ function CheckBoxField({
       />
 
       <span>
-        <strong>
-          {label}
-        </strong>
+        {label}
       </span>
+
     </label>
+  );
+}
+
+/* =========================================================
+   TAPING DATE FIELD
+========================================================= */
+
+function TapingDateField({
+  label,
+  value,
+  onChange,
+  virtual,
+  inPerson,
+  onVirtualChange,
+  onInPersonChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  virtual: boolean;
+  inPerson: boolean;
+  onVirtualChange: (checked: boolean) => void;
+  onInPersonChange: (checked: boolean) => void;
+}) {
+  return (
+    <div className="taping-date-field">
+
+      <span className="field-label">
+        {label}
+      </span>
+
+      <input
+        type="date"
+        value={value}
+        onChange={(event) =>
+          onChange(event.target.value)
+        }
+        className="form-input"
+      />
+
+      <div className="taping-format-options">
+
+        <label className="format-option">
+
+          <input
+            type="checkbox"
+            checked={virtual}
+            onChange={(event) =>
+              onVirtualChange(
+                event.target.checked
+              )
+            }
+          />
+
+          <span>
+            Virtual
+          </span>
+
+        </label>
+
+        <label className="format-option">
+
+          <input
+            type="checkbox"
+            checked={inPerson}
+            onChange={(event) =>
+              onInPersonChange(
+                event.target.checked
+              )
+            }
+          />
+
+          <span>
+            In-Person
+          </span>
+
+        </label>
+
+      </div>
+
+    </div>
   );
 }
