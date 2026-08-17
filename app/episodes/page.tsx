@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 
-const comingSoonEpisodes = [
+const navigation = [
+  { label: "Home", href: "/" },
+  { label: "Episodes", href: "/episodes" },
+  { label: "Guests", href: "/guests" },
+  { label: "Merchandise", href: "/merchandise" },
+  { label: "Contact", href: "/contact" },
+];
+
+const episodes = [
   {
     number: "01",
     title: "Coming Soon",
@@ -19,389 +27,809 @@ const comingSoonEpisodes = [
     number: "03",
     title: "Coming Soon",
     description:
-      "Another story that sounds too crazy to be true—but it happened.",
-  },
-];
-
-const reels = [
-  {
-    number: "01",
-    title: "Coming Soon",
-  },
-  {
-    number: "02",
-    title: "Coming Soon",
-  },
-  {
-    number: "03",
-    title: "Coming Soon",
+      "Another story that sounds too crazy to be true — but it happened.",
   },
 ];
 
 export default function EpisodesPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden text-black">
-      {/* =========================================================
-          CMTU BACKGROUND
-      ========================================================= */}
-      <div
-        className="fixed inset-0 -z-20 bg-[#d8b887] bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url('/images/episodes/episodes-background.png')",
-        }}
-      />
+    <main className="episodes-page">
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
+      <div className="episodes-bg" aria-hidden="true" />
+      <div className="episodes-overlay" aria-hidden="true" />
 
-      {/* Subtle readability layer */}
-      <div className="fixed inset-0 -z-10 bg-black/[0.03]" />
-
-      {/* =========================================================
+      {/* =====================================================
           HEADER
-      ========================================================= */}
-      <header className="sticky top-0 z-50 border-b border-black/20 bg-black/95">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8 lg:px-12">
-          <Link href="/" className="shrink-0">
-            <img
-              src="/images/logo.png"
-              alt="Scotti Brothers Can't Make This Up!"
-              className="h-14 w-auto object-contain sm:h-16"
-            />
-          </Link>
+      ===================================================== */}
+      <header className="site-header">
+        <Link
+          href="/"
+          className="site-logo"
+          aria-label="Scotti Brothers Entertainment"
+        >
+          <img
+            src="/images/logo.png"
+            alt="Scotti Brothers Can't Make This Up!"
+          />
+        </Link>
 
-          <nav className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.18em] sm:gap-7 sm:text-xs">
+        <nav className="site-nav" aria-label="Main navigation">
+          {navigation.map((item) => (
             <Link
-              href="/"
-              className="text-white/75 transition hover:text-[#d8b887]"
+              key={item.href}
+              href={item.href}
+              className={item.href === "/episodes" ? "active" : ""}
             >
-              Home
+              {item.label}
             </Link>
-
-            <Link
-              href="/episodes"
-              className="text-[#d8b887]"
-            >
-              Episodes
-            </Link>
-
-            <Link
-              href="/guests"
-              className="text-white/75 transition hover:text-[#d8b887]"
-            >
-              Guests
-            </Link>
-
-            <Link
-              href="/merchandise"
-              className="text-white/75 transition hover:text-[#d8b887]"
-            >
-              Merchandise
-            </Link>
-
-            <Link
-              href="/contact"
-              className="text-white/75 transition hover:text-[#d8b887]"
-            >
-              Contact
-            </Link>
-          </nav>
-        </div>
+          ))}
+        </nav>
       </header>
 
-      {/* =========================================================
+      {/* =====================================================
           HERO
-      ========================================================= */}
-      <section className="relative overflow-hidden border-b border-black/20 bg-transparent">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-          <div className="mx-auto max-w-5xl text-center">
+      ===================================================== */}
+      <section className="episodes-hero">
+        <div className="hero-content">
+          <p className="eyebrow">SCOTTI BROTHERS ENTERTAINMENT</p>
 
-            <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
-              Scotti Brothers Entertainment
-            </p>
+          <h1>EPISODES</h1>
 
-            <h1 className="mt-5 text-5xl font-black uppercase leading-none tracking-tight text-black sm:text-6xl lg:text-7xl">
-              Episodes
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/70 sm:text-lg">
-              Unbelievable moments. Real stories.
-              Conversations from the music and entertainment
-              industry that you simply{" "}
-              <span className="font-black text-black">
-                Can&apos;t Make This Up!
-              </span>
-            </p>
-
-            <div className="mx-auto mt-8 flex max-w-md items-center gap-4">
-              <span className="h-px flex-1 bg-black/45" />
-
-              <span className="h-3 w-3 rotate-45 border-2 border-[#c62828]" />
-
-              <span className="h-px flex-1 bg-black/45" />
-            </div>
+          <div className="gold-line">
+            <span />
+            <b>◆</b>
+            <span />
           </div>
+
+          <p className="hero-copy">
+            Unbelievable moments. Real stories. Conversations from the music
+            and entertainment industry that you simply{" "}
+            <strong>Can&apos;t Make This Up!</strong>
+          </p>
         </div>
       </section>
 
-      {/* =========================================================
+      {/* =====================================================
           CURRENT EPISODE
-      ========================================================= */}
-      <section className="bg-transparent px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-        <div className="mx-auto max-w-7xl">
+      ===================================================== */}
+      <section className="current-section">
+        <div className="section-inner">
+          <div className="section-heading">
+            <p>NOW PLAYING</p>
+            <h2>CURRENT EPISODE</h2>
+            <div className="heading-line" />
+          </div>
 
-          <SectionHeading
-            eyebrow="Now Playing"
-            title="Current Episode"
-          />
+          <div className="current-card">
+            <div className="current-art">
+              <div className="art-inner">
+                <span>EPISODE 01</span>
 
-          <div className="mt-10 overflow-hidden rounded-3xl border-2 border-black bg-black shadow-[0_20px_55px_rgba(0,0,0,0.30)]">
-            <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+                <div className="mic-mark">🎙</div>
 
-              {/* CURRENT EPISODE VISUAL */}
-              <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden bg-black p-8 sm:min-h-[420px]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(216,184,135,0.10),transparent_55%)]" />
+                <h3>COMING SOON</h3>
 
-                <div className="relative z-10 text-center">
-
-                  <p className="text-xs font-black uppercase tracking-[0.4em] text-[#c62828]">
-                    Current Episode
-                  </p>
-
-                  <div className="mx-auto mt-6 h-1 w-16 bg-[#d8b887]" />
-
-                  <h3 className="mt-7 text-4xl font-black uppercase text-white sm:text-5xl">
-                    Coming Soon
-                  </h3>
-
-                  <p className="mt-4 text-sm uppercase tracking-[0.25em] text-[#d8b887]">
-                    Scotti Brothers
-                  </p>
-
-                </div>
+                <p>CAN&apos;T MAKE THIS UP!</p>
               </div>
+            </div>
 
-              {/* CURRENT EPISODE DETAILS */}
-              <div className="flex flex-col justify-center p-8 sm:p-10 lg:p-12">
+            <div className="current-info">
+              <span className="episode-tag">EPISODE 01</span>
 
-                <EpisodeLabel number="01" />
+              <h3>THE NEXT STORY</h3>
 
-                <h3 className="mt-6 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
-                  The Next Story
-                </h3>
+              <div className="red-rule" />
 
-                <p className="mt-5 leading-8 text-white/60">
-                  The next episode of{" "}
-                  <span className="text-[#d8b887]">
-                    Can&apos;t Make This Up!
-                  </span>{" "}
-                  is coming soon. Get ready for another
-                  unforgettable conversation filled with
-                  stories, music, and moments you won&apos;t
-                  believe.
-                </p>
+              <p>
+                Get ready for another unforgettable conversation with stories,
+                music, entertainment, and moments you won&apos;t believe.
+              </p>
 
-                <div className="mt-8">
-                  <span className="inline-flex border border-[#d8b887]/40 px-5 py-3 text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
-                    Coming Soon
-                  </span>
-                </div>
+              <p>
+                The next episode of{" "}
+                <strong>Can&apos;t Make This Up!</strong> is coming soon.
+              </p>
 
-              </div>
+              <div className="coming-soon">COMING SOON</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          COMING SOON EPISODES
-      ========================================================= */}
-      <section className="border-y border-black/15 bg-transparent px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-        <div className="mx-auto max-w-7xl">
+      {/* =====================================================
+          EPISODE ARCHIVE
+      ===================================================== */}
+      <section className="archive-section">
+        <div className="section-inner">
+          <div className="section-heading centered">
+            <p>THE SHOW</p>
+            <h2>EPISODES</h2>
+            <div className="heading-line centered-line" />
+          </div>
 
-          <SectionHeading
-            eyebrow="What's Next"
-            title="Coming Soon"
-          />
+          <div className="episode-grid">
+            {episodes.map((episode) => (
+              <article className="episode-card" key={episode.number}>
+                <div className="episode-number">{episode.number}</div>
 
-          <div className="mt-10 grid gap-7 md:grid-cols-3">
+                <div className="episode-card-content">
+                  <span>EPISODE {episode.number}</span>
 
-            {comingSoonEpisodes.map((episode) => (
-              <article
-                key={episode.number}
-                className="group overflow-hidden rounded-3xl border-2 border-black bg-black shadow-[0_16px_40px_rgba(0,0,0,0.28)] transition duration-300 hover:-translate-y-1 hover:border-[#c62828]"
-              >
-                {/* BLACK CARD BACK */}
-                <div className="relative flex min-h-[330px] flex-col justify-between bg-black p-7">
+                  <h3>{episode.title}</h3>
 
-                  <div>
+                  <p>{episode.description}</p>
 
-                    {/* RED EPISODE LABEL / WHITE TEXT */}
-                    <EpisodeLabel number={episode.number} />
-
-                    <h3 className="mt-7 text-2xl font-black uppercase text-white">
-                      {episode.title}
-                    </h3>
-
-                    <p className="mt-4 leading-7 text-white/55">
-                      {episode.description}
-                    </p>
-
-                  </div>
-
-                  <div className="mt-8">
-
-                    <div className="h-px w-full bg-[#d8b887]/20" />
-
-                    <p className="mt-5 text-xs font-bold uppercase tracking-[0.28em] text-[#d8b887]">
-                      Episode {episode.number}
-                    </p>
-
+                  <div className="card-bottom">
+                    <span>COMING SOON</span>
                   </div>
                 </div>
               </article>
             ))}
-
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          EPISODE REELS
-      ========================================================= */}
-      <section className="bg-black px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-        <div className="mx-auto max-w-7xl">
+      {/* =====================================================
+          WATCH / LISTEN
+      ===================================================== */}
+      <section className="watch-section">
+        <div className="watch-content">
+          <p className="eyebrow">WATCH • LISTEN • EXPERIENCE</p>
 
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
+          <h2>CAN&apos;T MAKE THIS UP!</h2>
 
-              <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
-                Watch
-              </p>
-
-              {/* RED EPISODE REELS */}
-              <h2 className="mt-3 text-4xl font-black uppercase tracking-tight text-[#c62828] sm:text-5xl">
-                Episode Reels
-              </h2>
-
-              <p className="mt-4 max-w-2xl text-white/50">
-                Short clips and memorable moments from
-                Can&apos;t Make This Up!
-              </p>
-
-            </div>
-          </div>
-
-          <div className="mt-10 grid gap-7 md:grid-cols-3">
-
-            {reels.map((reel) => (
-              <article
-                key={reel.number}
-                className="group overflow-hidden rounded-2xl border border-[#d8b887]/20 bg-[#0d0d0d]"
-              >
-
-                <div className="flex aspect-video items-center justify-center bg-black">
-
-                  <div className="text-center">
-
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#c62828] text-[#c62828] transition group-hover:bg-[#c62828] group-hover:text-white">
-                      <span className="ml-1 text-xl">
-                        ▶
-                      </span>
-                    </div>
-
-                    <p className="mt-4 text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
-                      Coming Soon
-                    </p>
-
-                  </div>
-                </div>
-
-                <div className="p-6">
-
-                  <EpisodeLabel number={reel.number} />
-
-                  <h3 className="mt-4 text-xl font-black uppercase text-white">
-                    {reel.title}
-                  </h3>
-
-                </div>
-              </article>
-            ))}
-
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          FOOTER
-      ========================================================= */}
-      <footer className="border-t border-[#d8b887]/15 bg-black px-5 py-9">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
-
-          <div className="flex items-center gap-4">
-
-            <img
-              src="/images/logo.png"
-              alt="Scotti Brothers Entertainment"
-              className="h-10 w-auto object-contain"
-            />
-
-            <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
-              © 2026 Scotti Brothers Entertainment.
-              All rights reserved.
-            </p>
-
-          </div>
-
-          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d8b887]/70">
-            Can&apos;t Make This Up!
+          <p>
+            Follow the show for new episodes, exclusive conversations, and
+            stories from the people who lived them.
           </p>
 
+          <Link href="/contact" className="watch-button">
+            STAY CONNECTED
+          </Link>
         </div>
+      </section>
+
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
+      <footer className="site-footer">
+        <img
+          src="/images/logo.png"
+          alt="Scotti Brothers Entertainment"
+        />
+
+        <p>
+          © 2026 Scotti Brothers Entertainment. All rights reserved.
+        </p>
+
+        <span>CAN&apos;T MAKE THIS UP!</span>
       </footer>
+
+      {/* =====================================================
+          PAGE STYLES
+      ===================================================== */}
+      <style>{`
+        .episodes-page {
+          position: relative;
+          min-height: 100vh;
+          overflow-x: hidden;
+          background:
+            radial-gradient(
+              circle at 50% 15%,
+              rgba(216, 184, 135, 0.14),
+              transparent 34%
+            ),
+            linear-gradient(
+              180deg,
+              #080808 0%,
+              #111111 48%,
+              #090909 100%
+            );
+          color: #fff;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .episodes-bg {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          opacity: 0.16;
+          background:
+            radial-gradient(
+              circle at 20% 30%,
+              rgba(198, 40, 40, 0.22),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 80% 65%,
+              rgba(216, 184, 135, 0.16),
+              transparent 30%
+            );
+        }
+
+        .episodes-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background-image:
+            linear-gradient(
+              rgba(255,255,255,0.018) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(255,255,255,0.018) 1px,
+              transparent 1px
+            );
+          background-size: 42px 42px;
+          opacity: 0.35;
+        }
+
+        .site-header,
+        .episodes-hero,
+        .current-section,
+        .archive-section,
+        .watch-section,
+        .site-footer {
+          position: relative;
+          z-index: 2;
+        }
+
+        /* HEADER */
+
+        .site-header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          width: 100%;
+          padding: 24px 42px;
+          min-height: 110px;
+        }
+
+        .site-logo {
+          display: block;
+          line-height: 0;
+        }
+
+        .site-logo img {
+          display: block;
+          width: 115px;
+          height: auto;
+          max-height: 90px;
+          object-fit: contain;
+        }
+
+        .site-nav {
+          display: flex;
+          align-items: center;
+          gap: 30px;
+          padding-top: 12px;
+        }
+
+        .site-nav a {
+          color: rgba(255,255,255,0.78);
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.03em;
+          transition: color 0.2s ease;
+        }
+
+        .site-nav a:hover,
+        .site-nav a.active {
+          color: #d8b887;
+        }
+
+        /* HERO */
+
+        .episodes-hero {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 480px;
+          padding: 70px 30px 85px;
+          text-align: center;
+        }
+
+        .hero-content {
+          width: 100%;
+          max-width: 900px;
+        }
+
+        .eyebrow {
+          margin: 0;
+          color: #c62828;
+          font-size: 12px;
+          font-weight: 900;
+          letter-spacing: 0.45em;
+          text-transform: uppercase;
+        }
+
+        .episodes-hero h1 {
+          margin: 20px 0 0;
+          color: #fff;
+          font-size: clamp(58px, 9vw, 110px);
+          font-weight: 900;
+          line-height: 0.9;
+          letter-spacing: -0.045em;
+        }
+
+        .gold-line {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          width: min(520px, 80%);
+          margin: 30px auto;
+        }
+
+        .gold-line span {
+          flex: 1;
+          height: 1px;
+          background: rgba(216,184,135,0.55);
+        }
+
+        .gold-line b {
+          color: #d8b887;
+          font-size: 14px;
+        }
+
+        .hero-copy {
+          max-width: 720px;
+          margin: 0 auto;
+          color: rgba(255,255,255,0.68);
+          font-size: 17px;
+          line-height: 1.8;
+        }
+
+        .hero-copy strong {
+          color: #d8b887;
+        }
+
+        /* SHARED SECTION */
+
+        .section-inner {
+          width: min(1200px, calc(100% - 70px));
+          margin: 0 auto;
+        }
+
+        .current-section {
+          padding: 85px 0 100px;
+          border-top: 1px solid rgba(216,184,135,0.15);
+        }
+
+        .section-heading p {
+          margin: 0;
+          color: #c62828;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 0.4em;
+          text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+          margin: 10px 0 0;
+          color: #fff;
+          font-size: clamp(38px, 5vw, 62px);
+          font-weight: 900;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .heading-line {
+          width: 65px;
+          height: 4px;
+          margin-top: 22px;
+          background: #c62828;
+        }
+
+        .centered {
+          text-align: center;
+        }
+
+        .centered-line {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        /* CURRENT CARD */
+
+        .current-card {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          margin-top: 48px;
+          overflow: hidden;
+          border: 1px solid rgba(216,184,135,0.28);
+          border-radius: 4px;
+          background: #050505;
+          box-shadow: 0 25px 70px rgba(0,0,0,0.45);
+        }
+
+        .current-art {
+          min-height: 500px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 45px;
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(216,184,135,0.17),
+              transparent 58%
+            ),
+            linear-gradient(135deg, #151515, #030303);
+        }
+
+        .art-inner {
+          width: min(100%, 420px);
+          min-height: 390px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(216,184,135,0.25);
+          text-align: center;
+        }
+
+        .art-inner > span {
+          color: #c62828;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 0.35em;
+        }
+
+        .mic-mark {
+          margin: 25px 0 10px;
+          font-size: 65px;
+          filter: grayscale(1);
+        }
+
+        .art-inner h3 {
+          margin: 0;
+          color: #fff;
+          font-size: 34px;
+          font-weight: 900;
+        }
+
+        .art-inner p {
+          margin-top: 12px;
+          color: #d8b887;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.3em;
+        }
+
+        .current-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 60px;
+          background: #101010;
+        }
+
+        .episode-tag {
+          display: inline-flex;
+          align-self: flex-start;
+          padding: 8px 13px;
+          background: #c62828;
+          color: #fff;
+          font-size: 10px;
+          font-weight: 900;
+          letter-spacing: 0.2em;
+        }
+
+        .current-info h3 {
+          margin: 25px 0 0;
+          color: #fff;
+          font-size: clamp(34px, 4vw, 52px);
+          font-weight: 900;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .red-rule {
+          width: 65px;
+          height: 4px;
+          margin-top: 25px;
+          background: #c62828;
+        }
+
+        .current-info p {
+          max-width: 520px;
+          margin-top: 25px;
+          color: rgba(255,255,255,0.57);
+          font-size: 15px;
+          line-height: 1.9;
+        }
+
+        .current-info strong {
+          color: #d8b887;
+        }
+
+        .coming-soon {
+          align-self: flex-start;
+          margin-top: 28px;
+          padding: 13px 22px;
+          border: 1px solid rgba(216,184,135,0.45);
+          color: #d8b887;
+          font-size: 10px;
+          font-weight: 900;
+          letter-spacing: 0.25em;
+        }
+
+        /* ARCHIVE */
+
+        .archive-section {
+          padding: 100px 0;
+          background: rgba(0,0,0,0.28);
+          border-top: 1px solid rgba(216,184,135,0.12);
+          border-bottom: 1px solid rgba(216,184,135,0.12);
+        }
+
+        .episode-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 25px;
+          margin-top: 55px;
+        }
+
+        .episode-card {
+          min-height: 360px;
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(216,184,135,0.22);
+          background: #0b0b0b;
+          transition:
+            transform 0.25s ease,
+            border-color 0.25s ease;
+        }
+
+        .episode-card:hover {
+          transform: translateY(-5px);
+          border-color: #c62828;
+        }
+
+        .episode-number {
+          position: absolute;
+          top: 20px;
+          right: 22px;
+          color: rgba(216,184,135,0.18);
+          font-size: 75px;
+          font-weight: 900;
+          line-height: 1;
+        }
+
+        .episode-card-content {
+          position: relative;
+          height: 100%;
+          min-height: 360px;
+          display: flex;
+          flex-direction: column;
+          padding: 32px;
+        }
+
+        .episode-card-content > span {
+          align-self: flex-start;
+          padding: 7px 11px;
+          background: #c62828;
+          color: #fff;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 0.18em;
+        }
+
+        .episode-card h3 {
+          margin-top: 55px;
+          color: #fff;
+          font-size: 28px;
+          font-weight: 900;
+          text-transform: uppercase;
+        }
+
+        .episode-card p {
+          margin-top: 18px;
+          color: rgba(255,255,255,0.52);
+          font-size: 14px;
+          line-height: 1.8;
+        }
+
+        .card-bottom {
+          margin-top: auto;
+          padding-top: 22px;
+          border-top: 1px solid rgba(216,184,135,0.14);
+        }
+
+        .card-bottom span {
+          color: #d8b887;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 0.25em;
+        }
+
+        /* WATCH */
+
+        .watch-section {
+          padding: 110px 30px;
+          text-align: center;
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(198,40,40,0.14),
+              transparent 45%
+            );
+        }
+
+        .watch-content {
+          max-width: 760px;
+          margin: 0 auto;
+        }
+
+        .watch-content h2 {
+          margin-top: 16px;
+          color: #fff;
+          font-size: clamp(42px, 7vw, 78px);
+          font-weight: 900;
+          line-height: 0.95;
+        }
+
+        .watch-content > p:not(.eyebrow) {
+          margin: 25px auto 0;
+          color: rgba(255,255,255,0.57);
+          font-size: 16px;
+          line-height: 1.8;
+        }
+
+        .watch-button {
+          display: inline-flex;
+          margin-top: 35px;
+          padding: 15px 28px;
+          border: 1px solid #d8b887;
+          color: #d8b887;
+          text-decoration: none;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 0.25em;
+          transition: all 0.2s ease;
+        }
+
+        .watch-button:hover {
+          background: #c62828;
+          border-color: #c62828;
+          color: #fff;
+        }
+
+        /* FOOTER */
+
+        .site-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 25px;
+          padding: 28px 42px;
+          border-top: 1px solid rgba(216,184,135,0.15);
+          background: #050505;
+        }
+
+        .site-footer img {
+          display: block;
+          width: 95px;
+          height: auto;
+          max-height: 65px;
+          object-fit: contain;
+        }
+
+        .site-footer p,
+        .site-footer span {
+          margin: 0;
+          color: rgba(255,255,255,0.35);
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+        }
+
+        .site-footer span {
+          color: rgba(216,184,135,0.65);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+          .site-header {
+            padding: 20px 25px;
+          }
+
+          .site-nav {
+            gap: 17px;
+          }
+
+          .site-nav a {
+            font-size: 11px;
+          }
+
+          .current-card {
+            grid-template-columns: 1fr;
+          }
+
+          .current-art {
+            min-height: 400px;
+          }
+
+          .episode-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .current-info {
+            padding: 45px;
+          }
+        }
+
+        @media (max-width: 650px) {
+          .site-header {
+            align-items: flex-start;
+            padding: 18px;
+          }
+
+          .site-logo img {
+            width: 85px;
+            max-height: 70px;
+          }
+
+          .site-nav {
+            gap: 10px;
+            padding-top: 5px;
+          }
+
+          .site-nav a {
+            font-size: 9px;
+            letter-spacing: 0;
+          }
+
+          .episodes-hero {
+            min-height: 400px;
+            padding: 55px 20px 70px;
+          }
+
+          .hero-copy {
+            font-size: 14px;
+          }
+
+          .section-inner {
+            width: calc(100% - 36px);
+          }
+
+          .current-section,
+          .archive-section {
+            padding: 70px 0;
+          }
+
+          .current-art {
+            min-height: 330px;
+            padding: 25px;
+          }
+
+          .art-inner {
+            min-height: 280px;
+          }
+
+          .current-info {
+            padding: 35px 25px;
+          }
+
+          .episode-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .site-footer {
+            flex-direction: column;
+            padding: 30px 20px;
+            text-align: center;
+          }
+        }
+      `}</style>
     </main>
-  );
-}
-
-/* =========================================================
-   SECTION HEADING
-========================================================= */
-
-function SectionHeading({
-  eyebrow,
-  title,
-}: {
-  eyebrow: string;
-  title: string;
-}) {
-  return (
-    <div>
-
-      <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
-        {eyebrow}
-      </p>
-
-      <h2 className="mt-3 text-4xl font-black uppercase tracking-tight text-[#c62828] sm:text-5xl">
-        {title}
-      </h2>
-
-      <div className="mt-5 h-1 w-16 bg-black" />
-
-    </div>
-  );
-}
-
-/* =========================================================
-   EPISODE LABEL
-========================================================= */
-
-function EpisodeLabel({
-  number,
-}: {
-  number: string;
-}) {
-  return (
-    <span className="inline-flex items-center bg-[#c62828] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white">
-      Episode {number}
-    </span>
   );
 }
