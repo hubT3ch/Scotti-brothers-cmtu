@@ -10,24 +10,9 @@ const navigation = [
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        position: "relative",
-        width: "100%",
-        minHeight: "100vh",
-        overflow: "hidden",
-        backgroundColor: "#000",
-        fontFamily: "Arial, Helvetica, sans-serif",
-      }}
-    >
+    <main className="home-page">
       {/* =========================================================
           HERO ARTWORK
-          Desktop/tablet:
-          Entire artwork remains visible.
-
-          Portrait phone:
-          Artwork fills the height so it remains large enough
-          to read and see the podcast title.
           ========================================================= */}
       <div
         aria-hidden="true"
@@ -37,37 +22,16 @@ export default function HomePage() {
       {/* =========================================================
           NAVIGATION
           ========================================================= */}
-      <header
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          zIndex: 20,
-          padding: "30px 42px",
-        }}
-      >
+      <header className="home-header">
         <nav
           aria-label="Main navigation"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            gap: "30px",
-          }}
+          className="home-nav"
         >
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              style={{
-                color: "#ffffff",
-                textDecoration: "none",
-                fontSize: "15px",
-                fontWeight: 700,
-                letterSpacing: "0.2px",
-                whiteSpace: "nowrap",
-                textShadow: "0 2px 5px rgba(0,0,0,0.9)",
-              }}
+              className="home-nav-link"
             >
               {item.label}
             </Link>
@@ -78,49 +42,78 @@ export default function HomePage() {
       {/* =========================================================
           WATCH & LISTEN
           ========================================================= */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "33%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 20,
-        }}
-      >
+      <div className="watch-listen-position">
         <Link
           href="/episodes"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minWidth: "155px",
-            padding: "13px 26px",
-            borderRadius: "999px",
-            backgroundColor: "#111111",
-            color: "#ffffff",
-            border: "2px solid rgba(255,255,255,0.9)",
-            textDecoration: "none",
-            fontSize: "15px",
-            fontWeight: 800,
-            letterSpacing: "0.2px",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.5)",
-          }}
+          className="watch-listen-button"
         >
           Watch &amp; Listen
         </Link>
       </div>
 
       {/* =========================================================
-          RESPONSIVE STYLES
+          PAGE STYLES
           ========================================================= */}
       <style>{`
         /* =====================================================
-           HERO BACKGROUND — DESKTOP / DEFAULT
+           IMPORTANT:
+           Keep the browser/overscroll area BLACK.
+           This prevents the tan color from appearing when the
+           page is pulled sideways on iPhone/iPad.
+           ===================================================== */
+
+        :global(html) {
+          background: #000000 !important;
+          overscroll-behavior-x: none;
+          overscroll-behavior-y: none;
+        }
+
+        :global(body) {
+          margin: 0 !important;
+          padding: 0 !important;
+          background: #000000 !important;
+          overscroll-behavior-x: none;
+          overscroll-behavior-y: none;
+        }
+
+        /* =====================================================
+           PAGE
+           ===================================================== */
+
+        .home-page {
+          position: relative;
+
+          width: 100%;
+          min-width: 100%;
+          min-height: 100vh;
+          min-height: 100svh;
+
+          overflow: hidden;
+
+          background: #000000;
+
+          color: #ffffff;
+
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+          overscroll-behavior-x: none;
+        }
+
+        /* =====================================================
+           HERO BACKGROUND
            ===================================================== */
 
         .home-hero-background {
           position: absolute;
-          inset: 0;
+
+          top: 0;
+          left: 0;
+
+          width: 100%;
+          height: 100%;
 
           background-image:
             url('/images/hero/hero-background.png');
@@ -132,18 +125,137 @@ export default function HomePage() {
             no-repeat;
 
           /*
-           * Keep the entire artwork visible.
-           * This prevents the podcast title at the bottom
-           * from being cropped on laptop screens.
+           * Desktop/tablet:
+           * Keep the complete artwork visible.
            */
           background-size:
             contain;
 
           background-color:
-            #000;
+            #000000;
 
-          z-index:
-            0;
+          z-index: 0;
+
+          pointer-events: none;
+        }
+
+        /* =====================================================
+           NAVIGATION
+           ===================================================== */
+
+        .home-header {
+          position: absolute;
+
+          top: 0;
+          right: 0;
+
+          z-index: 20;
+
+          padding:
+            30px
+            42px;
+        }
+
+        .home-nav {
+          display: flex;
+
+          align-items: center;
+          justify-content: flex-end;
+
+          gap: 30px;
+        }
+
+        .home-nav-link {
+          color: #ffffff;
+
+          text-decoration: none;
+
+          font-size: 15px;
+
+          font-weight: 700;
+
+          letter-spacing:
+            0.2px;
+
+          white-space: nowrap;
+
+          text-shadow:
+            0 2px 5px
+            rgba(0,0,0,0.9);
+
+          transition:
+            opacity 0.2s ease;
+        }
+
+        .home-nav-link:hover {
+          opacity: 0.75;
+        }
+
+        /* =====================================================
+           WATCH & LISTEN
+           ===================================================== */
+
+        .watch-listen-position {
+          position: absolute;
+
+          left: 50%;
+          top: 33%;
+
+          transform:
+            translate(-50%, -50%);
+
+          z-index: 20;
+        }
+
+        .watch-listen-button {
+          display: inline-flex;
+
+          align-items: center;
+          justify-content: center;
+
+          min-width: 155px;
+
+          padding:
+            13px
+            26px;
+
+          border-radius:
+            999px;
+
+          background-color:
+            #111111;
+
+          color:
+            #ffffff;
+
+          border:
+            2px solid
+            rgba(255,255,255,0.9);
+
+          text-decoration: none;
+
+          font-size: 15px;
+
+          font-weight: 800;
+
+          letter-spacing:
+            0.2px;
+
+          box-shadow:
+            0 6px 20px
+            rgba(0,0,0,0.5);
+
+          transition:
+            transform 0.2s ease,
+            background-color 0.2s ease;
+        }
+
+        .watch-listen-button:hover {
+          background-color:
+            #222222;
+
+          transform:
+            translateY(-1px);
         }
 
         /* =====================================================
@@ -152,20 +264,20 @@ export default function HomePage() {
 
         @media (max-width: 900px) {
 
-          header {
+          .home-header {
             padding:
               24px
-              24px !important;
+              24px;
           }
 
-          header nav {
+          .home-nav {
             gap:
-              18px !important;
+              18px;
           }
 
-          header nav a {
+          .home-nav-link {
             font-size:
-              13px !important;
+              13px;
           }
 
         }
@@ -177,16 +289,17 @@ export default function HomePage() {
         @media (max-width: 650px) {
 
           /*
-           * On a portrait phone, contain would make the
-           * landscape artwork too small.
+           * Slightly smaller than the previous version.
            *
-           * Instead, make the artwork fill the height.
-           * This keeps the important top/bottom content
-           * visible while allowing some side cropping.
+           * 94% gives us a little breathing room while keeping
+           * the artwork large enough to read.
            */
           .home-hero-background {
+            width: 100%;
+            height: 100%;
+
             background-size:
-              auto 100%;
+              auto 94%;
 
             background-position:
               center center;
@@ -195,23 +308,23 @@ export default function HomePage() {
               no-repeat;
 
             background-color:
-              #000;
+              #000000;
           }
 
-          header {
+          .home-header {
             padding:
               20px
-              18px !important;
+              18px;
           }
 
-          header nav {
+          .home-nav {
             gap:
-              12px !important;
+              12px;
           }
 
-          header nav a {
+          .home-nav-link {
             font-size:
-              11px !important;
+              11px;
           }
 
         }
@@ -222,25 +335,33 @@ export default function HomePage() {
 
         @media (max-width: 520px) {
 
-          header {
+          .home-header {
             top:
-              8px !important;
+              8px;
 
             right:
-              8px !important;
+              8px;
 
             padding:
-              12px !important;
+              12px;
           }
 
-          header nav {
+          .home-nav {
             gap:
-              9px !important;
+              9px;
           }
 
-          header nav a {
+          .home-nav-link {
             font-size:
-              10px !important;
+              10px;
+          }
+
+          /*
+           * Slightly more breathing room on very small phones.
+           */
+          .home-hero-background {
+            background-size:
+              auto 92%;
           }
 
         }
