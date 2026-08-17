@@ -118,11 +118,12 @@ export default function MerchandisePage() {
             </div>
 
             <p className="hero-subtitle">
-              Wear the conversation. Rep the stories.
-              Bring a little{" "}
-              <strong>Can&apos;t Make This Up!</strong>{" "}
-              with you.
-            </p>
+  Wear the conversation. Rep the stories.
+  <br />
+  Bring a little{" "}
+  <strong>Can&apos;t Make This Up!</strong>{" "}
+  with you.
+</p>
 
           </div>
 
