@@ -20,47 +20,22 @@ export default function HomePage() {
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
     >
-      {/* HERO ARTWORK — DO NOT CHANGE */}
+      {/* =========================================================
+          HERO ARTWORK
+          Top of artwork is kept visible on laptop/desktop screens.
+          ========================================================= */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage: "url('/images/hero/hero-background.png')",
-          backgroundPosition: "center center",
+          backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           zIndex: 0,
         }}
       />
-
-      {/* =========================================================
-          LOGO
-          Actual file: public/images/logo.png
-          ========================================================= */}
-      <Link
-        href="/"
-        aria-label="Scotti Brothers Entertainment"
-        style={{
-          position: "absolute",
-          top: "24px",
-          left: "42px",
-          zIndex: 20,
-          display: "block",
-          lineHeight: 0,
-        }}
-      >
-        <img
-          src="/images/logo.png"
-          alt="Scotti Brothers"
-          style={{
-            display: "block",
-            width: "115px",
-            height: "auto",
-            objectFit: "contain",
-          }}
-        />
-      </Link>
 
       {/* =========================================================
           NAVIGATION
@@ -154,15 +129,6 @@ export default function HomePage() {
           header nav a {
             font-size: 13px !important;
           }
-
-          a[aria-label="Scotti Brothers Entertainment"] {
-            left: 24px !important;
-            top: 20px !important;
-          }
-
-          a[aria-label="Scotti Brothers Entertainment"] img {
-            width: 95px !important;
-          }
         }
 
         @media (max-width: 650px) {
@@ -176,15 +142,6 @@ export default function HomePage() {
 
           header nav a {
             font-size: 11px !important;
-          }
-
-          a[aria-label="Scotti Brothers Entertainment"] {
-            left: 18px !important;
-            top: 18px !important;
-          }
-
-          a[aria-label="Scotti Brothers Entertainment"] img {
-            width: 82px !important;
           }
         }
 
