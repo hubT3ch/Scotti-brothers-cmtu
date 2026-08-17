@@ -94,11 +94,10 @@ export default function ContactsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#071426] text-white">
+    <main className="min-h-screen bg-[#d8b887] text-black">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-[#d4af37]/30 bg-[#030912]/95 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-black/20 bg-black">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8 lg:px-10">
-          {/* CMTU LOGO */}
           <Link href="/" className="shrink-0">
             <img
               src="/images/logo.png"
@@ -107,39 +106,38 @@ export default function ContactsPage() {
             />
           </Link>
 
-          {/* NAVIGATION */}
-          <nav className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.22em] sm:gap-7 sm:text-xs">
+          <nav className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] sm:gap-7 sm:text-xs">
             <Link
               href="/"
-              className="text-white/75 transition hover:text-[#efc761]"
+              className="text-white transition hover:text-[#c62828]"
             >
               Home
             </Link>
 
             <Link
               href="/episodes"
-              className="text-white/75 transition hover:text-[#efc761]"
+              className="text-white transition hover:text-[#c62828]"
             >
               Episodes
             </Link>
 
             <Link
               href="/guests"
-              className="text-white/75 transition hover:text-[#efc761]"
+              className="text-white transition hover:text-[#c62828]"
             >
               Guests
             </Link>
 
             <Link
               href="/merchandise"
-              className="text-white/75 transition hover:text-[#efc761]"
+              className="text-white transition hover:text-[#c62828]"
             >
               Merchandise
             </Link>
 
             <Link
               href="/contacts"
-              className="text-[#efc761]"
+              className="text-[#c62828]"
             >
               Contact
             </Link>
@@ -148,58 +146,62 @@ export default function ContactsPage() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden border-b border-[#d4af37]/25">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(31,76,126,0.38),transparent_40%)]" />
+      <section className="relative overflow-hidden border-b border-black/20 bg-[#d8b887]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.18),transparent_35%)]" />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_35%,rgba(194,35,28,0.14),transparent_32%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_30%,rgba(198,40,40,0.08),transparent_30%)]" />
 
-        <div className="relative mx-auto max-w-7xl px-5 py-20 text-center sm:px-8 lg:px-12 lg:py-24">
-          <p className="text-xs font-bold uppercase tracking-[0.45em] text-[#efc761]">
-            Scotti Brothers Entertainment
-          </p>
+        <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
+              Scotti Brothers Entertainment
+            </p>
 
-          <h1 className="mt-5 text-4xl font-black uppercase tracking-tight sm:text-6xl lg:text-7xl">
-            Contact
-            <span className="block text-[#efc761]">
-              Can&apos;t Make This Up!
-            </span>
-          </h1>
+            <h1 className="mt-5 text-4xl font-black uppercase leading-none tracking-tight text-black sm:text-6xl lg:text-7xl">
+              Contact
+              <span className="block text-[#c62828]">
+                Can&apos;t Make This Up!
+              </span>
+            </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/65 sm:text-lg">
-            Promotions, marketing, sponsorships, media
-            requests, partnerships, publicity, and guest
-            opportunities for the{" "}
-            <span className="text-[#f6dc94]">
-              Can&apos;t Make This Up!
-            </span>{" "}
-            Podcast.
-          </p>
+            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/70 sm:text-lg">
+              Promotions, marketing, sponsorships, media
+              requests, partnerships, publicity, and guest
+              opportunities for the{" "}
+              <span className="font-bold text-black">
+                Can&apos;t Make This Up!
+              </span>{" "}
+              Podcast.
+            </p>
 
-          <div className="mx-auto mt-8 flex max-w-xl items-center gap-4">
-            <span className="h-px flex-1 bg-[#efc761]/60" />
-            <span className="h-2.5 w-2.5 rotate-45 border border-[#efc761]" />
-            <span className="h-px flex-1 bg-[#efc761]/60" />
+            <div className="mx-auto mt-8 flex max-w-xl items-center gap-4">
+              <span className="h-px flex-1 bg-black/50" />
+
+              <span className="h-3 w-3 rotate-45 border-2 border-[#c62828]" />
+
+              <span className="h-px flex-1 bg-black/50" />
+            </div>
           </div>
         </div>
       </section>
 
       {/* PROMOTIONS & MARKETING */}
-      <section className="px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+      <section className="bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[1.4fr_0.8fr]">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.42em] text-[#efc761]">
+              <p className="text-xs font-black uppercase tracking-[0.42em] text-[#c62828]">
                 Promotions & Marketing
               </p>
 
-              <h2 className="mt-4 text-3xl font-light uppercase tracking-wide sm:text-5xl">
+              <h2 className="mt-4 text-3xl font-black uppercase tracking-wide text-black sm:text-5xl">
                 Media & Business
-                <span className="block text-white/45">
+                <span className="block text-black/45">
                   Inquiries
                 </span>
               </h2>
 
-              <p className="mt-7 max-w-3xl text-base leading-8 text-white/70">
+              <p className="mt-7 max-w-3xl text-base font-medium leading-8 text-black/75">
                 Scotti Brothers Entertainment welcomes
                 opportunities to collaborate with artists,
                 brands, businesses, media organizations,
@@ -207,7 +209,7 @@ export default function ContactsPage() {
                 partners.
               </p>
 
-              <p className="mt-5 max-w-3xl text-base leading-8 text-white/70">
+              <p className="mt-5 max-w-3xl text-base font-medium leading-8 text-black/75">
                 Contact the Marketing & Promotions office
                 for podcast promotions, marketing campaigns,
                 sponsorship opportunities, media requests,
@@ -217,24 +219,24 @@ export default function ContactsPage() {
               </p>
 
               <div className="mt-9 grid gap-5 sm:grid-cols-2">
-                <div className="rounded-2xl border border-[#d4af37]/35 bg-[#0b1c31] p-6">
-                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#efc761]">
+                <div className="rounded-2xl border-2 border-black bg-black p-6 text-white">
+                  <p className="text-xs font-black uppercase tracking-[0.3em] text-[#d8b887]">
                     Promotions
                   </p>
 
-                  <p className="mt-4 leading-7 text-white/60">
+                  <p className="mt-4 leading-7 text-white/70">
                     Podcast promotion, artist promotion,
                     campaigns, publicity, and audience
                     engagement.
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-[#d4af37]/35 bg-[#0b1c31] p-6">
-                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#efc761]">
+                <div className="rounded-2xl border-2 border-black bg-black p-6 text-white">
+                  <p className="text-xs font-black uppercase tracking-[0.3em] text-[#d8b887]">
                     Partnerships
                   </p>
 
-                  <p className="mt-4 leading-7 text-white/60">
+                  <p className="mt-4 leading-7 text-white/70">
                     Sponsorships, brand partnerships,
                     collaborations, and media opportunities.
                   </p>
@@ -242,17 +244,17 @@ export default function ContactsPage() {
               </div>
             </div>
 
-            {/* CONTACT CARD */}
-            <aside className="rounded-3xl border border-[#d4af37]/50 bg-gradient-to-br from-[#173252] via-[#102741] to-[#081729] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
-              <p className="text-xs font-bold uppercase tracking-[0.38em] text-[#efc761]">
+            {/* MARKETING CONTACT CARD */}
+            <aside className="rounded-3xl border-2 border-black bg-black p-8 text-white shadow-[0_20px_50px_rgba(0,0,0,0.30)]">
+              <p className="text-xs font-black uppercase tracking-[0.38em] text-[#d8b887]">
                 Contact
               </p>
 
-              <h3 className="mt-5 text-2xl font-light uppercase tracking-wide">
+              <h3 className="mt-5 text-2xl font-black uppercase tracking-wide">
                 Marketing & Promotions
               </h3>
 
-              <p className="mt-5 leading-7 text-white/65">
+              <p className="mt-5 leading-7 text-white/70">
                 For promotions, marketing, sponsorships,
                 media requests, partnerships, and podcast
                 publicity, contact the Marketing &
@@ -261,14 +263,14 @@ export default function ContactsPage() {
 
               <a
                 href="mailto:pbody@scottibrothersent.com"
-                className="mt-7 block break-all text-[#f6dc94] transition hover:text-white"
+                className="mt-7 block break-all font-semibold text-[#d8b887] transition hover:text-[#c62828]"
               >
                 pbody@scottibrothersent.com
               </a>
 
               <a
                 href="mailto:pbody@scottibrothersent.com"
-                className="mt-7 inline-block border border-[#efc761] bg-[#efc761] px-5 py-3 text-xs font-bold uppercase tracking-[0.25em] text-black transition hover:bg-transparent hover:text-[#efc761]"
+                className="mt-7 inline-block border-2 border-[#c62828] bg-[#c62828] px-5 py-3 text-xs font-black uppercase tracking-[0.25em] text-white transition hover:bg-transparent hover:text-[#c62828]"
               >
                 Email Marketing
               </a>
@@ -280,24 +282,24 @@ export default function ContactsPage() {
       {/* GUEST SIGN-UP */}
       <section
         id="guest-signup"
-        className="border-y border-[#d4af37]/20 bg-[#09172a] px-5 py-16 sm:px-8 lg:px-12 lg:py-20"
+        className="border-y-2 border-black bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20"
       >
         <div className="mx-auto max-w-6xl">
-          {/* FORM INTRO */}
+          {/* INTRO */}
           <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.45em] text-[#efc761]">
+            <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
               Guest Sign-Up
             </p>
 
-            <h2 className="mt-4 text-4xl font-light uppercase tracking-wide sm:text-5xl">
+            <h2 className="mt-4 text-4xl font-black uppercase tracking-wide text-black sm:text-5xl">
               Share Your Story
             </h2>
 
-            <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/65">
+            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/70">
               Submit a guest proposal for consideration.
               Tell us who you are, what you would like to
               discuss, and why your story belongs on{" "}
-              <span className="text-[#f6dc94]">
+              <span className="font-black text-black">
                 Can&apos;t Make This Up!
               </span>
             </p>
@@ -306,9 +308,9 @@ export default function ContactsPage() {
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="mt-12 rounded-3xl border border-[#d4af37]/45 bg-[#050d19]/95 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] sm:p-10 lg:p-12"
+            className="mt-12 rounded-3xl border-2 border-black bg-[#050505] p-6 text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:p-10 lg:p-12"
           >
-            {/* 01 */}
+            {/* GUEST INFORMATION */}
             <FormSectionHeading
               number="01"
               title="Guest Information"
@@ -353,7 +355,7 @@ export default function ContactsPage() {
               />
             </div>
 
-            {/* 02 */}
+            {/* MANAGEMENT */}
             <div className="mt-12">
               <FormSectionHeading
                 number="02"
@@ -398,7 +400,7 @@ export default function ContactsPage() {
               />
             </div>
 
-            {/* 03 */}
+            {/* PODCAST SEGMENT */}
             <div className="mt-12">
               <FormSectionHeading
                 number="03"
@@ -423,9 +425,9 @@ export default function ContactsPage() {
 
             {/* DISCUSSION */}
             <label className="mt-7 block">
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#efc761]">
+              <span className="text-xs font-black uppercase tracking-[0.25em] text-[#d8b887]">
                 Proposed Discussion
-                <span className="ml-1 text-[#e6312a]">
+                <span className="ml-1 text-[#c62828]">
                   *
                 </span>
               </span>
@@ -442,16 +444,16 @@ export default function ContactsPage() {
                   )
                 }
                 placeholder="Provide a short paragraph describing your proposed topic, the story you would like to share, and why it would be compelling for the podcast audience."
-                className="mt-3 w-full resize-y rounded-xl border border-[#d4af37]/35 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#efc761] focus:ring-2 focus:ring-[#efc761]/20"
+                className="mt-3 w-full resize-y rounded-xl border-2 border-white/15 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#c62828] focus:ring-2 focus:ring-[#c62828]/20"
               />
 
-              <span className="mt-2 block text-right text-xs text-white/35">
+              <span className="mt-2 block text-right text-xs text-white/40">
                 {proposal.discussion.length}/1500
               </span>
             </label>
 
             {/* CONSENT */}
-            <label className="mt-7 flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.025] p-5">
+            <label className="mt-7 flex items-start gap-4 rounded-xl border border-white/15 bg-white/[0.04] p-5">
               <input
                 type="checkbox"
                 required
@@ -462,10 +464,10 @@ export default function ContactsPage() {
                     event.target.checked
                   )
                 }
-                className="mt-1 h-4 w-4 accent-[#efc761]"
+                className="mt-1 h-4 w-4 accent-[#c62828]"
               />
 
-              <span className="text-sm leading-6 text-white/60">
+              <span className="text-sm leading-6 text-white/65">
                 I understand that submitting a guest
                 proposal does not guarantee an appearance
                 on the podcast. Scotti Brothers
@@ -477,13 +479,13 @@ export default function ContactsPage() {
             {/* SUBMIT */}
             <button
               type="submit"
-              className="mt-8 w-full border border-[#efc761] bg-[#efc761] px-7 py-4 text-xs font-bold uppercase tracking-[0.32em] text-black transition hover:bg-transparent hover:text-[#efc761]"
+              className="mt-8 w-full border-2 border-[#c62828] bg-[#c62828] px-7 py-4 text-xs font-black uppercase tracking-[0.32em] text-white transition hover:bg-transparent hover:text-[#c62828]"
             >
               Submit Guest Proposal
             </button>
 
             {submitted && (
-              <p className="mt-6 text-center text-sm leading-7 text-[#f6dc94]">
+              <p className="mt-6 text-center text-sm leading-7 text-[#d8b887]">
                 Your email application should now open
                 with the proposal information prepared.
                 Review the message and press Send.
@@ -494,22 +496,22 @@ export default function ContactsPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#d4af37]/20 bg-[#03070d] px-5 py-8">
+      <footer className="border-t-2 border-black bg-black px-5 py-8 text-white">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
             <img
               src="/images/logo.png"
               alt="Scotti Brothers Entertainment"
-              className="h-10 w-auto object-contain"
+              className="h-12 w-auto object-contain"
             />
 
-            <p className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-white/45">
               © 2026 Scotti Brothers Entertainment.
               All rights reserved.
             </p>
           </div>
 
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[#efc761]/70">
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d8b887]">
             Can&apos;t Make This Up!
           </p>
         </div>
@@ -530,12 +532,12 @@ function FormSectionHeading({
   title: string;
 }) {
   return (
-    <div className="flex items-center gap-4 border-b border-[#d4af37]/20 pb-4">
-      <span className="text-xs font-bold tracking-[0.3em] text-[#e6312a]">
+    <div className="flex items-center gap-4 border-b border-white/15 pb-4">
+      <span className="text-xs font-black tracking-[0.3em] text-[#c62828]">
         {number}
       </span>
 
-      <h3 className="text-lg font-light uppercase tracking-[0.22em] text-[#f6dc94]">
+      <h3 className="text-lg font-black uppercase tracking-[0.22em] text-[#d8b887]">
         {title}
       </h3>
     </div>
@@ -563,11 +565,11 @@ function FormField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#efc761]">
+      <span className="text-xs font-black uppercase tracking-[0.25em] text-[#d8b887]">
         {label}
 
         {required && (
-          <span className="ml-1 text-[#e6312a]">
+          <span className="ml-1 text-[#c62828]">
             *
           </span>
         )}
@@ -581,7 +583,7 @@ function FormField({
         onChange={(event) =>
           onChange(event.target.value)
         }
-        className="mt-3 w-full rounded-xl border border-[#d4af37]/40 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#efc761] focus:ring-2 focus:ring-[#efc761]/20"
+        className="mt-3 w-full rounded-xl border-2 border-black/20 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#c62828] focus:ring-2 focus:ring-[#c62828]/20"
       />
     </label>
   );
