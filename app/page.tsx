@@ -110,7 +110,7 @@ export default function HomePage() {
         style={{
           position: "absolute",
           left: "50%",
-          top: "70%",
+          top: "33%",
           transform: "translate(-50%, -50%)",
           zIndex: 20,
         }}
