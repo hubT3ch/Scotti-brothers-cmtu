@@ -94,50 +94,50 @@ export default function ContactsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#d8b887] text-black">
+    <main className="min-h-screen bg-[#050505] text-white">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-black/20 bg-black">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8 lg:px-10">
-          <Link href="/" className="shrink-0">
+      <header className="sticky top-0 z-50 border-b border-[#d8b887]/20 bg-[#050505]/95 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
+          <Link href="/" className="flex items-center">
             <img
               src="/images/logo.png"
               alt="Scotti Brothers Entertainment"
-              className="h-14 w-auto object-contain sm:h-16"
+              className="h-12 w-auto object-contain sm:h-14"
             />
           </Link>
 
-          <nav className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] sm:gap-7 sm:text-xs">
+          <nav className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.18em] sm:gap-7 sm:text-xs">
             <Link
               href="/"
-              className="text-white transition hover:text-[#c62828]"
+              className="text-white/70 transition hover:text-[#d8b887]"
             >
               Home
             </Link>
 
             <Link
               href="/episodes"
-              className="text-white transition hover:text-[#c62828]"
+              className="text-white/70 transition hover:text-[#d8b887]"
             >
               Episodes
             </Link>
 
             <Link
               href="/guests"
-              className="text-white transition hover:text-[#c62828]"
+              className="text-white/70 transition hover:text-[#d8b887]"
             >
               Guests
             </Link>
 
             <Link
               href="/merchandise"
-              className="text-white transition hover:text-[#c62828]"
+              className="text-white/70 transition hover:text-[#d8b887]"
             >
               Merchandise
             </Link>
 
             <Link
               href="/contacts"
-              className="text-[#c62828]"
+              className="text-[#d8b887]"
             >
               Contact
             </Link>
@@ -146,62 +146,62 @@ export default function ContactsPage() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden border-b border-black/20 bg-[#d8b887]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.18),transparent_35%)]" />
+      <section className="relative overflow-hidden border-b border-[#d8b887]/20 bg-[#050505]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(216,184,135,0.10),transparent_42%)]" />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_30%,rgba(198,40,40,0.08),transparent_30%)]" />
+        <div className="pointer-events-none absolute right-0 top-0 h-[420px] w-[420px] rounded-full bg-[#c62828]/[0.05] blur-3xl" />
 
-        <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+        <div className="relative mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-24">
           <div className="mx-auto max-w-5xl text-center">
-            <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
+            <p className="text-xs font-bold uppercase tracking-[0.45em] text-[#d8b887]">
               Scotti Brothers Entertainment
             </p>
 
-            <h1 className="mt-5 text-4xl font-black uppercase leading-none tracking-tight text-black sm:text-6xl lg:text-7xl">
+            <h1 className="mt-5 text-4xl font-black uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
               Contact
               <span className="block text-[#c62828]">
                 Can&apos;t Make This Up!
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/70 sm:text-lg">
+            <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-white/60 sm:text-lg">
               Promotions, marketing, sponsorships, media
               requests, partnerships, publicity, and guest
               opportunities for the{" "}
-              <span className="font-bold text-black">
+              <span className="text-[#d8b887]">
                 Can&apos;t Make This Up!
               </span>{" "}
               Podcast.
             </p>
 
-            <div className="mx-auto mt-8 flex max-w-xl items-center gap-4">
-              <span className="h-px flex-1 bg-black/50" />
+            <div className="mx-auto mt-9 flex max-w-md items-center gap-4">
+              <span className="h-px flex-1 bg-[#d8b887]/40" />
 
-              <span className="h-3 w-3 rotate-45 border-2 border-[#c62828]" />
+              <span className="h-2.5 w-2.5 rotate-45 border border-[#c62828]" />
 
-              <span className="h-px flex-1 bg-black/50" />
+              <span className="h-px flex-1 bg-[#d8b887]/40" />
             </div>
           </div>
         </div>
       </section>
 
       {/* PROMOTIONS & MARKETING */}
-      <section className="bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+      <section className="bg-[#050505] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[1.4fr_0.8fr]">
+          <div className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr]">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.42em] text-[#c62828]">
+              <p className="text-xs font-bold uppercase tracking-[0.42em] text-[#c62828]">
                 Promotions & Marketing
               </p>
 
-              <h2 className="mt-4 text-3xl font-black uppercase tracking-wide text-black sm:text-5xl">
+              <h2 className="mt-4 text-3xl font-light uppercase tracking-wide sm:text-5xl">
                 Media & Business
-                <span className="block text-black/45">
+                <span className="block text-white/35">
                   Inquiries
                 </span>
               </h2>
 
-              <p className="mt-7 max-w-3xl text-base font-medium leading-8 text-black/75">
+              <p className="mt-7 max-w-3xl text-base leading-8 text-white/65">
                 Scotti Brothers Entertainment welcomes
                 opportunities to collaborate with artists,
                 brands, businesses, media organizations,
@@ -209,7 +209,7 @@ export default function ContactsPage() {
                 partners.
               </p>
 
-              <p className="mt-5 max-w-3xl text-base font-medium leading-8 text-black/75">
+              <p className="mt-5 max-w-3xl text-base leading-8 text-white/65">
                 Contact the Marketing & Promotions office
                 for podcast promotions, marketing campaigns,
                 sponsorship opportunities, media requests,
@@ -219,24 +219,28 @@ export default function ContactsPage() {
               </p>
 
               <div className="mt-9 grid gap-5 sm:grid-cols-2">
-                <div className="rounded-2xl border-2 border-black bg-black p-6 text-white">
-                  <p className="text-xs font-black uppercase tracking-[0.3em] text-[#d8b887]">
+                <div className="rounded-2xl border border-[#d8b887]/20 bg-[#0d0d0d] p-7">
+                  <div className="mb-5 h-1 w-12 bg-[#c62828]" />
+
+                  <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#d8b887]">
                     Promotions
                   </p>
 
-                  <p className="mt-4 leading-7 text-white/70">
+                  <p className="mt-4 leading-7 text-white/55">
                     Podcast promotion, artist promotion,
                     campaigns, publicity, and audience
                     engagement.
                   </p>
                 </div>
 
-                <div className="rounded-2xl border-2 border-black bg-black p-6 text-white">
-                  <p className="text-xs font-black uppercase tracking-[0.3em] text-[#d8b887]">
+                <div className="rounded-2xl border border-[#d8b887]/20 bg-[#0d0d0d] p-7">
+                  <div className="mb-5 h-1 w-12 bg-[#c62828]" />
+
+                  <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#d8b887]">
                     Partnerships
                   </p>
 
-                  <p className="mt-4 leading-7 text-white/70">
+                  <p className="mt-4 leading-7 text-white/55">
                     Sponsorships, brand partnerships,
                     collaborations, and media opportunities.
                   </p>
@@ -244,36 +248,43 @@ export default function ContactsPage() {
               </div>
             </div>
 
-            {/* MARKETING CONTACT CARD */}
-            <aside className="rounded-3xl border-2 border-black bg-black p-8 text-white shadow-[0_20px_50px_rgba(0,0,0,0.30)]">
-              <p className="text-xs font-black uppercase tracking-[0.38em] text-[#d8b887]">
-                Contact
-              </p>
+            {/* MARKETING CONTACT */}
+            <aside className="relative overflow-hidden rounded-3xl border border-[#d8b887]/30 bg-[#111111] p-8">
+              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-[#c62828]/10 blur-3xl" />
 
-              <h3 className="mt-5 text-2xl font-black uppercase tracking-wide">
-                Marketing & Promotions
-              </h3>
+              <div className="relative">
+                <p className="text-xs font-bold uppercase tracking-[0.38em] text-[#c62828]">
+                  Contact
+                </p>
 
-              <p className="mt-5 leading-7 text-white/70">
-                For promotions, marketing, sponsorships,
-                media requests, partnerships, and podcast
-                publicity, contact the Marketing &
-                Promotions office.
-              </p>
+                <h3 className="mt-5 text-2xl font-light uppercase tracking-wide text-white">
+                  Marketing &
+                  <span className="block text-[#d8b887]">
+                    Promotions
+                  </span>
+                </h3>
 
-              <a
-                href="mailto:pbody@scottibrothersent.com"
-                className="mt-7 block break-all font-semibold text-[#d8b887] transition hover:text-[#c62828]"
-              >
-                pbody@scottibrothersent.com
-              </a>
+                <p className="mt-5 leading-7 text-white/55">
+                  For promotions, marketing, sponsorships,
+                  media requests, partnerships, and podcast
+                  publicity, contact the Marketing &
+                  Promotions office.
+                </p>
 
-              <a
-                href="mailto:pbody@scottibrothersent.com"
-                className="mt-7 inline-block border-2 border-[#c62828] bg-[#c62828] px-5 py-3 text-xs font-black uppercase tracking-[0.25em] text-white transition hover:bg-transparent hover:text-[#c62828]"
-              >
-                Email Marketing
-              </a>
+                <a
+                  href="mailto:pbody@scottibrothersent.com"
+                  className="mt-7 block break-all text-sm font-semibold text-[#d8b887] transition hover:text-[#c62828]"
+                >
+                  pbody@scottibrothersent.com
+                </a>
+
+                <a
+                  href="mailto:pbody@scottibrothersent.com"
+                  className="mt-7 inline-flex border border-[#c62828] bg-[#c62828] px-6 py-3 text-xs font-bold uppercase tracking-[0.25em] text-white transition hover:bg-transparent hover:text-[#c62828]"
+                >
+                  Email Marketing
+                </a>
+              </div>
             </aside>
           </div>
         </div>
@@ -282,24 +293,23 @@ export default function ContactsPage() {
       {/* GUEST SIGN-UP */}
       <section
         id="guest-signup"
-        className="border-y-2 border-black bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20"
+        className="border-y border-[#d8b887]/15 bg-[#090909] px-5 py-16 sm:px-8 lg:px-12 lg:py-20"
       >
         <div className="mx-auto max-w-6xl">
-          {/* INTRO */}
           <div className="text-center">
-            <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
+            <p className="text-xs font-bold uppercase tracking-[0.45em] text-[#c62828]">
               Guest Sign-Up
             </p>
 
-            <h2 className="mt-4 text-4xl font-black uppercase tracking-wide text-black sm:text-5xl">
+            <h2 className="mt-4 text-4xl font-light uppercase tracking-wide text-white sm:text-5xl">
               Share Your Story
             </h2>
 
-            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/70">
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/55">
               Submit a guest proposal for consideration.
               Tell us who you are, what you would like to
               discuss, and why your story belongs on{" "}
-              <span className="font-black text-black">
+              <span className="text-[#d8b887]">
                 Can&apos;t Make This Up!
               </span>
             </p>
@@ -308,9 +318,8 @@ export default function ContactsPage() {
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="mt-12 rounded-3xl border-2 border-black bg-[#050505] p-6 text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:p-10 lg:p-12"
+            className="mt-12 rounded-3xl border border-[#d8b887]/25 bg-[#050505] p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] sm:p-10 lg:p-12"
           >
-            {/* GUEST INFORMATION */}
             <FormSectionHeading
               number="01"
               title="Guest Information"
@@ -355,7 +364,6 @@ export default function ContactsPage() {
               />
             </div>
 
-            {/* MANAGEMENT */}
             <div className="mt-12">
               <FormSectionHeading
                 number="02"
@@ -400,7 +408,6 @@ export default function ContactsPage() {
               />
             </div>
 
-            {/* PODCAST SEGMENT */}
             <div className="mt-12">
               <FormSectionHeading
                 number="03"
@@ -423,9 +430,8 @@ export default function ContactsPage() {
               />
             </div>
 
-            {/* DISCUSSION */}
             <label className="mt-7 block">
-              <span className="text-xs font-black uppercase tracking-[0.25em] text-[#d8b887]">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
                 Proposed Discussion
                 <span className="ml-1 text-[#c62828]">
                   *
@@ -444,16 +450,15 @@ export default function ContactsPage() {
                   )
                 }
                 placeholder="Provide a short paragraph describing your proposed topic, the story you would like to share, and why it would be compelling for the podcast audience."
-                className="mt-3 w-full resize-y rounded-xl border-2 border-white/15 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#c62828] focus:ring-2 focus:ring-[#c62828]/20"
+                className="mt-3 w-full resize-y rounded-xl border border-white/15 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#c62828] focus:ring-2 focus:ring-[#c62828]/20"
               />
 
-              <span className="mt-2 block text-right text-xs text-white/40">
+              <span className="mt-2 block text-right text-xs text-white/30">
                 {proposal.discussion.length}/1500
               </span>
             </label>
 
-            {/* CONSENT */}
-            <label className="mt-7 flex items-start gap-4 rounded-xl border border-white/15 bg-white/[0.04] p-5">
+            <label className="mt-7 flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.025] p-5">
               <input
                 type="checkbox"
                 required
@@ -467,7 +472,7 @@ export default function ContactsPage() {
                 className="mt-1 h-4 w-4 accent-[#c62828]"
               />
 
-              <span className="text-sm leading-6 text-white/65">
+              <span className="text-sm leading-6 text-white/55">
                 I understand that submitting a guest
                 proposal does not guarantee an appearance
                 on the podcast. Scotti Brothers
@@ -476,10 +481,9 @@ export default function ContactsPage() {
               </span>
             </label>
 
-            {/* SUBMIT */}
             <button
               type="submit"
-              className="mt-8 w-full border-2 border-[#c62828] bg-[#c62828] px-7 py-4 text-xs font-black uppercase tracking-[0.32em] text-white transition hover:bg-transparent hover:text-[#c62828]"
+              className="mt-8 w-full border border-[#c62828] bg-[#c62828] px-7 py-4 text-xs font-bold uppercase tracking-[0.32em] text-white transition hover:bg-transparent hover:text-[#c62828]"
             >
               Submit Guest Proposal
             </button>
@@ -496,22 +500,22 @@ export default function ContactsPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t-2 border-black bg-black px-5 py-8 text-white">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
-          <div className="flex flex-col items-center gap-3 sm:flex-row">
+      <footer className="border-t border-[#d8b887]/15 bg-black px-5 py-9">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
+          <div className="flex items-center gap-4">
             <img
               src="/images/logo.png"
               alt="Scotti Brothers Entertainment"
-              className="h-12 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
 
-            <p className="text-[10px] uppercase tracking-[0.25em] text-white/45">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
               © 2026 Scotti Brothers Entertainment.
               All rights reserved.
             </p>
           </div>
 
-          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d8b887]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d8b887]/70">
             Can&apos;t Make This Up!
           </p>
         </div>
@@ -519,10 +523,6 @@ export default function ContactsPage() {
     </main>
   );
 }
-
-/* -------------------------------------------------
-   FORM SECTION HEADING
-------------------------------------------------- */
 
 function FormSectionHeading({
   number,
@@ -532,21 +532,17 @@ function FormSectionHeading({
   title: string;
 }) {
   return (
-    <div className="flex items-center gap-4 border-b border-white/15 pb-4">
+    <div className="flex items-center gap-4 border-b border-white/10 pb-4">
       <span className="text-xs font-black tracking-[0.3em] text-[#c62828]">
         {number}
       </span>
 
-      <h3 className="text-lg font-black uppercase tracking-[0.22em] text-[#d8b887]">
+      <h3 className="text-lg font-light uppercase tracking-[0.22em] text-[#d8b887]">
         {title}
       </h3>
     </div>
   );
 }
-
-/* -------------------------------------------------
-   FORM FIELD
-------------------------------------------------- */
 
 function FormField({
   label,
@@ -565,7 +561,7 @@ function FormField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-black uppercase tracking-[0.25em] text-[#d8b887]">
+      <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
         {label}
 
         {required && (
@@ -583,7 +579,7 @@ function FormField({
         onChange={(event) =>
           onChange(event.target.value)
         }
-        className="mt-3 w-full rounded-xl border-2 border-black/20 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#c62828] focus:ring-2 focus:ring-[#c62828]/20"
+        className="mt-3 w-full rounded-xl border border-white/15 bg-white px-4 py-4 text-black outline-none transition placeholder:text-gray-400 focus:border-[#c62828] focus:ring-2 focus:ring-[#c62828]/20"
       />
     </label>
   );
