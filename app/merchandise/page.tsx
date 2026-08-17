@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 type Product = {
@@ -38,24 +40,27 @@ export default function MerchandisePage() {
   return (
     <main className="merch-page">
 
-      {/* BACKGROUND */}
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
       <div
         className="merch-background"
         aria-hidden="true"
       />
 
-      {/* CONTENT */}
-      <div className="merch-content">
-        <div className="page-logo">
-  <Link href="/" aria-label="Can't Make This Up!">
-    <img
-      src="/images/logo.png"
-      alt="Can't Make This Up!"
-    />
-  </Link>
-</div>
+      <div
+        className="merch-overlay"
+        aria-hidden="true"
+      />
 
-        {/* NAVIGATION */}
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
+      <div className="merch-content">
+
+        {/* =====================================================
+            NAVIGATION
+        ===================================================== */}
         <header className="merch-header">
           <nav
             className="merch-nav"
@@ -77,9 +82,25 @@ export default function MerchandisePage() {
           </nav>
         </header>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
         <section className="merch-hero">
 
+          {/* HERO LOGO — LEFT SIDE */}
+          <div className="hero-logo">
+            <Link
+              href="/"
+              aria-label="Scotti Brothers Can't Make This Up!"
+            >
+              <img
+                src="/images/logo.png"
+                alt="Scotti Brothers Can't Make This Up!"
+              />
+            </Link>
+          </div>
+
+          {/* HERO CONTENT — RIGHT SIDE */}
           <div className="merch-hero-copy">
 
             <p className="eyebrow">
@@ -90,16 +111,26 @@ export default function MerchandisePage() {
               Merchandise
             </h1>
 
+            <div className="gold-line">
+              <span />
+              <b>◆</b>
+              <span />
+            </div>
+
             <p className="hero-subtitle">
               Wear the conversation. Rep the stories.
-              Bring a little Can't Make This Up! with you.
+              Bring a little{" "}
+              <strong>Can&apos;t Make This Up!</strong>{" "}
+              with you.
             </p>
 
           </div>
 
         </section>
 
-        {/* STORE */}
+        {/* =====================================================
+            STORE
+        ===================================================== */}
         <section className="store-section">
 
           <div className="section-heading">
@@ -111,6 +142,8 @@ export default function MerchandisePage() {
             <h2>
               Shop The Show
             </h2>
+
+            <div className="heading-line" />
 
           </div>
 
@@ -132,7 +165,7 @@ export default function MerchandisePage() {
                       ) : (
                         <div className="product-image-placeholder">
                           <span>
-                            Can't Make
+                            Can&apos;t Make
                             <br />
                             This Up!
                           </span>
@@ -201,7 +234,9 @@ export default function MerchandisePage() {
 
           ) : (
 
-            /* COMING SOON */
+            /* =================================================
+               COMING SOON
+            ================================================= */
             <div className="store-coming-soon">
 
               <div className="store-card">
@@ -221,7 +256,7 @@ export default function MerchandisePage() {
                   </h3>
 
                   <p>
-                    The official Can't Make This Up!
+                    The official Can&apos;t Make This Up!
                     merchandise collection is on the way.
                   </p>
 
@@ -239,15 +274,18 @@ export default function MerchandisePage() {
 
         </section>
 
-        {/* FEATURE STRIP */}
+        {/* =====================================================
+            FEATURE STRIP
+        ===================================================== */}
         <section className="merch-strip">
 
           <div className="strip-item">
             <strong>
               OFFICIAL
             </strong>
+
             <span>
-              Can't Make This Up! merchandise
+              Can&apos;t Make This Up! merchandise
             </span>
           </div>
 
@@ -257,6 +295,7 @@ export default function MerchandisePage() {
             <strong>
               ORIGINAL
             </strong>
+
             <span>
               Designed for the show
             </span>
@@ -268,6 +307,7 @@ export default function MerchandisePage() {
             <strong>
               COMING SOON
             </strong>
+
             <span>
               More gear. More stories.
             </span>
@@ -275,26 +315,20 @@ export default function MerchandisePage() {
 
         </section>
 
-        {/* FOOTER */}
+        {/* =====================================================
+            FOOTER
+        ===================================================== */}
         <footer className="merch-footer">
-          © {new Date().getFullYear()} Scotti Brothers Entertainment
+          © {new Date().getFullYear()} Scotti Brothers Ent
         </footer>
 
       </div>
 
+      {/* =====================================================
+          PAGE STYLES
+      ===================================================== */}
       <style>{`
-.page-logo {
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  z-index: 20;
-}
 
-.page-logo img {
-  display: block;
-  width: 180px;
-  height: auto;
-}
         * {
           box-sizing: border-box;
         }
@@ -304,11 +338,32 @@ export default function MerchandisePage() {
         ========================================= */
 
         .merch-page {
+          --gold: #F2C94C;
+
           min-height: 100vh;
+
           position: relative;
+
           overflow-x: hidden;
 
-          background: #050505;
+          background:
+            radial-gradient(
+              circle at 20% 20%,
+              rgba(139,0,0,0.18),
+              transparent 30%
+            ),
+            radial-gradient(
+              circle at 80% 65%,
+              rgba(242,201,76,0.07),
+              transparent 32%
+            ),
+            linear-gradient(
+              180deg,
+              #050505 0%,
+              #090909 50%,
+              #050505 100%
+            );
+
           color: #fff;
 
           font-family:
@@ -319,30 +374,54 @@ export default function MerchandisePage() {
 
         .merch-background {
           position: fixed;
+
           inset: 0;
+
           z-index: 0;
+
+          pointer-events: none;
 
           background:
             radial-gradient(
-              circle at 15% 15%,
-              rgba(139,0,0,0.25),
+              circle at 20% 25%,
+              rgba(130,0,0,0.13),
               transparent 30%
             ),
             radial-gradient(
-              circle at 85% 70%,
-              rgba(212,175,55,0.10),
-              transparent 28%
+              circle at 80% 65%,
+              rgba(242,201,76,0.07),
+              transparent 32%
+            );
+        }
+
+        .merch-overlay {
+          position: fixed;
+
+          inset: 0;
+
+          z-index: 1;
+
+          pointer-events: none;
+
+          background-image:
+            linear-gradient(
+              rgba(255,255,255,0.012) 1px,
+              transparent 1px
             ),
             linear-gradient(
-              135deg,
-              #050505 0%,
-              #100000 45%,
-              #050505 100%
+              90deg,
+              rgba(255,255,255,0.012) 1px,
+              transparent 1px
             );
+
+          background-size: 42px 42px;
+
+          opacity: 0.35;
         }
 
         .merch-content {
           position: relative;
+
           z-index: 2;
 
           width: 100%;
@@ -361,11 +440,13 @@ export default function MerchandisePage() {
             0;
 
           display: flex;
+
           justify-content: flex-end;
         }
 
         .merch-nav {
           display: flex;
+
           align-items: center;
 
           gap: 4px;
@@ -394,6 +475,7 @@ export default function MerchandisePage() {
           display: inline-flex;
 
           align-items: center;
+
           justify-content: center;
 
           padding:
@@ -407,13 +489,23 @@ export default function MerchandisePage() {
           text-decoration: none;
 
           font-size: 14px;
+
           font-weight: 800;
 
           white-space: nowrap;
+
+          transition:
+            color 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .merch-nav-link:hover {
+          color: var(--gold);
         }
 
         .merch-nav-link.active {
           background: #8b0000;
+
           color: #fff;
         }
 
@@ -422,48 +514,104 @@ export default function MerchandisePage() {
         ========================================= */
 
         .merch-hero {
+          position: relative;
+
           width: 100%;
 
-          max-width: 1200px;
+          max-width: 1250px;
+
+          min-height: 430px;
 
           margin: 0 auto;
 
-          min-height: 360px;
-
           padding:
-            90px
-            32px
-            55px;
+            55px
+            45px
+            70px;
 
           display: flex;
 
           align-items: center;
-          justify-content: center;
 
-          text-align: center;
+          overflow: hidden;
         }
 
-        .merch-hero-copy {
+        /* =========================================
+           HERO LOGO
+        ========================================= */
+
+        .hero-logo {
+          position: absolute;
+
+          left: 3%;
+
+          top: 50%;
+
+          transform:
+            translateY(-50%);
+
+          width: 43%;
+
+          max-width: 500px;
+
+          z-index: 2;
+        }
+
+        .hero-logo a {
+          display: block;
+
+          line-height: 0;
+        }
+
+        .hero-logo img {
+          display: block;
+
           width: 100%;
-          max-width: 950px;
+
+          height: auto;
+
+          object-fit: contain;
+        }
+
+        /* =========================================
+           HERO COPY
+        ========================================= */
+
+        .merch-hero-copy {
+          position: relative;
+
+          z-index: 3;
+
+          width: 55%;
+
+          max-width: 690px;
+
+          margin-left: auto;
+
+          margin-right: 2%;
+
+          text-align: center;
         }
 
         .eyebrow {
           margin: 0;
 
-          color: #d4af37;
+          color: var(--gold);
 
-          font-size: 13px;
+          font-size: 12px;
+
           font-weight: 900;
 
-          letter-spacing: 4px;
+          letter-spacing:
+            0.45em;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
         }
 
         .merch-hero h1 {
           margin:
-            12px
+            17px
             0
             0;
 
@@ -472,7 +620,7 @@ export default function MerchandisePage() {
           font-size:
             clamp(
               52px,
-              8vw,
+              7.5vw,
               92px
             );
 
@@ -480,31 +628,80 @@ export default function MerchandisePage() {
 
           font-weight: 900;
 
-          letter-spacing: -4px;
+          letter-spacing:
+            -0.045em;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
 
           text-shadow:
             4px 4px 0 #8b0000,
-            8px 8px 0 rgba(212,175,55,0.35);
+            8px 8px 0
+            rgba(242,201,76,0.30);
+        }
+
+        .gold-line {
+          display: flex;
+
+          align-items: center;
+
+          gap: 16px;
+
+          width:
+            min(
+              500px,
+              85%
+            );
+
+          margin:
+            28px
+            auto;
+        }
+
+        .gold-line span {
+          flex: 1;
+
+          height: 1px;
+
+          background:
+            rgba(
+              242,
+              201,
+              76,
+              0.7
+            );
+        }
+
+        .gold-line b {
+          color: var(--gold);
+
+          font-size: 14px;
         }
 
         .hero-subtitle {
-          margin:
-            25px
-            auto
-            0;
+          max-width: 650px;
 
-          max-width: 760px;
+          margin:
+            0
+            auto;
 
           color:
-            rgba(255,255,255,0.78);
+            rgba(
+              255,
+              255,
+              255,
+              0.80
+            );
 
-          font-size: 19px;
+          font-size: 17px;
 
-          line-height: 1.55;
+          line-height: 1.8;
 
-          font-weight: 700;
+          font-weight: 600;
+        }
+
+        .hero-subtitle strong {
+          color: var(--gold);
         }
 
         /* =========================================
@@ -519,32 +716,47 @@ export default function MerchandisePage() {
           margin: 0 auto;
 
           padding:
-            0
+            20px
             32px
             70px;
         }
 
         .section-heading {
-          margin-bottom: 28px;
+          margin-bottom: 32px;
 
           text-align: center;
         }
 
         .section-heading h2 {
           margin:
-            7px
+            8px
             0
             0;
 
           color: #fff;
 
-          font-size: 38px;
+          font-size: 42px;
 
           line-height: 1;
 
           font-weight: 900;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
+        }
+
+        .heading-line {
+          width: 65px;
+
+          height: 4px;
+
+          margin:
+            20px
+            auto
+            0;
+
+          background:
+            #c62828;
         }
 
         /* =========================================
@@ -575,7 +787,12 @@ export default function MerchandisePage() {
 
           border:
             1px solid
-            rgba(212,175,55,0.45);
+            rgba(
+              242,
+              201,
+              76,
+              0.45
+            );
 
           box-shadow:
             0 15px 35px
@@ -591,7 +808,7 @@ export default function MerchandisePage() {
             translateY(-7px);
 
           border-color:
-            #d4af37;
+            var(--gold);
         }
 
         .product-image {
@@ -599,7 +816,8 @@ export default function MerchandisePage() {
 
           width: 100%;
 
-          aspect-ratio: 1 / 1;
+          aspect-ratio:
+            1 / 1;
 
           overflow: hidden;
 
@@ -609,6 +827,7 @@ export default function MerchandisePage() {
 
         .product-image img {
           width: 100%;
+
           height: 100%;
 
           display: block;
@@ -627,11 +846,13 @@ export default function MerchandisePage() {
 
         .product-image-placeholder {
           width: 100%;
+
           height: 100%;
 
           display: flex;
 
           align-items: center;
+
           justify-content: center;
 
           text-align: center;
@@ -645,7 +866,8 @@ export default function MerchandisePage() {
         }
 
         .product-image-placeholder span {
-          color: #f5d76e;
+          color:
+            var(--gold);
 
           font-size: 28px;
 
@@ -653,22 +875,22 @@ export default function MerchandisePage() {
 
           font-weight: 900;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
 
           text-shadow:
             2px 2px 0 #000;
         }
 
         .product-content {
-          padding:
-            22px;
+          padding: 22px;
         }
 
         .product-category {
           margin: 0;
 
           color:
-            #d4af37;
+            var(--gold);
 
           font-size: 10px;
 
@@ -676,7 +898,8 @@ export default function MerchandisePage() {
 
           letter-spacing: 2px;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
         }
 
         .product-content h3 {
@@ -701,7 +924,12 @@ export default function MerchandisePage() {
             0;
 
           color:
-            rgba(255,255,255,0.62);
+            rgba(
+              255,
+              255,
+              255,
+              0.62
+            );
 
           font-size: 13px;
 
@@ -713,14 +941,15 @@ export default function MerchandisePage() {
 
           align-items: center;
 
-          justify-content: space-between;
+          justify-content:
+            space-between;
 
           margin-top: 20px;
         }
 
         .product-price {
           color:
-            #f5d76e;
+            var(--gold);
 
           font-size: 19px;
 
@@ -731,6 +960,7 @@ export default function MerchandisePage() {
           display: inline-flex;
 
           align-items: center;
+
           justify-content: center;
 
           padding:
@@ -750,7 +980,8 @@ export default function MerchandisePage() {
 
           letter-spacing: 1px;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
         }
 
         /* =========================================
@@ -760,7 +991,8 @@ export default function MerchandisePage() {
         .store-coming-soon {
           display: flex;
 
-          justify-content: center;
+          justify-content:
+            center;
 
           width: 100%;
         }
@@ -776,9 +1008,9 @@ export default function MerchandisePage() {
             linear-gradient(
               135deg,
               #fff0a3,
-              #d4af37,
+              #f2c94c,
               #80600e,
-              #f5d76e,
+              #f7d85d,
               #987318
             );
 
@@ -796,13 +1028,17 @@ export default function MerchandisePage() {
 
           display: flex;
 
-          flex-direction: column;
+          flex-direction:
+            column;
 
-          align-items: center;
+          align-items:
+            center;
 
-          justify-content: center;
+          justify-content:
+            center;
 
-          text-align: center;
+          text-align:
+            center;
 
           background:
             linear-gradient(
@@ -818,21 +1054,26 @@ export default function MerchandisePage() {
 
         .store-mark {
           width: 72px;
+
           height: 72px;
 
           display: flex;
 
-          align-items: center;
-          justify-content: center;
+          align-items:
+            center;
+
+          justify-content:
+            center;
 
           border:
             2px solid
-            #d4af37;
+            var(--gold);
 
-          border-radius: 50%;
+          border-radius:
+            50%;
 
           color:
-            #f5d76e;
+            var(--gold);
 
           font-size: 15px;
 
@@ -848,7 +1089,7 @@ export default function MerchandisePage() {
             0;
 
           color:
-            #d4af37;
+            var(--gold);
 
           font-size: 11px;
 
@@ -856,7 +1097,8 @@ export default function MerchandisePage() {
 
           letter-spacing: 2px;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
         }
 
         .store-card h3 {
@@ -865,8 +1107,7 @@ export default function MerchandisePage() {
             0
             0;
 
-          color:
-            #fff;
+          color: #fff;
 
           font-size: 42px;
 
@@ -874,7 +1115,8 @@ export default function MerchandisePage() {
 
           font-weight: 900;
 
-          text-transform: uppercase;
+          text-transform:
+            uppercase;
         }
 
         .store-card-inner > p:not(.store-card-eyebrow) {
@@ -886,7 +1128,12 @@ export default function MerchandisePage() {
             0;
 
           color:
-            rgba(255,255,255,0.72);
+            rgba(
+              255,
+              255,
+              255,
+              0.72
+            );
 
           font-size: 15px;
 
@@ -903,26 +1150,28 @@ export default function MerchandisePage() {
 
           border:
             1px solid
-            rgba(212,175,55,0.7);
+            rgba(
+              242,
+              201,
+              76,
+              0.75
+            );
 
           border-radius:
             999px;
 
           color:
-            #f5d76e;
+            var(--gold);
 
-          font-size:
-            10px;
+          font-size: 10px;
 
-          font-weight:
-            900;
+          font-weight: 900;
 
-          letter-spacing:
-            2px;
+          letter-spacing: 2px;
         }
 
         /* =========================================
-           STRIP
+           FEATURE STRIP
         ========================================= */
 
         .merch-strip {
@@ -931,7 +1180,8 @@ export default function MerchandisePage() {
           max-width: 1200px;
 
           margin:
-            0 auto;
+            0
+            auto;
 
           padding:
             30px
@@ -940,30 +1190,44 @@ export default function MerchandisePage() {
           display: flex;
 
           align-items: center;
-          justify-content: center;
+
+          justify-content:
+            center;
 
           gap: 30px;
 
           border-top:
             1px solid
-            rgba(212,175,55,0.25);
+            rgba(
+              242,
+              201,
+              76,
+              0.25
+            );
 
           border-bottom:
             1px solid
-            rgba(212,175,55,0.25);
+            rgba(
+              242,
+              201,
+              76,
+              0.25
+            );
         }
 
         .strip-item {
           display: flex;
 
-          flex-direction: column;
+          flex-direction:
+            column;
 
-          text-align: center;
+          text-align:
+            center;
         }
 
         .strip-item strong {
           color:
-            #f5d76e;
+            var(--gold);
 
           font-size: 12px;
 
@@ -973,11 +1237,15 @@ export default function MerchandisePage() {
         }
 
         .strip-item span {
-          margin-top:
-            5px;
+          margin-top: 5px;
 
           color:
-            rgba(255,255,255,0.55);
+            rgba(
+              255,
+              255,
+              255,
+              0.55
+            );
 
           font-size: 11px;
         }
@@ -988,7 +1256,12 @@ export default function MerchandisePage() {
           height: 38px;
 
           background:
-            rgba(212,175,55,0.35);
+            rgba(
+              242,
+              201,
+              76,
+              0.35
+            );
         }
 
         /* =========================================
@@ -1000,10 +1273,16 @@ export default function MerchandisePage() {
             30px
             20px;
 
-          text-align: center;
+          text-align:
+            center;
 
           color:
-            rgba(255,255,255,0.4);
+            rgba(
+              255,
+              255,
+              255,
+              0.4
+            );
 
           font-size: 13px;
         }
@@ -1026,27 +1305,41 @@ export default function MerchandisePage() {
             gap: 20px;
           }
 
+          .hero-logo {
+            left: 2%;
+
+            width: 42%;
+          }
+
+          .merch-hero-copy {
+            width: 58%;
+
+            margin-right: 0;
+          }
         }
 
         /* =========================================
            MOBILE
         ========================================= */
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
 
           .merch-header {
             padding:
               18px
-              20px
+              12px
               0;
 
-            justify-content: center;
+            justify-content:
+              center;
           }
 
           .merch-nav {
-            flex-wrap: wrap;
+            flex-wrap:
+              wrap;
 
-            justify-content: center;
+            justify-content:
+              center;
 
             border-radius:
               18px;
@@ -1057,31 +1350,63 @@ export default function MerchandisePage() {
               6px
               8px;
 
-            font-size: 11px;
+            font-size: 10px;
           }
 
           .merch-hero {
-            min-height: 280px;
+            min-height: 400px;
 
             padding:
-              55px
+              40px
               16px
-              35px;
+              55px;
+          }
+
+          .hero-logo {
+            left: 0;
+
+            width: 39%;
+          }
+
+          .merch-hero-copy {
+            width: 60%;
+
+            margin-left: auto;
+
+            margin-right: 0;
+          }
+
+          .eyebrow {
+            font-size: 8px;
+
+            letter-spacing:
+              0.25em;
           }
 
           .merch-hero h1 {
-            font-size: 58px;
+            font-size: 46px;
 
-            letter-spacing: -2px;
+            letter-spacing:
+              -2px;
           }
 
           .hero-subtitle {
-            font-size: 16px;
+            font-size: 12px;
+
+            line-height: 1.6;
+          }
+
+          .gold-line {
+            width: 90%;
+
+            margin:
+              20px
+              auto;
           }
 
           .store-section {
             padding:
-              0
+              10px
               16px
               60px;
           }
@@ -1097,7 +1422,8 @@ export default function MerchandisePage() {
             max-width: 430px;
 
             margin:
-              0 auto;
+              0
+              auto;
           }
 
           .store-card-inner {
@@ -1113,7 +1439,8 @@ export default function MerchandisePage() {
           }
 
           .merch-strip {
-            flex-direction: column;
+            flex-direction:
+              column;
 
             gap: 18px;
 
@@ -1124,16 +1451,10 @@ export default function MerchandisePage() {
 
           .strip-divider {
             width: 60px;
+
             height: 1px;
           }
-.page-logo {
-  top: 18px;
-  left: 18px;
-}
-
-.page-logo img {
-  width: 130px;
-}
+        }
 
       `}</style>
 
