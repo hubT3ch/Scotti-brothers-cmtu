@@ -1,783 +1,351 @@
+"use client";
+
 import Link from "next/link";
 
-type Episode = {
-  slug: string;
-  episodeNumber: string;
-  title: string;
-  guestName: string;
-  guestSubtitle: string;
-  guestImage?: string;
-  description: string;
-  videoUrl?: string;
-  audioUrl?: string;
-};
+const comingSoonEpisodes = [
+  {
+    number: "01",
+    title: "Coming Soon",
+    description:
+      "An unforgettable story from the music and entertainment industry.",
+  },
+  {
+    number: "02",
+    title: "Coming Soon",
+    description:
+      "Real stories, unbelievable moments, and conversations you won't expect.",
+  },
+  {
+    number: "03",
+    title: "Coming Soon",
+    description:
+      "Another story that sounds too crazy to be true—but it happened.",
+  },
+];
 
-/*
- * NO GUEST IS CURRENTLY CONFIRMED.
- *
- * When the first guest is confirmed, we can add the episode here.
- *
- * Example:
- *
- * {
- *   slug: "episode-1",
- *   episodeNumber: "EPISODE 01",
- *   title: "Can't Make This Up!",
- *   guestName: "Guest Name",
- *   guestSubtitle: "Guest Description",
- *   guestImage: "/images/episodes/guest-name.jpg",
- *   description: "Episode description.",
- * }
- */
-
-const episodes: Episode[] = [];
-
-/*
- * These are placeholders until actual episodes are added.
- * They make sure the Episode Reels section is visible now.
- */
-const comingSoonEpisodes = [2, 3, 4];
-
-const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Episodes", href: "/episodes" },
-  { label: "Guests", href: "/guests" },
-  { label: "Merchandise", href: "/merchandise" },
-  { label: "Contact", href: "/contact" },
+const reels = [
+  {
+    number: "01",
+    title: "Coming Soon",
+  },
+  {
+    number: "02",
+    title: "Coming Soon",
+  },
+  {
+    number: "03",
+    title: "Coming Soon",
+  },
 ];
 
 export default function EpisodesPage() {
-  const currentEpisode = episodes[0] ?? null;
-  const additionalEpisodes = episodes.slice(1);
-
   return (
-    <main className="episodes-page">
-      {/* BACKGROUND */}
-      <div
-        className="episodes-background"
-        aria-hidden="true"
-      />
+    <main className="min-h-screen bg-[#d8b887] text-black">
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 border-b border-black/20 bg-black">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8 lg:px-12">
+          <Link href="/" className="shrink-0">
+            <img
+              src="/images/logo.png"
+              alt="Scotti Brothers Can't Make This Up!"
+              className="h-14 w-auto object-contain sm:h-16"
+            />
+          </Link>
 
-      {/* CONTENT */}
-      <div className="episodes-content">
+          <nav className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.18em] sm:gap-7 sm:text-xs">
+            <Link
+              href="/"
+              className="text-white/75 transition hover:text-[#d8b887]"
+            >
+              Home
+            </Link>
 
-        {/* NAVIGATION */}
-        <header className="episodes-header">
-          <nav
-            className="episodes-nav"
-            aria-label="Main navigation"
-          >
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  item.href === "/episodes"
-                    ? "episodes-nav-link active"
-                    : "episodes-nav-link"
-                }
-              >
-                {item.label}
-              </Link>
-            ))}
+            <Link
+              href="/episodes"
+              className="text-[#d8b887]"
+            >
+              Episodes
+            </Link>
+
+            <Link
+              href="/guests"
+              className="text-white/75 transition hover:text-[#d8b887]"
+            >
+              Guests
+            </Link>
+
+            <Link
+              href="/merchandise"
+              className="text-white/75 transition hover:text-[#d8b887]"
+            >
+              Merchandise
+            </Link>
+
+            <Link
+              href="/contact"
+              className="text-white/75 transition hover:text-[#d8b887]"
+            >
+              Contact
+            </Link>
           </nav>
-        </header>
+        </div>
+      </header>
 
-        {/* PAGE HERO */}
-        <section className="episodes-hero">
-          <div className="episodes-hero-copy">
-            <p className="eyebrow">
+      {/* HERO */}
+      <section className="relative overflow-hidden border-b border-black/20 bg-[#d8b887]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.16),transparent_35%)]" />
+
+        <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
               Scotti Brothers Entertainment
             </p>
 
-            <h1>Episodes</h1>
+            <h1 className="mt-5 text-5xl font-black uppercase leading-none tracking-tight text-black sm:text-6xl lg:text-7xl">
+              Episodes
+            </h1>
 
-            <p className="hero-subtitle">
-              Real conversations. Real stories. No script. No filter.
+            <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-black/65 sm:text-lg">
+              Unbelievable moments. Real stories.
+              Conversations from the music and entertainment
+              industry that you simply{" "}
+              <span className="font-black text-black">
+                Can&apos;t Make This Up!
+              </span>
             </p>
+
+            <div className="mx-auto mt-8 flex max-w-md items-center gap-4">
+              <span className="h-px flex-1 bg-black/45" />
+
+              <span className="h-3 w-3 rotate-45 border-2 border-[#c62828]" />
+
+              <span className="h-px flex-1 bg-black/45" />
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* CURRENT EPISODE */}
-        <section className="current-section">
-          <div className="section-heading">
-            <p className="eyebrow">Watch &amp; Listen</p>
+      {/* CURRENT EPISODE */}
+      <section className="bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Now Playing"
+            title="Current Episode"
+          />
 
-            <h2>Current Episode</h2>
-          </div>
+          <div className="mt-10 overflow-hidden rounded-3xl border-2 border-black bg-black shadow-[0_20px_55px_rgba(0,0,0,0.30)]">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+              {/* CURRENT EPISODE VISUAL */}
+              <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden bg-[#111111] p-8 sm:min-h-[420px]">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(216,184,135,0.10),transparent_55%)]" />
 
-          {currentEpisode ? (
-            <article className="current-episode-card">
+                <div className="relative z-10 text-center">
+                  <p className="text-xs font-black uppercase tracking-[0.4em] text-[#c62828]">
+                    Current Episode
+                  </p>
 
-              <div className="current-episode-image">
-                {currentEpisode.guestImage ? (
-                  <img
-                    src={currentEpisode.guestImage}
-                    alt={currentEpisode.guestName}
-                  />
-                ) : (
-                  <div className="image-placeholder">
-                    Guest Image Coming Soon
-                  </div>
-                )}
+                  <div className="mx-auto mt-6 h-1 w-16 bg-[#d8b887]" />
 
-                <span className="episode-badge">
-                  {currentEpisode.episodeNumber}
-                </span>
-              </div>
+                  <h3 className="mt-7 text-4xl font-black uppercase text-white sm:text-5xl">
+                    Coming Soon
+                  </h3>
 
-              <div className="current-episode-content">
-                <p className="guest-subtitle">
-                  {currentEpisode.guestSubtitle}
-                </p>
-
-                <h3>{currentEpisode.guestName}</h3>
-
-                <p className="episode-title">
-                  {currentEpisode.title}
-                </p>
-
-                <p className="episode-description">
-                  {currentEpisode.description}
-                </p>
-
-                <div className="episode-buttons">
-                  <Link
-                    href={`/episodes/${currentEpisode.slug}`}
-                    className="primary-button"
-                  >
-                    View Episode
-                  </Link>
-
-                  {currentEpisode.videoUrl && (
-                    <a
-                      href={currentEpisode.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="secondary-button"
-                    >
-                      Watch
-                    </a>
-                  )}
-
-                  {currentEpisode.audioUrl && (
-                    <a
-                      href={currentEpisode.audioUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="secondary-button"
-                    >
-                      Listen
-                    </a>
-                  )}
+                  <p className="mt-4 text-sm uppercase tracking-[0.25em] text-[#d8b887]">
+                    Scotti Brothers
+                  </p>
                 </div>
               </div>
-            </article>
-          ) : (
-            /*
-             * COMPACT PLACEHOLDER
-             *
-             * This replaces the oversized black Jaheim card
-             * until an actual episode is confirmed.
-             */
-            <div className="current-placeholder">
-              <div>
-                <span className="episode-badge">
-                  EPISODE 01
-                </span>
 
-                <h3>Coming Soon</h3>
+              {/* CURRENT EPISODE DETAILS */}
+              <div className="flex flex-col justify-center p-8 sm:p-10 lg:p-12">
+                <EpisodeLabel number="01" />
 
-                <p>
-                  Our first episode is coming soon.
-                  Check back for the official guest announcement.
+                <h3 className="mt-6 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
+                  The Next Story
+                </h3>
+
+                <p className="mt-5 leading-8 text-white/60">
+                  The next episode of{" "}
+                  <span className="text-[#d8b887]">
+                    Can&apos;t Make This Up!
+                  </span>{" "}
+                  is coming soon. Get ready for another
+                  unforgettable conversation filled with
+                  stories, music, and moments you won't
+                  believe.
                 </p>
+
+                <div className="mt-8">
+                  <span className="inline-flex border border-[#d8b887]/40 px-5 py-3 text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
+                    Coming Soon
+                  </span>
+                </div>
               </div>
             </div>
-          )}
-        </section>
-
-        {/* EPISODE REELS */}
-        <section className="reels-section">
-          <div className="section-heading reels-heading">
-            <div>
-              <p className="eyebrow">
-                More From The Show
-              </p>
-
-              <h2>Episode Reels</h2>
-            </div>
           </div>
+        </div>
+      </section>
 
-          {additionalEpisodes.length > 0 ? (
-            <div className="reels-row">
-              {additionalEpisodes.map((episode) => (
-                <Link
-                  key={episode.slug}
-                  href={`/episodes/${episode.slug}`}
-                  className="reel-card"
-                >
-                  <div className="reel-image">
-                    {episode.guestImage ? (
-                      <img
-                        src={episode.guestImage}
-                        alt={episode.guestName}
-                      />
-                    ) : (
-                      <div className="reel-placeholder">
-                        Guest Image Coming Soon
-                      </div>
-                    )}
+      {/* COMING SOON EPISODES */}
+      <section className="border-y border-black/15 bg-[#d8b887] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="What's Next"
+            title="Coming Soon"
+          />
 
-                    <span className="episode-badge">
-                      {episode.episodeNumber}
-                    </span>
+          <div className="mt-10 grid gap-7 md:grid-cols-3">
+            {comingSoonEpisodes.map((episode) => (
+              <article
+                key={episode.number}
+                className="group overflow-hidden rounded-3xl border-2 border-black bg-black shadow-[0_16px_40px_rgba(0,0,0,0.28)] transition duration-300 hover:-translate-y-1 hover:border-[#c62828]"
+              >
+                {/* CARD BACK — BLACK */}
+                <div className="relative flex min-h-[330px] flex-col justify-between bg-black p-7">
+                  <div>
+                    {/* RED EPISODE LABEL */}
+                    <EpisodeLabel number={episode.number} />
+
+                    <h3 className="mt-7 text-2xl font-black uppercase text-white">
+                      {episode.title}
+                    </h3>
+
+                    <p className="mt-4 leading-7 text-white/55">
+                      {episode.description}
+                    </p>
                   </div>
 
-                  <div className="reel-content">
-                    <p>{episode.guestSubtitle}</p>
-                    <h3>{episode.guestName}</h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="reels-row">
-              {comingSoonEpisodes.map((number) => (
-                <div
-                  key={number}
-                  className="reel-card coming-soon-card"
-                >
-                  <div className="reel-coming-soon">
-                    <span className="episode-badge">
-                      EPISODE {String(number).padStart(2, "0")}
-                    </span>
+                  <div className="mt-8">
+                    <div className="h-px w-full bg-[#d8b887]/20" />
 
-                    <strong>Coming Soon</strong>
-
-                    <p>
-                      New episode
+                    <p className="mt-5 text-xs font-bold uppercase tracking-[0.28em] text-[#d8b887]">
+                      Episode {episode.number}
                     </p>
                   </div>
                 </div>
-              ))}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* EPISODE REELS */}
+      <section className="bg-black px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
+                Watch
+              </p>
+
+              {/* RED EPISODE REELS HEADING */}
+              <h2 className="mt-3 text-4xl font-black uppercase tracking-tight text-[#c62828] sm:text-5xl">
+                Episode Reels
+              </h2>
+
+              <p className="mt-4 max-w-2xl text-white/50">
+                Short clips and memorable moments from
+                Can&apos;t Make This Up!
+              </p>
             </div>
-          )}
-        </section>
-
-        {/* FOOTER */}
-        <footer className="episodes-footer">
-          © {new Date().getFullYear()} Scotti Brothers Entertainment
-        </footer>
-      </div>
-
-      <style>{`
-        * {
-          box-sizing: border-box;
-        }
-
-        .episodes-page {
-          min-height: 100vh;
-          position: relative;
-          overflow-x: hidden;
-          background: #d9b985;
-          color: #111;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .episodes-background {
-          position: fixed;
-          inset: 0;
-          z-index: 0;
-          background-image:
-            linear-gradient(
-              rgba(255,255,255,0.035),
-              rgba(255,255,255,0.035)
-            ),
-            url("/images/episodes/episodes-background.png");
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-size: cover;
-        }
-
-        .episodes-content {
-          position: relative;
-          z-index: 2;
-          width: 100%;
-        }
-
-        /* NAVIGATION */
-
-        .episodes-header {
-          width: 100%;
-          padding: 24px 42px 0;
-          display: flex;
-          justify-content: flex-end;
-        }
-
-        .episodes-nav {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          padding: 8px 10px;
-          border-radius: 999px;
-          background: rgba(0,0,0,0.48);
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
-        }
-
-        .episodes-nav-link {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8px 12px;
-          border-radius: 999px;
-          color: #fff;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: 800;
-          white-space: nowrap;
-        }
-
-        .episodes-nav-link.active {
-          background: rgba(255,255,255,0.18);
-        }
-
-        /* HERO */
-
-        .episodes-hero {
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          min-height: 310px;
-          padding: 90px 32px 50px;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-        }
-
-        .episodes-hero-copy {
-          width: 58%;
-          padding-right: 30px;
-        }
-
-        .eyebrow {
-          margin: 0;
-          font-size: 13px;
-          font-weight: 900;
-          letter-spacing: 4px;
-          text-transform: uppercase;
-          color: #191919;
-        }
-
-        .episodes-hero h1 {
-          margin: 10px 0 0;
-          font-size: clamp(54px, 7vw, 86px);
-          line-height: 0.9;
-          font-weight: 900;
-          letter-spacing: -3px;
-          text-transform: uppercase;
-        }
-
-        .hero-subtitle {
-          margin: 20px 0 0;
-          max-width: 650px;
-          font-size: 19px;
-          line-height: 1.45;
-          font-weight: 700;
-        }
-
-        /* CURRENT EPISODE */
-
-        .current-section {
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 32px 45px;
-        }
-
-        .section-heading {
-          margin-bottom: 18px;
-        }
-
-        .section-heading h2 {
-          margin: 6px 0 0;
-          font-size: 34px;
-          line-height: 1;
-          font-weight: 900;
-        }
-
-        .current-episode-card {
-          display: grid;
-          grid-template-columns: 300px 1fr;
-          min-height: 250px;
-          overflow: hidden;
-          border-radius: 22px;
-          background: rgba(20,20,20,0.96);
-          box-shadow: 0 14px 32px rgba(0,0,0,0.18);
-        }
-
-        .current-episode-image {
-          position: relative;
-          min-height: 250px;
-          background: #191919;
-          overflow: hidden;
-        }
-
-        .current-episode-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .image-placeholder {
-          width: 100%;
-          height: 100%;
-          min-height: 250px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-          text-align: center;
-          color: rgba(255,255,255,0.55);
-          font-size: 14px;
-          font-weight: 700;
-        }
-
-        .episode-badge {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 7px 11px;
-          border-radius: 999px;
-          background: #050505;
-          color: #fff;
-          font-size: 10px;
-          font-weight: 900;
-          letter-spacing: 1.8px;
-          white-space: nowrap;
-        }
-
-        .current-episode-image .episode-badge {
-          position: absolute;
-          top: 16px;
-          left: 16px;
-        }
-
-        .current-episode-content {
-          padding: 28px 34px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        .guest-subtitle {
-          margin: 0;
-          color: #d9b985;
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-        }
-
-        .current-episode-content h3 {
-          margin: 7px 0 0;
-          color: #fff;
-          font-size: clamp(36px, 4vw, 52px);
-          line-height: 0.95;
-          font-weight: 900;
-        }
-
-        .episode-title {
-          margin: 9px 0 0;
-          color: #fff;
-          font-size: 18px;
-          font-weight: 800;
-        }
-
-        .episode-description {
-          margin: 12px 0 0;
-          max-width: 650px;
-          color: rgba(255,255,255,0.75);
-          font-size: 14px;
-          line-height: 1.55;
-        }
-
-        .episode-buttons {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 9px;
-          margin-top: 18px;
-        }
-
-        .primary-button,
-        .secondary-button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 10px 17px;
-          border-radius: 999px;
-          text-decoration: none;
-          font-size: 12px;
-          font-weight: 900;
-        }
-
-        .primary-button {
-          background: #d9b985;
-          color: #111;
-        }
-
-        .secondary-button {
-          color: #fff;
-          border: 1px solid rgba(255,255,255,0.35);
-        }
-
-        /* CURRENT PLACEHOLDER */
-
-        .current-placeholder {
-          min-height: 145px;
-          padding: 24px 30px;
-          display: flex;
-          align-items: center;
-          border-radius: 20px;
-          background: rgba(20,20,20,0.94);
-          box-shadow: 0 14px 32px rgba(0,0,0,0.16);
-          color: #fff;
-        }
-
-        .current-placeholder h3 {
-          margin: 10px 0 5px;
-          font-size: 30px;
-          line-height: 1;
-          font-weight: 900;
-        }
-
-        .current-placeholder p {
-          margin: 0;
-          color: rgba(255,255,255,0.7);
-          font-size: 14px;
-        }
-
-        /* REELS */
-
-        .reels-section {
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 32px 80px;
-        }
-
-        .reels-heading {
-          margin-bottom: 16px;
-        }
-
-        .reels-row {
-          display: flex;
-          gap: 18px;
-          overflow-x: auto;
-          padding: 4px 2px 14px;
-          scroll-snap-type: x mandatory;
-        }
-
-        .reel-card {
-          flex: 0 0 280px;
-          min-width: 280px;
-          overflow: hidden;
-          border-radius: 18px;
-          background: rgba(255,255,255,0.92);
-          border: 1px solid rgba(0,0,0,0.12);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-          text-decoration: none;
-          color: #111;
-          scroll-snap-align: start;
-        }
-
-        .reel-image {
-          position: relative;
-          height: 165px;
-          overflow: hidden;
-          background: #222;
-        }
-
-        .reel-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .reel-image .episode-badge {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-        }
-
-        .reel-content {
-          padding: 15px 17px 18px;
-        }
-
-        .reel-content p {
-          margin: 0;
-          color: #666;
-          font-size: 10px;
-          font-weight: 800;
-          letter-spacing: 1.4px;
-          text-transform: uppercase;
-        }
-
-        .reel-content h3 {
-          margin: 5px 0 0;
-          font-size: 24px;
-          font-weight: 900;
-        }
-
-        /* COMING SOON REELS */
-
-        .coming-soon-card {
-          height: 205px;
-          background: rgba(20,20,20,0.94);
-          color: #fff;
-        }
-
-        .reel-coming-soon {
-          height: 100%;
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-        }
-
-        .reel-coming-soon strong {
-          margin-top: 12px;
-          font-size: 23px;
-          font-weight: 900;
-        }
-
-        .reel-coming-soon p {
-          margin: 6px 0 0;
-          color: rgba(255,255,255,0.6);
-          font-size: 13px;
-        }
-
-        /* FOOTER */
-
-        .episodes-footer {
-          padding: 28px 20px;
-          text-align: center;
-          border-top: 1px solid rgba(0,0,0,0.12);
-          color: #555;
-          font-size: 13px;
-        }
-
-        /* TABLET */
-
-        @media (max-width: 850px) {
-          .episodes-header {
-            padding: 18px 20px 0;
-          }
-
-          .episodes-hero {
-            min-height: 280px;
-            padding: 70px 20px 40px;
-          }
-
-          .episodes-hero-copy {
-            width: 65%;
-            padding-right: 0;
-          }
-
-          .current-section,
-          .reels-section {
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
-          .current-episode-card {
-            grid-template-columns: 250px 1fr;
-          }
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 600px) {
-          .episodes-header {
-            justify-content: center;
-          }
-
-          .episodes-nav {
-            flex-wrap: wrap;
-            justify-content: center;
-            border-radius: 18px;
-          }
-
-          .episodes-nav-link {
-            font-size: 11px;
-            padding: 6px 8px;
-          }
-
-          .episodes-hero {
-            min-height: 250px;
-            padding: 55px 16px 35px;
-            justify-content: center;
-          }
-
-          .episodes-hero-copy {
-            width: 100%;
-            text-align: center;
-          }
-
-          .episodes-hero h1 {
-            font-size: 58px;
-          }
-
-          .hero-subtitle {
-            font-size: 16px;
-          }
-
-          .current-section,
-          .reels-section {
-            padding-left: 16px;
-            padding-right: 16px;
-          }
-
-          .section-heading h2 {
-            font-size: 30px;
-          }
-
-          .current-episode-card {
-            grid-template-columns: 1fr;
-          }
-
-          .current-episode-image {
-            min-height: 220px;
-          }
-
-          .image-placeholder {
-            min-height: 220px;
-          }
-
-          .current-episode-content {
-            padding: 24px 22px;
-          }
-
-          .current-placeholder {
-            min-height: 135px;
-            padding: 22px;
-          }
-
-          .current-placeholder h3 {
-            font-size: 27px;
-          }
-
-          .reel-card {
-            flex-basis: 260px;
-            min-width: 260px;
-          }
-        }
-      `}</style>
+          </div>
+
+          <div className="mt-10 grid gap-7 md:grid-cols-3">
+            {reels.map((reel) => (
+              <article
+                key={reel.number}
+                className="group overflow-hidden rounded-2xl border border-[#d8b887]/20 bg-[#0d0d0d]"
+              >
+                <div className="flex aspect-video items-center justify-center bg-black">
+                  <div className="text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#c62828] text-[#c62828] transition group-hover:bg-[#c62828] group-hover:text-white">
+                      <span className="ml-1 text-xl">
+                        ▶
+                      </span>
+                    </div>
+
+                    <p className="mt-4 text-xs font-bold uppercase tracking-[0.25em] text-[#d8b887]">
+                      Coming Soon
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <EpisodeLabel number={reel.number} />
+
+                  <h3 className="mt-4 text-xl font-black uppercase text-white">
+                    {reel.title}
+                  </h3>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-[#d8b887]/15 bg-black px-5 py-9">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
+          <div className="flex items-center gap-4">
+            <img
+              src="/images/logo.png"
+              alt="Scotti Brothers Entertainment"
+              className="h-10 w-auto object-contain"
+            />
+
+            <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
+              © 2026 Scotti Brothers Entertainment.
+              All rights reserved.
+            </p>
+          </div>
+
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d8b887]/70">
+            Can&apos;t Make This Up!
+          </p>
+        </div>
+      </footer>
     </main>
+  );
+}
+
+/* -------------------------------------------------
+   SECTION HEADING
+------------------------------------------------- */
+
+function SectionHeading({
+  eyebrow,
+  title,
+}: {
+  eyebrow: string;
+  title: string;
+}) {
+  return (
+    <div>
+      <p className="text-xs font-black uppercase tracking-[0.45em] text-[#c62828]">
+        {eyebrow}
+      </p>
+
+      <h2 className="mt-3 text-4xl font-black uppercase tracking-tight text-[#c62828] sm:text-5xl">
+        {title}
+      </h2>
+
+      <div className="mt-5 h-1 w-16 bg-black" />
+    </div>
+  );
+}
+
+/* -------------------------------------------------
+   EPISODE LABEL
+------------------------------------------------- */
+
+function EpisodeLabel({
+  number,
+}: {
+  number: string;
+}) {
+  return (
+    <span className="inline-flex items-center bg-[#c62828] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+      Episode {number}
+    </span>
   );
 }
