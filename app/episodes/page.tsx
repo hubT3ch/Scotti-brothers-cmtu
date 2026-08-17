@@ -41,20 +41,10 @@ export default function EpisodesPage() {
       <div className="episodes-overlay" aria-hidden="true" />
 
       {/* =====================================================
-          HEADER
+          HEADER / NAVIGATION
+          NO LOGO HERE
       ===================================================== */}
       <header className="site-header">
-        <Link
-          href="/"
-          className="site-logo"
-          aria-label="Scotti Brothers Entertainment"
-        >
-          <img
-            src="/images/logo.png"
-            alt="Scotti Brothers Can't Make This Up!"
-          />
-        </Link>
-
         <nav className="site-nav" aria-label="Main navigation">
           {navigation.map((item) => (
             <Link
@@ -70,10 +60,18 @@ export default function EpisodesPage() {
 
       {/* =====================================================
           HERO
+          LOGO LEFT / CONTENT RIGHT
       ===================================================== */}
       <section className="episodes-hero">
+        <div className="hero-logo">
+          <img
+            src="/images/logo.png"
+            alt="Scotti Brothers Can't Make This Up!"
+          />
+        </div>
+
         <div className="hero-content">
-          <p className="eyebrow">SCOTTI BROTHERS ENTERTAINMENT</p>
+          <p className="eyebrow">SCOTTI BROTHERS</p>
 
           <h1>EPISODES</h1>
 
@@ -84,8 +82,11 @@ export default function EpisodesPage() {
           </div>
 
           <p className="hero-copy">
-            Unbelievable moments. Real stories. Conversations from the music
-            and entertainment industry that you simply{" "}
+            <strong>Unbelievable moments! Real stories!</strong>
+            <br />
+            Conversations from the music and entertainment industry.
+            <br />
+            Stories and moments you simply{" "}
             <strong>Can&apos;t Make This Up!</strong>
           </p>
         </div>
@@ -217,15 +218,20 @@ export default function EpisodesPage() {
           overflow-x: hidden;
           background:
             radial-gradient(
-              circle at 50% 15%,
-              rgba(216, 184, 135, 0.14),
-              transparent 34%
+              circle at 20% 20%,
+              rgba(198, 40, 40, 0.12),
+              transparent 30%
+            ),
+            radial-gradient(
+              circle at 80% 55%,
+              rgba(216, 184, 135, 0.10),
+              transparent 30%
             ),
             linear-gradient(
               180deg,
               #080808 0%,
-              #111111 48%,
-              #090909 100%
+              #111111 50%,
+              #080808 100%
             );
           color: #fff;
           font-family: Arial, Helvetica, sans-serif;
@@ -236,17 +242,16 @@ export default function EpisodesPage() {
           inset: 0;
           z-index: 0;
           pointer-events: none;
-          opacity: 0.16;
           background:
             radial-gradient(
-              circle at 20% 30%,
-              rgba(198, 40, 40, 0.22),
-              transparent 28%
+              circle at 25% 35%,
+              rgba(198, 40, 40, 0.10),
+              transparent 30%
             ),
             radial-gradient(
-              circle at 80% 65%,
-              rgba(216, 184, 135, 0.16),
-              transparent 30%
+              circle at 75% 65%,
+              rgba(216, 184, 135, 0.08),
+              transparent 32%
             );
         }
 
@@ -257,12 +262,12 @@ export default function EpisodesPage() {
           pointer-events: none;
           background-image:
             linear-gradient(
-              rgba(255,255,255,0.018) 1px,
+              rgba(255,255,255,0.015) 1px,
               transparent 1px
             ),
             linear-gradient(
               90deg,
-              rgba(255,255,255,0.018) 1px,
+              rgba(255,255,255,0.015) 1px,
               transparent 1px
             );
           background-size: 42px 42px;
@@ -279,35 +284,23 @@ export default function EpisodesPage() {
           z-index: 2;
         }
 
-        /* HEADER */
+        /* =====================================================
+           HEADER
+        ===================================================== */
 
         .site-header {
           display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
+          align-items: center;
+          justify-content: flex-end;
           width: 100%;
+          min-height: 82px;
           padding: 24px 42px;
-          min-height: 110px;
-        }
-
-        .site-logo {
-          display: block;
-          line-height: 0;
-        }
-
-        .site-logo img {
-          display: block;
-          width: 115px;
-          height: auto;
-          max-height: 90px;
-          object-fit: contain;
         }
 
         .site-nav {
           display: flex;
           align-items: center;
           gap: 30px;
-          padding-top: 12px;
         }
 
         .site-nav a {
@@ -324,20 +317,45 @@ export default function EpisodesPage() {
           color: #d8b887;
         }
 
-        /* HERO */
+        /* =====================================================
+           HERO
+        ===================================================== */
 
         .episodes-hero {
+          position: relative;
           display: flex;
           align-items: center;
-          justify-content: center;
-          min-height: 480px;
-          padding: 70px 30px 85px;
-          text-align: center;
+          width: 100%;
+          min-height: 500px;
+          padding: 65px 70px 80px;
+          overflow: hidden;
+        }
+
+        .hero-logo {
+          position: absolute;
+          left: 5%;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 38%;
+          max-width: 430px;
+          z-index: 2;
+        }
+
+        .hero-logo img {
+          display: block;
+          width: 100%;
+          height: auto;
+          object-fit: contain;
         }
 
         .hero-content {
-          width: 100%;
-          max-width: 900px;
+          position: relative;
+          z-index: 3;
+          width: 52%;
+          max-width: 680px;
+          margin-left: auto;
+          margin-right: 4%;
+          text-align: center;
         }
 
         .eyebrow {
@@ -350,9 +368,9 @@ export default function EpisodesPage() {
         }
 
         .episodes-hero h1 {
-          margin: 20px 0 0;
+          margin: 18px 0 0;
           color: #fff;
-          font-size: clamp(58px, 9vw, 110px);
+          font-size: clamp(58px, 8vw, 100px);
           font-weight: 900;
           line-height: 0.9;
           letter-spacing: -0.045em;
@@ -362,8 +380,8 @@ export default function EpisodesPage() {
           display: flex;
           align-items: center;
           gap: 16px;
-          width: min(520px, 80%);
-          margin: 30px auto;
+          width: min(500px, 85%);
+          margin: 28px auto;
         }
 
         .gold-line span {
@@ -378,18 +396,21 @@ export default function EpisodesPage() {
         }
 
         .hero-copy {
-          max-width: 720px;
+          max-width: 650px;
           margin: 0 auto;
-          color: rgba(255,255,255,0.68);
+          color: rgba(255,255,255,0.72);
           font-size: 17px;
           line-height: 1.8;
         }
 
         .hero-copy strong {
           color: #d8b887;
+          font-weight: 900;
         }
 
-        /* SHARED SECTION */
+        /* =====================================================
+           SHARED SECTION
+        ===================================================== */
 
         .section-inner {
           width: min(1200px, calc(100% - 70px));
@@ -435,7 +456,9 @@ export default function EpisodesPage() {
           margin-right: auto;
         }
 
-        /* CURRENT CARD */
+        /* =====================================================
+           CURRENT EPISODE
+        ===================================================== */
 
         .current-card {
           display: grid;
@@ -560,7 +583,9 @@ export default function EpisodesPage() {
           letter-spacing: 0.25em;
         }
 
-        /* ARCHIVE */
+        /* =====================================================
+           ARCHIVE
+        ===================================================== */
 
         .archive-section {
           padding: 100px 0;
@@ -649,7 +674,9 @@ export default function EpisodesPage() {
           letter-spacing: 0.25em;
         }
 
-        /* WATCH */
+        /* =====================================================
+           WATCH / LISTEN
+        ===================================================== */
 
         .watch-section {
           padding: 110px 30px;
@@ -701,7 +728,9 @@ export default function EpisodesPage() {
           color: #fff;
         }
 
-        /* FOOTER */
+        /* =====================================================
+           FOOTER
+        ===================================================== */
 
         .site-footer {
           display: flex;
@@ -735,7 +764,9 @@ export default function EpisodesPage() {
           color: rgba(216,184,135,0.65);
         }
 
-        /* RESPONSIVE */
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
 
         @media (max-width: 900px) {
           .site-header {
@@ -748,6 +779,25 @@ export default function EpisodesPage() {
 
           .site-nav a {
             font-size: 11px;
+          }
+
+          .episodes-hero {
+            min-height: 440px;
+            padding: 55px 30px 70px;
+          }
+
+          .hero-logo {
+            left: 3%;
+            width: 36%;
+          }
+
+          .hero-content {
+            width: 58%;
+            margin-right: 2%;
+          }
+
+          .hero-copy {
+            font-size: 14px;
           }
 
           .current-card {
@@ -769,13 +819,7 @@ export default function EpisodesPage() {
 
         @media (max-width: 650px) {
           .site-header {
-            align-items: flex-start;
             padding: 18px;
-          }
-
-          .site-logo img {
-            width: 85px;
-            max-height: 70px;
           }
 
           .site-nav {
@@ -789,12 +833,37 @@ export default function EpisodesPage() {
           }
 
           .episodes-hero {
-            min-height: 400px;
-            padding: 55px 20px 70px;
+            min-height: 430px;
+            padding: 45px 18px 60px;
+          }
+
+          .hero-logo {
+            left: 2%;
+            width: 38%;
+          }
+
+          .hero-content {
+            width: 58%;
+            margin-right: 0;
+          }
+
+          .eyebrow {
+            font-size: 8px;
+            letter-spacing: 0.25em;
+          }
+
+          .episodes-hero h1 {
+            font-size: 48px;
           }
 
           .hero-copy {
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 1.6;
+          }
+
+          .gold-line {
+            width: 90%;
+            margin: 20px auto;
           }
 
           .section-inner {
