@@ -16,13 +16,11 @@ export default function HomePage() {
         width: "100%",
         minHeight: "100vh",
         overflow: "hidden",
-        backgroundColor: "#d9b985",
+        backgroundColor: "#000",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
     >
-      {/* =========================================================
-          SCOTTI BROTHERS HERO ARTWORK
-          ========================================================= */}
+      {/* HERO ARTWORK — DO NOT CHANGE */}
       <div
         aria-hidden="true"
         style={{
@@ -36,20 +34,9 @@ export default function HomePage() {
         }}
       />
 
-      {/* Very subtle readability overlay */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.02), rgba(0,0,0,0.06))",
-          zIndex: 1,
-        }}
-      />
-
       {/* =========================================================
           LOGO
+          Actual file: public/images/logo.png
           ========================================================= */}
       <Link
         href="/"
@@ -58,13 +45,13 @@ export default function HomePage() {
           position: "absolute",
           top: "24px",
           left: "42px",
-          zIndex: 10,
+          zIndex: 20,
           display: "block",
           lineHeight: 0,
         }}
       >
         <img
-          src="/images/logo/logo.png"
+          src="/images/logo.png"
           alt="Scotti Brothers"
           style={{
             display: "block",
@@ -83,7 +70,7 @@ export default function HomePage() {
           position: "absolute",
           top: 0,
           right: 0,
-          zIndex: 10,
+          zIndex: 20,
           padding: "30px 42px",
         }}
       >
@@ -101,12 +88,13 @@ export default function HomePage() {
               key={item.href}
               href={item.href}
               style={{
-                color: "#111",
+                color: "#ffffff",
                 textDecoration: "none",
                 fontSize: "15px",
                 fontWeight: 700,
                 letterSpacing: "0.2px",
                 whiteSpace: "nowrap",
+                textShadow: "0 2px 5px rgba(0,0,0,0.9)",
               }}
             >
               {item.label}
@@ -116,8 +104,7 @@ export default function HomePage() {
       </header>
 
       {/* =========================================================
-          WATCH & LISTEN BUTTON
-          Positioned over the main artwork/title area.
+          WATCH & LISTEN
           ========================================================= */}
       <div
         style={{
@@ -125,7 +112,7 @@ export default function HomePage() {
           left: "50%",
           top: "70%",
           transform: "translate(-50%, -50%)",
-          zIndex: 10,
+          zIndex: 20,
         }}
       >
         <Link
@@ -134,16 +121,17 @@ export default function HomePage() {
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            minWidth: "150px",
-            padding: "12px 24px",
+            minWidth: "155px",
+            padding: "13px 26px",
             borderRadius: "999px",
-            background: "#111",
-            color: "#fff",
+            backgroundColor: "#111111",
+            color: "#ffffff",
+            border: "2px solid rgba(255,255,255,0.9)",
             textDecoration: "none",
-            fontSize: "14px",
+            fontSize: "15px",
             fontWeight: 800,
             letterSpacing: "0.2px",
-            boxShadow: "0 6px 18px rgba(0,0,0,0.22)",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.5)",
           }}
         >
           Watch &amp; Listen
@@ -151,7 +139,7 @@ export default function HomePage() {
       </div>
 
       {/* =========================================================
-          RESPONSIVE POSITIONING
+          RESPONSIVE
           ========================================================= */}
       <style>{`
         @media (max-width: 900px) {
