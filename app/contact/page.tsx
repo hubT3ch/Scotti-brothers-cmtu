@@ -22,7 +22,7 @@
       {/* RIGHT — CONTACT HEADING */}
       <div className="relative lg:pl-4">
         <p className="text-xs font-bold uppercase tracking-[0.45em] text-[#d8b887]">
-          Scotti Brothers Entertainment
+          Scotti Brothers
         </p>
 
         <h1 className="mt-5 text-4xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
