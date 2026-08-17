@@ -96,6 +96,8 @@ export default function HomePage() {
             Arial,
             Helvetica,
             sans-serif;
+
+          overscroll-behavior-x: none;
         }
 
         /* ===================================================
@@ -177,9 +179,6 @@ export default function HomePage() {
           text-shadow:
             0 2px 5px
             rgba(0,0,0,0.9);
-
-          transition:
-            opacity 0.2s ease;
         }
 
         .home-nav-link:hover {
@@ -273,9 +272,8 @@ export default function HomePage() {
         /* ===================================================
            PORTRAIT PHONE
            
-           Artwork occupies the upper portion.
-           Dark area occupies the bottom.
-           Watch & Listen sits in the dark area.
+           Artwork fills roughly the upper half.
+           Watch & Listen sits immediately below it.
            =================================================== */
 
         @media (max-width: 650px) and (orientation: portrait) {
@@ -304,14 +302,21 @@ export default function HomePage() {
             width:
               100%;
 
+            /*
+             * Give the artwork enough vertical space to
+             * occupy roughly half the phone.
+             */
             height:
-              72svh;
+              58svh;
 
             background-size:
               contain;
 
             background-position:
               center top;
+
+            background-repeat:
+              no-repeat;
 
             background-color:
               #000000;
@@ -346,6 +351,10 @@ export default function HomePage() {
               rgba(0,0,0,0.95);
           }
 
+          /*
+           * Button is placed just below the artwork
+           * instead of near the bottom edge.
+           */
           .watch-listen-area {
             left:
               0;
@@ -354,10 +363,10 @@ export default function HomePage() {
               0;
 
             top:
-              auto;
+              62svh;
 
             bottom:
-              8svh;
+              auto;
 
             transform:
               none;
@@ -368,10 +377,10 @@ export default function HomePage() {
             display:
               flex;
 
-            justify-content:
+            align-items:
               center;
 
-            align-items:
+            justify-content:
               center;
           }
 
@@ -390,11 +399,45 @@ export default function HomePage() {
         }
 
         /* ===================================================
+           SMALL PORTRAIT PHONE
+           =================================================== */
+
+        @media (max-width: 390px) and (orientation: portrait) {
+
+          .home-artwork {
+            height:
+              56svh;
+
+            background-size:
+              contain;
+
+            background-position:
+              center top;
+          }
+
+          .watch-listen-area {
+            top:
+              60svh;
+          }
+
+          .home-nav {
+            gap:
+              6px;
+          }
+
+          .home-nav-link {
+            font-size:
+              8px;
+          }
+
+        }
+
+        /* ===================================================
            LANDSCAPE PHONE
            
-           Artwork moves left.
-           Dark area occupies the right.
-           Watch & Listen sits on the right.
+           Artwork stays on left.
+           Button moves toward center-right rather than
+           being pushed against the edge.
            =================================================== */
 
         @media (max-width: 900px) and (orientation: landscape) {
@@ -432,6 +475,9 @@ export default function HomePage() {
             background-position:
               left center;
 
+            background-repeat:
+              no-repeat;
+
             background-color:
               #000000;
           }
@@ -465,12 +511,15 @@ export default function HomePage() {
               rgba(0,0,0,0.95);
           }
 
+          /*
+           * Move the button left from the previous position.
+           */
           .watch-listen-area {
             left:
-              auto;
+              76vw;
 
             right:
-              7vw;
+              auto;
 
             top:
               50%;
@@ -479,10 +528,10 @@ export default function HomePage() {
               auto;
 
             transform:
-              translateY(-50%);
+              translate(-50%, -50%);
 
             width:
-              20vw;
+              26vw;
 
             display:
               flex;
@@ -509,40 +558,6 @@ export default function HomePage() {
         }
 
         /* ===================================================
-           VERY SMALL PORTRAIT PHONE
-           =================================================== */
-
-        @media (max-width: 390px) and (orientation: portrait) {
-
-          .home-artwork {
-            height:
-              69svh;
-
-            background-size:
-              contain;
-
-            background-position:
-              center top;
-          }
-
-          .watch-listen-area {
-            bottom:
-              9svh;
-          }
-
-          .home-nav {
-            gap:
-              6px;
-          }
-
-          .home-nav-link {
-            font-size:
-              8px;
-          }
-
-        }
-
-        /* ===================================================
            VERY SMALL LANDSCAPE PHONE
            =================================================== */
 
@@ -554,11 +569,11 @@ export default function HomePage() {
           }
 
           .watch-listen-area {
-            right:
-              5vw;
+            left:
+              74vw;
 
             width:
-              25vw;
+              28vw;
           }
 
           .watch-listen-button {
