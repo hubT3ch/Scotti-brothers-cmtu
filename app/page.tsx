@@ -201,7 +201,7 @@ export default function HomePage() {
           z-index: 1;
 
           background-image:
-            url('/images/hero/hero-background.png');
+  url('/images/homepage-hero.png');
 
           background-repeat:
             no-repeat;
