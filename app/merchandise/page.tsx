@@ -541,22 +541,15 @@ export default function MerchandisePage() {
            HERO LOGO
         ========================================= */
 
-        .hero-logo {
-          position: absolute;
-
-          left: 3%;
-
-          top: 50%;
-
-          transform:
-            translateY(-50%);
-
-          width: 43%;
-
-          max-width: 500px;
-
-          z-index: 2;
-        }
+      .hero-logo {
+  position: absolute;
+  left: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52%;
+  max-width: 650px;
+  z-index: 2;
+}
 
         .hero-logo a {
           display: block;
@@ -1306,11 +1299,10 @@ export default function MerchandisePage() {
             gap: 20px;
           }
 
-          .hero-logo {
-            left: 2%;
-
-            width: 42%;
-          }
+        .hero-logo {
+  left: 1%;
+  width: 48%;
+}
 
           .merch-hero-copy {
             width: 58%;
@@ -1363,11 +1355,10 @@ export default function MerchandisePage() {
               55px;
           }
 
-          .hero-logo {
-            left: 0;
-
-            width: 39%;
-          }
+        .hero-logo {
+  left: 1%;
+  width: 46%;
+}
 
           .merch-hero-copy {
             width: 60%;
