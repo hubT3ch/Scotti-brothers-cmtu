@@ -22,24 +22,11 @@ export default function ContactPage() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    /*
-      This prevents the browser from leaving the page until
-      the submission endpoint is connected.
-
-      The form is fully structured and ready for the site's
-      submission handler/API.
-    */
-
     setSubmitted(true);
   }
 
   return (
     <main className="contact-page">
-      {/* =====================================================
-          BACKGROUND
-      ====================================================== */}
-
       <div className="background" aria-hidden="true" />
       <div className="grid-overlay" aria-hidden="true" />
 
@@ -62,19 +49,12 @@ export default function ContactPage() {
             </Link>
           </div>
 
-          <nav
-            className="site-nav"
-            aria-label="Main navigation"
-          >
+          <nav className="site-nav" aria-label="Main navigation">
             {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={
-                  item.href === "/contact"
-                    ? "active"
-                    : ""
-                }
+                className={item.href === "/contact" ? "active" : ""}
               >
                 {item.label}
               </Link>
@@ -101,14 +81,11 @@ export default function ContactPage() {
           </div>
 
           <div className="hero-copy">
-
             <p className="eyebrow">
               SCOTTI BROTHERS
             </p>
 
-            <h1>
-              CONTACT
-            </h1>
+            <h1>CONTACT</h1>
 
             <div className="gold-line">
               <span />
@@ -118,19 +95,16 @@ export default function ContactPage() {
 
             <p className="hero-subtitle">
               Want to be a guest on{" "}
-              <strong>
-                Can&apos;t Make This Up!
-              </strong>
-              ?
+              <strong>Can&apos;t Make This Up!</strong>?
               <br />
               Tell us your story and let&apos;s talk.
             </p>
-
           </div>
+
         </section>
 
         {/* =====================================================
-            GUEST INTRO
+            INTRO
         ====================================================== */}
 
         <section className="intro-section">
@@ -162,62 +136,7 @@ export default function ContactPage() {
         </section>
 
         {/* =====================================================
-            AGREEMENT CARD
-        ====================================================== */}
-
-        <section className="agreement-section">
-
-          <div className="agreement-card">
-
-            <div className="agreement-badge">
-              REQUIRED BEFORE RECORDING
-            </div>
-
-            <div className="agreement-content">
-
-              <p className="agreement-eyebrow">
-                PODCAST APPEARANCE &amp; RELEASE AGREEMENT
-              </p>
-
-              <h2>
-                READ &amp; SIGN AGREEMENT
-              </h2>
-
-              <p>
-                Before participating in a recording, guests are
-                required to review the Scotti Brothers
-                &quot;Can&apos;t Make This Up!&quot; Podcast
-                Appearance &amp; Release Agreement.
-              </p>
-
-              <p>
-                The agreement explains the recording, production,
-                publication, promotional, intellectual-property,
-                and release terms applicable to your appearance.
-              </p>
-
-              <a
-                href="/documents/scotti-brothers-podcast-appearance-release-agreement.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="agreement-button"
-              >
-                READ &amp; SIGN AGREEMENT
-                <span>↗</span>
-              </a>
-
-              <p className="agreement-note">
-                The agreement may be reviewed, completed,
-                electronically signed, downloaded, or printed.
-              </p>
-
-            </div>
-          </div>
-
-        </section>
-
-        {/* =====================================================
-            FORM
+            GUEST FORM
         ====================================================== */}
 
         <section className="form-section">
@@ -243,9 +162,7 @@ export default function ContactPage() {
 
           {submitted && (
             <div className="success-message">
-              <strong>
-                THANK YOU.
-              </strong>
+              <strong>THANK YOU.</strong>
 
               <span>
                 Your guest inquiry has been prepared for submission.
@@ -260,7 +177,7 @@ export default function ContactPage() {
           >
 
             {/* =================================================
-                SECTION 1 — GUEST INFORMATION
+                01 — GUEST INFORMATION
             ================================================== */}
 
             <div className="form-card">
@@ -269,13 +186,8 @@ export default function ContactPage() {
                 <span>01</span>
 
                 <div>
-                  <p>
-                    GUEST INFORMATION
-                  </p>
-
-                  <h3>
-                    TELL US ABOUT YOU
-                  </h3>
+                  <p>GUEST INFORMATION</p>
+                  <h3>TELL US ABOUT YOU</h3>
                 </div>
               </div>
 
@@ -337,7 +249,7 @@ export default function ContactPage() {
             </div>
 
             {/* =================================================
-                SECTION 2 — REPRESENTATION
+                02 — REPRESENTATION
             ================================================== */}
 
             <div className="form-card">
@@ -346,13 +258,8 @@ export default function ContactPage() {
                 <span>02</span>
 
                 <div>
-                  <p>
-                    REPRESENTATION
-                  </p>
-
-                  <h3>
-                    MANAGEMENT / REPRESENTATIVE
-                  </h3>
+                  <p>REPRESENTATION</p>
+                  <h3>MANAGEMENT / REPRESENTATIVE</h3>
                 </div>
               </div>
 
@@ -365,9 +272,7 @@ export default function ContactPage() {
                     name="selfRepresented"
                     checked={selfRepresented}
                     onChange={(event) =>
-                      setSelfRepresented(
-                        event.target.checked
-                      )
+                      setSelfRepresented(event.target.checked)
                     }
                   />
 
@@ -411,7 +316,7 @@ export default function ContactPage() {
             </div>
 
             {/* =================================================
-                SECTION 3 — STORY
+                03 — STORY
             ================================================== */}
 
             <div className="form-card">
@@ -420,13 +325,8 @@ export default function ContactPage() {
                 <span>03</span>
 
                 <div>
-                  <p>
-                    YOUR STORY
-                  </p>
-
-                  <h3>
-                    CAN&apos;T MAKE THIS UP!
-                  </h3>
+                  <p>YOUR STORY</p>
+                  <h3>CAN&apos;T MAKE THIS UP!</h3>
                 </div>
               </div>
 
@@ -467,7 +367,7 @@ export default function ContactPage() {
             </div>
 
             {/* =================================================
-                SECTION 4 — TAPING AVAILABILITY
+                04 — TAPING AVAILABILITY
             ================================================== */}
 
             <div className="form-card">
@@ -476,13 +376,8 @@ export default function ContactPage() {
                 <span>04</span>
 
                 <div>
-                  <p>
-                    TAPING AVAILABILITY
-                  </p>
-
-                  <h3>
-                    WHEN CAN WE RECORD?
-                  </h3>
+                  <p>TAPING AVAILABILITY</p>
+                  <h3>WHEN CAN WE RECORD?</h3>
                 </div>
               </div>
 
@@ -503,9 +398,7 @@ export default function ContactPage() {
                       required
                       checked={appearanceType === "Live"}
                       onChange={(event) =>
-                        setAppearanceType(
-                          event.target.value
-                        )
+                        setAppearanceType(event.target.value)
                       }
                     />
 
@@ -527,9 +420,7 @@ export default function ContactPage() {
                       value="Virtual"
                       checked={appearanceType === "Virtual"}
                       onChange={(event) =>
-                        setAppearanceType(
-                          event.target.value
-                        )
+                        setAppearanceType(event.target.value)
                       }
                     />
 
@@ -551,9 +442,7 @@ export default function ContactPage() {
                       value="Either"
                       checked={appearanceType === "Either"}
                       onChange={(event) =>
-                        setAppearanceType(
-                          event.target.value
-                        )
+                        setAppearanceType(event.target.value)
                       }
                     />
 
@@ -626,7 +515,7 @@ export default function ContactPage() {
 
                 </div>
 
-                <div className="field full">
+                <div className="field full availability-notes">
 
                   <label htmlFor="availabilityNotes">
                     Additional Availability Notes
@@ -645,24 +534,20 @@ export default function ContactPage() {
             </div>
 
             {/* =================================================
-                SECTION 5 — LIVE TAPING EMERGENCY CONTACT
+                05 — EMERGENCY CONTACT
             ================================================== */}
 
-            {appearanceType === "Live" ||
-            appearanceType === "Either" ? (
+            {(appearanceType === "Live" ||
+              appearanceType === "Either") && (
+
               <div className="form-card">
 
                 <div className="form-card-header">
                   <span>05</span>
 
                   <div>
-                    <p>
-                      LIVE TAPINGS
-                    </p>
-
-                    <h3>
-                      EMERGENCY CONTACT
-                    </h3>
+                    <p>LIVE TAPINGS</p>
+                    <h3>EMERGENCY CONTACT</h3>
                   </div>
                 </div>
 
@@ -698,11 +583,12 @@ export default function ContactPage() {
                   </div>
 
                 </div>
+
               </div>
-            ) : null}
+            )}
 
             {/* =================================================
-                SECTION 6 — PRIVACY / ANONYMITY
+                06 — PRIVACY
             ================================================== */}
 
             <div className="form-card">
@@ -711,13 +597,8 @@ export default function ContactPage() {
                 <span>06</span>
 
                 <div>
-                  <p>
-                    PRIVACY PREFERENCES
-                  </p>
-
-                  <h3>
-                    NAME &amp; ORGANIZATION
-                  </h3>
+                  <p>PRIVACY PREFERENCES</p>
+                  <h3>NAME &amp; ORGANIZATION</h3>
                 </div>
               </div>
 
@@ -764,48 +645,39 @@ export default function ContactPage() {
             </div>
 
             {/* =================================================
-                SECTION 7 — AGREEMENT ACKNOWLEDGMENT
+                AGREEMENT — SMALL FINAL STEP
             ================================================== */}
 
-            <div className="form-card agreement-confirmation">
+            <div className="agreement-final">
 
-              <div className="form-card-header">
-                <span>07</span>
+              <div className="agreement-final-heading">
 
-                <div>
-                  <p>
-                    AGREEMENT
-                  </p>
+                <p className="eyebrow">
+                  REQUIRED BEFORE RECORDING
+                </p>
 
-                  <h3>
-                    REVIEW &amp; ACKNOWLEDGMENT
-                  </h3>
-                </div>
+                <h3>
+                  PODCAST APPEARANCE &amp; RELEASE AGREEMENT
+                </h3>
+
+                <p>
+                  Please review the agreement before submitting
+                  your guest inquiry.
+                </p>
+
               </div>
 
-              <div className="form-body">
+              <a
+                href="/documents/scotti-brothers-podcast-appearance-release-agreement.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="agreement-link-button"
+              >
+                READ &amp; SIGN AGREEMENT
+                <span>↗</span>
+              </a>
 
-                <div className="agreement-mini-card">
-
-                  <div>
-                    <strong>
-                      SCOTTI BROTHERS &quot;CAN&apos;T MAKE THIS UP!&quot;
-                    </strong>
-
-                    <span>
-                      Podcast Appearance &amp; Release Agreement
-                    </span>
-                  </div>
-
-                  <a
-                    href="/documents/scotti-brothers-podcast-appearance-release-agreement.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    READ &amp; SIGN
-                  </a>
-
-                </div>
+              <div className="final-checks">
 
                 <label className="check-row required-check">
 
@@ -860,6 +732,7 @@ export default function ContactPage() {
                 </label>
 
               </div>
+
             </div>
 
             {/* =================================================
@@ -968,10 +841,6 @@ export default function ContactPage() {
           box-sizing: border-box;
         }
 
-        /* =====================================================
-           PAGE
-        ====================================================== */
-
         .contact-page {
           min-height: 100vh;
           position: relative;
@@ -1050,9 +919,7 @@ export default function ContactPage() {
           width: 100%;
         }
 
-        /* =====================================================
-           HEADER
-        ====================================================== */
+        /* HEADER */
 
         .site-header {
           min-height: 82px;
@@ -1125,9 +992,7 @@ export default function ContactPage() {
           color: #fff;
         }
 
-        /* =====================================================
-           HERO
-        ====================================================== */
+        /* HERO */
 
         .hero {
           width:
@@ -1138,8 +1003,7 @@ export default function ContactPage() {
 
           min-height: 460px;
 
-          margin:
-            0 auto;
+          margin: 0 auto;
 
           padding:
             35px
@@ -1196,11 +1060,9 @@ export default function ContactPage() {
           font-size: 11px;
           font-weight: 900;
 
-          letter-spacing:
-            .42em;
+          letter-spacing: .42em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .hero h1 {
@@ -1222,16 +1084,13 @@ export default function ContactPage() {
 
           font-weight: 900;
 
-          letter-spacing:
-            -.045em;
+          letter-spacing: -.045em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
 
           text-shadow:
             4px 4px 0 ${RED},
-            8px 8px 0
-            rgba(242,201,76,.3);
+            8px 8px 0 rgba(242,201,76,.30);
         }
 
         .gold-line {
@@ -1266,9 +1125,7 @@ export default function ContactPage() {
         .hero-subtitle {
           max-width: 650px;
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
           color:
             rgba(255,255,255,.78);
@@ -1282,9 +1139,7 @@ export default function ContactPage() {
           color: ${GOLD};
         }
 
-        /* =====================================================
-           INTRO
-        ====================================================== */
+        /* INTRO */
 
         .intro-section {
           width:
@@ -1294,8 +1149,7 @@ export default function ContactPage() {
             );
 
           margin:
-            0
-            auto;
+            0 auto;
 
           padding:
             35px
@@ -1354,212 +1208,7 @@ export default function ContactPage() {
             ${BRIGHT_RED};
         }
 
-        /* =====================================================
-           AGREEMENT
-        ====================================================== */
-
-        .agreement-section {
-          width:
-            min(
-              1150px,
-              100%
-            );
-
-          margin:
-            0
-            auto;
-
-          padding:
-            0
-            25px
-            75px;
-        }
-
-        .agreement-card {
-          position: relative;
-
-          display: grid;
-
-          grid-template-columns:
-            auto
-            1fr;
-
-          overflow: hidden;
-
-          border:
-            2px
-            solid
-            ${GOLD};
-
-          background:
-            linear-gradient(
-              135deg,
-              #8b0000,
-              #520000
-            );
-
-          box-shadow:
-            0
-            20px
-            55px
-            rgba(0,0,0,.55);
-        }
-
-        .agreement-badge {
-          writing-mode:
-            vertical-rl;
-
-          transform:
-            rotate(180deg);
-
-          padding:
-            25px
-            13px;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          background:
-            ${GOLD};
-
-          color:
-            #050505;
-
-          font-size: 9px;
-          font-weight: 900;
-
-          letter-spacing:
-            .2em;
-        }
-
-        .agreement-content {
-          padding:
-            42px
-            48px;
-        }
-
-        .agreement-eyebrow {
-          margin: 0;
-
-          color:
-            ${GOLD};
-
-          font-size: 10px;
-          font-weight: 900;
-
-          letter-spacing:
-            .3em;
-
-          text-transform:
-            uppercase;
-        }
-
-        .agreement-content h2 {
-          margin:
-            10px
-            0
-            0;
-
-          font-size:
-            clamp(
-              32px,
-              5vw,
-              52px
-            );
-
-          line-height: .95;
-
-          font-weight: 900;
-        }
-
-        .agreement-content p:not(.agreement-eyebrow):not(.agreement-note) {
-          max-width: 750px;
-
-          margin:
-            18px
-            0
-            0;
-
-          color:
-            rgba(255,255,255,.78);
-
-          font-size: 14px;
-          line-height: 1.7;
-        }
-
-        .agreement-button {
-          display: inline-flex;
-          align-items: center;
-          gap: 16px;
-
-          margin-top: 28px;
-
-          padding:
-            17px
-            28px;
-
-          background:
-            ${BRIGHT_RED};
-
-          border:
-            2px
-            solid
-            ${GOLD};
-
-          color:
-            #fff;
-
-          text-decoration:
-            none;
-
-          font-size: 12px;
-          font-weight: 900;
-
-          letter-spacing:
-            .2em;
-
-          transition:
-            transform .2s ease,
-            background .2s ease,
-            box-shadow .2s ease;
-        }
-
-        .agreement-button:hover {
-          transform:
-            translateY(-2px);
-
-          background:
-            #ff1717;
-
-          box-shadow:
-            0
-            0
-            25px
-            rgba(242,201,76,.28);
-        }
-
-        .agreement-button span {
-          color:
-            ${GOLD};
-
-          font-size: 18px;
-        }
-
-        .agreement-note {
-          margin-top: 13px;
-
-          color:
-            rgba(255,255,255,.48);
-
-          font-size: 10px;
-
-          font-weight: 700;
-        }
-
-        /* =====================================================
-           FORM
-        ====================================================== */
+        /* FORM */
 
         .form-section {
           width:
@@ -1569,8 +1218,7 @@ export default function ContactPage() {
             );
 
           margin:
-            0
-            auto;
+            0 auto;
 
           padding:
             15px
@@ -1723,8 +1371,7 @@ export default function ContactPage() {
         }
 
         .form-card-header p {
-          margin:
-            0;
+          margin: 0;
 
           color:
             ${GOLD};
@@ -1877,10 +1524,6 @@ export default function ContactPage() {
             rgba(242,201,76,.15);
         }
 
-        /* =====================================================
-           MANAGEMENT
-        ====================================================== */
-
         .management-fields {
           margin-top:
             25px;
@@ -1900,9 +1543,7 @@ export default function ContactPage() {
             rgba(242,201,76,.3);
         }
 
-        /* =====================================================
-           CHECKBOXES
-        ====================================================== */
+        /* CHECKBOXES */
 
         .check-row {
           display:
@@ -1970,9 +1611,7 @@ export default function ContactPage() {
             1.7;
         }
 
-        /* =====================================================
-           AVAILABILITY
-        ====================================================== */
+        /* AVAILABILITY */
 
         .availability-label {
           margin-bottom:
@@ -2072,6 +1711,13 @@ export default function ContactPage() {
             700;
         }
 
+        .availability-notes {
+          margin-top:
+            24px;
+        }
+
+        /* EMERGENCY */
+
         .optional-banner {
           display:
             inline-flex;
@@ -2110,10 +1756,77 @@ export default function ContactPage() {
         }
 
         /* =====================================================
-           AGREEMENT CONFIRMATION
+           FINAL AGREEMENT
         ====================================================== */
 
-        .agreement-mini-card {
+        .agreement-final {
+          padding:
+            30px
+            32px;
+
+          border-top:
+            2px
+            solid
+            ${GOLD};
+
+          border-bottom:
+            2px
+            solid
+            ${GOLD};
+
+          background:
+            rgba(255,255,255,.035);
+        }
+
+        .agreement-final-heading {
+          text-align:
+            center;
+        }
+
+        .agreement-final-heading h3 {
+          margin:
+            8px
+            0
+            0;
+
+          color:
+            #fff;
+
+          font-size:
+            24px;
+
+          line-height:
+            1.1;
+
+          font-weight:
+            900;
+
+          text-transform:
+            uppercase;
+        }
+
+        .agreement-final-heading > p:not(.eyebrow) {
+          margin:
+            10px
+            auto
+            0;
+
+          color:
+            rgba(255,255,255,.55);
+
+          font-size:
+            12px;
+        }
+
+        .agreement-link-button {
+          width:
+            fit-content;
+
+          margin:
+            22px
+            auto
+            0;
+
           display:
             flex;
 
@@ -2121,68 +1834,22 @@ export default function ContactPage() {
             center;
 
           justify-content:
-            space-between;
+            center;
 
           gap:
-            20px;
-
-          padding:
-            20px;
-
-          background:
-            #fff;
-
-          border-left:
-            6px
-            solid
-            ${RED};
-
-          color:
-            #111;
-        }
-
-        .agreement-mini-card div {
-          display:
-            flex;
-
-          flex-direction:
-            column;
-
-          gap:
-            5px;
-        }
-
-        .agreement-mini-card strong {
-          color:
-            ${RED};
-
-          font-size:
             12px;
 
-          font-weight:
-            900;
-        }
-
-        .agreement-mini-card span {
-          color:
-            #555;
-
-          font-size:
-            11px;
-        }
-
-        .agreement-mini-card a {
-          flex:
-            0
-            0
-            auto;
-
           padding:
-            12px
-            18px;
+            14px
+            23px;
 
           background:
             ${RED};
+
+          border:
+            2px
+            solid
+            ${GOLD};
 
           color:
             #fff;
@@ -2197,26 +1864,50 @@ export default function ContactPage() {
             900;
 
           letter-spacing:
-            .15em;
-
-          border:
-            2px
-            solid
-            ${GOLD};
+            .18em;
 
           transition:
-            background .2s ease;
+            transform .2s ease,
+            background .2s ease,
+            box-shadow .2s ease;
         }
 
-        .agreement-mini-card a:hover {
+        .agreement-link-button span {
+          color:
+            ${GOLD};
+
+          font-size:
+            16px;
+        }
+
+        .agreement-link-button:hover {
+          transform:
+            translateY(-2px);
+
           background:
             #ff1717;
+
+          box-shadow:
+            0
+            0
+            22px
+            rgba(242,201,76,.22);
+        }
+
+        .final-checks {
+          max-width:
+            850px;
+
+          margin:
+            22px
+            auto
+            0;
         }
 
         .required-check {
           padding:
-            14px
-            16px;
+            13px
+            15px;
 
           border:
             1px
@@ -2232,9 +1923,7 @@ export default function ContactPage() {
             #fff;
         }
 
-        /* =====================================================
-           SUCCESS
-        ====================================================== */
+        /* SUCCESS */
 
         .success-message {
           margin-bottom:
@@ -2284,13 +1973,11 @@ export default function ContactPage() {
             #555;
         }
 
-        /* =====================================================
-           SUBMIT
-        ====================================================== */
+        /* SUBMIT */
 
         .submit-section {
           padding:
-            25px
+            20px
             0
             10px;
 
@@ -2385,9 +2072,7 @@ export default function ContactPage() {
             rgba(242,201,76,.25);
         }
 
-        /* =====================================================
-           CONNECT
-        ====================================================== */
+        /* CONNECT */
 
         .connect-section {
           padding:
@@ -2450,8 +2135,7 @@ export default function ContactPage() {
             900;
 
           text-shadow:
-            4px 4px 0
-            ${RED};
+            4px 4px 0 ${RED};
         }
 
         .connect-content > p:not(.eyebrow) {
@@ -2524,9 +2208,7 @@ export default function ContactPage() {
             #fff;
         }
 
-        /* =====================================================
-           FOOTER
-        ====================================================== */
+        /* FOOTER */
 
         .site-footer {
           padding:
@@ -2622,9 +2304,7 @@ export default function ContactPage() {
             underline;
         }
 
-        /* =====================================================
-           TABLET
-        ====================================================== */
+        /* TABLET */
 
         @media (max-width: 900px) {
 
@@ -2649,9 +2329,7 @@ export default function ContactPage() {
 
         }
 
-        /* =====================================================
-           MOBILE
-        ====================================================== */
+        /* MOBILE */
 
         @media (max-width: 650px) {
 
@@ -2816,51 +2494,6 @@ export default function ContactPage() {
               40px;
           }
 
-          .agreement-section {
-            padding:
-              0
-              14px
-              60px;
-          }
-
-          .agreement-card {
-            grid-template-columns:
-              1fr;
-          }
-
-          .agreement-badge {
-            writing-mode:
-              horizontal-tb;
-
-            transform:
-              none;
-
-            padding:
-              10px;
-
-            font-size:
-              8px;
-          }
-
-          .agreement-content {
-            padding:
-              30px
-              24px;
-          }
-
-          .agreement-content h2 {
-            font-size:
-              34px;
-          }
-
-          .agreement-button {
-            width:
-              100%;
-
-            justify-content:
-              center;
-          }
-
           .form-section {
             padding:
               10px
@@ -2918,15 +2551,21 @@ export default function ContactPage() {
               1fr;
           }
 
-          .agreement-mini-card {
-            flex-direction:
-              column;
-
-            align-items:
-              stretch;
+          .agreement-final {
+            padding:
+              25px
+              18px;
           }
 
-          .agreement-mini-card a {
+          .agreement-final-heading h3 {
+            font-size:
+              19px;
+          }
+
+          .agreement-link-button {
+            width:
+              100%;
+
             text-align:
               center;
           }
@@ -2970,13 +2609,12 @@ export default function ContactPage() {
         }
 
       `}</style>
-
     </main>
   );
 }
 
 /* ============================================================
-   REUSABLE FIELD COMPONENT
+   REUSABLE FIELD
 ============================================================ */
 
 function Field({
