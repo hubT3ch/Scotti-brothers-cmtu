@@ -1257,22 +1257,15 @@ export default function ContactPage() {
           overflow: hidden;
         }
 
-        .hero-logo {
-          position: absolute;
-
-          left: 2%;
-
-          top: 50%;
-
-          transform:
-            translateY(-50%);
-
-          width: 44%;
-
-          max-width: 540px;
-
-          z-index: 2;
-        }
+     .hero-logo {
+  position: absolute;
+  left: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52%;
+  max-width: 650px;
+  z-index: 2;
+}
 
         .hero-logo a {
           display: block;
@@ -2616,9 +2609,10 @@ export default function ContactPage() {
               60px;
           }
 
-          .hero-logo {
-            width: 42%;
-          }
+      .hero-logo {
+  left: 1%;
+  width: 48%;
+}
 
           .contact-hero-copy {
             width: 58%;
@@ -2679,11 +2673,10 @@ export default function ContactPage() {
               55px;
           }
 
-          .hero-logo {
-            left: 0;
-
-            width: 39%;
-          }
+       .hero-logo {
+  left: 1%;
+  width: 46%;
+}
 
           .contact-hero-copy {
             width: 60%;
