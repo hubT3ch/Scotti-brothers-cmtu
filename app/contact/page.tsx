@@ -12,33 +12,43 @@ const navigation = [
 ];
 
 const GOLD = "#F2C94C";
+const RED = "#D60000";
+const BRIGHT_RED = "#F20D0D";
 
 export default function ContactPage() {
   const [selfRepresented, setSelfRepresented] = useState(false);
+  const [appearanceType, setAppearanceType] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setSubmitted(true);
+    /*
+      This prevents the browser from leaving the page until
+      the submission endpoint is connected.
 
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
+      The form is fully structured and ready for the site's
+      submission handler/API.
+    */
+
+    setSubmitted(true);
   }
 
   return (
     <main className="contact-page">
-      {/* BACKGROUND */}
+      {/* =====================================================
+          BACKGROUND
+      ====================================================== */}
+
       <div className="background" aria-hidden="true" />
       <div className="grid-overlay" aria-hidden="true" />
 
       <div className="page-content">
 
-        {/* =========================================
+        {/* =====================================================
             HEADER
-        ========================================= */}
+        ====================================================== */}
+
         <header className="site-header">
           <div className="mobile-logo">
             <Link
@@ -52,13 +62,18 @@ export default function ContactPage() {
             </Link>
           </div>
 
-          <nav className="site-nav" aria-label="Main navigation">
+          <nav
+            className="site-nav"
+            aria-label="Main navigation"
+          >
             {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={
-                  item.href === "/contact" ? "active" : ""
+                  item.href === "/contact"
+                    ? "active"
+                    : ""
                 }
               >
                 {item.label}
@@ -67,9 +82,10 @@ export default function ContactPage() {
           </nav>
         </header>
 
-        {/* =========================================
+        {/* =====================================================
             HERO
-        ========================================= */}
+        ====================================================== */}
+
         <section className="hero">
 
           <div className="desktop-logo">
@@ -85,11 +101,14 @@ export default function ContactPage() {
           </div>
 
           <div className="hero-copy">
+
             <p className="eyebrow">
               SCOTTI BROTHERS
             </p>
 
-            <h1>CONTACT</h1>
+            <h1>
+              CONTACT
+            </h1>
 
             <div className="gold-line">
               <span />
@@ -99,760 +118,781 @@ export default function ContactPage() {
 
             <p className="hero-subtitle">
               Want to be a guest on{" "}
-              <strong>Can&apos;t Make This Up!</strong>?
+              <strong>
+                Can&apos;t Make This Up!
+              </strong>
+              ?
               <br />
-              Tell us your story and connect with the Scotti Brothers team.
+              Tell us your story and let&apos;s talk.
             </p>
+
           </div>
         </section>
 
-        {/* =========================================
-            GUEST INQUIRY SECTION
-        ========================================= */}
-        <section className="contact-section">
+        {/* =====================================================
+            GUEST INTRO
+        ====================================================== */}
+
+        <section className="intro-section">
+
+          <p className="eyebrow">
+            GUEST APPEARANCE INQUIRIES
+          </p>
+
+          <h2>
+            HAVE A STORY?
+          </h2>
+
+          <div className="red-line" />
+
+          <p className="intro-copy">
+            The Scotti Brothers &quot;Can&apos;t Make This Up!&quot;
+            Podcast is looking for unforgettable stories,
+            unbelievable moments, music-industry experiences,
+            behind-the-scenes insight, and conversations that
+            people will be talking about long after the episode ends.
+          </p>
+
+          <p className="intro-copy">
+            Complete the guest inquiry form below. Our team will
+            review your information and contact you if your story
+            is a potential fit for the show.
+          </p>
+
+        </section>
+
+        {/* =====================================================
+            AGREEMENT CARD
+        ====================================================== */}
+
+        <section className="agreement-section">
+
+          <div className="agreement-card">
+
+            <div className="agreement-badge">
+              REQUIRED BEFORE RECORDING
+            </div>
+
+            <div className="agreement-content">
+
+              <p className="agreement-eyebrow">
+                PODCAST APPEARANCE &amp; RELEASE AGREEMENT
+              </p>
+
+              <h2>
+                READ &amp; SIGN AGREEMENT
+              </h2>
+
+              <p>
+                Before participating in a recording, guests are
+                required to review the Scotti Brothers
+                &quot;Can&apos;t Make This Up!&quot; Podcast
+                Appearance &amp; Release Agreement.
+              </p>
+
+              <p>
+                The agreement explains the recording, production,
+                publication, promotional, intellectual-property,
+                and release terms applicable to your appearance.
+              </p>
+
+              <a
+                href="/documents/scotti-brothers-podcast-appearance-release-agreement.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="agreement-button"
+              >
+                READ &amp; SIGN AGREEMENT
+                <span>↗</span>
+              </a>
+
+              <p className="agreement-note">
+                The agreement may be reviewed, completed,
+                electronically signed, downloaded, or printed.
+              </p>
+
+            </div>
+          </div>
+
+        </section>
+
+        {/* =====================================================
+            FORM
+        ====================================================== */}
+
+        <section className="form-section">
 
           <div className="section-heading">
+
             <p className="eyebrow">
-              CAN&apos;T MAKE THIS UP!
+              LET&apos;S CONNECT
             </p>
 
             <h2>
-              PODCAST GUEST INQUIRY
+              GUEST INQUIRY FORM
             </h2>
 
             <div className="red-line" />
 
-            <p className="section-description">
-              Interested in appearing on{" "}
-              <strong>Can&apos;t Make This Up!</strong>?
-              Complete the guest inquiry form below. Our production
-              team will review your information and contact you
-              regarding potential booking opportunities.
+            <p>
+              Please provide as much information as possible.
+              Fields marked with <strong>*</strong> are required.
             </p>
+
           </div>
+
+          {submitted && (
+            <div className="success-message">
+              <strong>
+                THANK YOU.
+              </strong>
+
+              <span>
+                Your guest inquiry has been prepared for submission.
+                Our team will review your information.
+              </span>
+            </div>
+          )}
 
           <form
             className="guest-form"
             onSubmit={handleSubmit}
           >
 
-            {/* =========================================
-                GUEST INFORMATION
-            ========================================= */}
-            <div className="form-section">
+            {/* =================================================
+                SECTION 1 — GUEST INFORMATION
+            ================================================== */}
 
-              <div className="form-section-heading">
+            <div className="form-card">
+
+              <div className="form-card-header">
                 <span>01</span>
 
                 <div>
-                  <p>GUEST INFORMATION</p>
-                  <h3>Tell Us About You</h3>
+                  <p>
+                    GUEST INFORMATION
+                  </p>
+
+                  <h3>
+                    TELL US ABOUT YOU
+                  </h3>
                 </div>
               </div>
 
-              <div className="form-grid two">
+              <div className="form-body">
 
-                <div className="field">
-                  <label htmlFor="fullName">
-                    FULL NAME *
-                  </label>
+                <div className="form-grid">
 
-                  <input
-                    id="fullName"
+                  <Field
+                    label="Full Name"
                     name="fullName"
-                    type="text"
                     required
-                    placeholder="First and last name"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="professionalName">
-                    PROFESSIONAL / STAGE NAME
-                  </label>
-
-                  <input
-                    id="professionalName"
+                  <Field
+                    label="Professional / Stage Name"
                     name="professionalName"
-                    type="text"
-                    placeholder="Professional or stage name"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="organization">
-                    ORGANIZATION / COMPANY
-                  </label>
-
-                  <input
-                    id="organization"
+                  <Field
+                    label="Organization / Company"
                     name="organization"
-                    type="text"
-                    placeholder="Company or organization"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="title">
-                    TITLE / POSITION
-                  </label>
-
-                  <input
-                    id="title"
+                  <Field
+                    label="Title / Position"
                     name="title"
-                    type="text"
-                    placeholder="Title or position"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="email">
-                    EMAIL *
-                  </label>
-
-                  <input
-                    id="email"
+                  <Field
+                    label="Email Address"
                     name="email"
                     type="email"
                     required
-                    placeholder="Your email address"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="phone">
-                    PHONE *
-                  </label>
-
-                  <input
-                    id="phone"
+                  <Field
+                    label="Phone Number"
                     name="phone"
                     type="tel"
                     required
-                    placeholder="Your phone number"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="website">
-                    WEBSITE
-                  </label>
+                  <div className="field full">
+                    <label htmlFor="address">
+                      Mailing Address
+                    </label>
 
-                  <input
-                    id="website"
-                    name="website"
-                    type="url"
-                    placeholder="https://"
-                  />
-                </div>
+                    <input
+                      id="address"
+                      name="address"
+                      type="text"
+                      placeholder="Street address, city, state, ZIP"
+                    />
+                  </div>
 
-                <div className="field">
-                  <label htmlFor="socialMedia">
-                    SOCIAL MEDIA
-                  </label>
-
-                  <input
-                    id="socialMedia"
-                    name="socialMedia"
-                    type="text"
-                    placeholder="@username or profile links"
-                  />
                 </div>
 
               </div>
             </div>
 
-            {/* =========================================
-                MANAGEMENT
-            ========================================= */}
-            <div className="form-section">
+            {/* =================================================
+                SECTION 2 — REPRESENTATION
+            ================================================== */}
 
-              <div className="form-section-heading">
+            <div className="form-card">
+
+              <div className="form-card-header">
                 <span>02</span>
 
                 <div>
-                  <p>REPRESENTATION</p>
-                  <h3>Management / Representation</h3>
+                  <p>
+                    REPRESENTATION
+                  </p>
+
+                  <h3>
+                    MANAGEMENT / REPRESENTATIVE
+                  </h3>
                 </div>
               </div>
 
-              <label className="checkbox-card">
-                <input
-                  type="checkbox"
-                  name="selfRepresented"
-                  checked={selfRepresented}
-                  onChange={(event) =>
-                    setSelfRepresented(event.target.checked)
-                  }
-                />
+              <div className="form-body">
 
-                <span className="custom-checkbox" />
+                <label className="check-row featured-check">
 
-                <div>
-                  <strong>
-                    I am self-represented.
-                  </strong>
+                  <input
+                    type="checkbox"
+                    name="selfRepresented"
+                    checked={selfRepresented}
+                    onChange={(event) =>
+                      setSelfRepresented(
+                        event.target.checked
+                      )
+                    }
+                  />
 
-                  <small>
-                    I am authorized to discuss and coordinate my
-                    podcast appearance directly.
-                  </small>
-                </div>
-              </label>
+                  <span>
+                    I am self-represented and do not have a
+                    manager, agent, attorney, publicist, or other
+                    professional representative for this appearance.
+                  </span>
 
-              <div
-                className={
-                  selfRepresented
-                    ? "management-fields disabled"
-                    : "management-fields"
-                }
-              >
+                </label>
 
-                <div className="form-grid two">
+                {!selfRepresented && (
+                  <div className="form-grid management-fields">
 
-                  <div className="field">
-                    <label htmlFor="managerName">
-                      MANAGER / REPRESENTATIVE NAME
-                    </label>
-
-                    <input
-                      id="managerName"
+                    <Field
+                      label="Manager / Representative Name"
                       name="managerName"
-                      type="text"
-                      disabled={selfRepresented}
-                      placeholder="Full name"
                     />
-                  </div>
 
-                  <div className="field">
-                    <label htmlFor="managerOrganization">
-                      MANAGEMENT / AGENCY
-                    </label>
-
-                    <input
-                      id="managerOrganization"
-                      name="managerOrganization"
-                      type="text"
-                      disabled={selfRepresented}
-                      placeholder="Company or agency"
+                    <Field
+                      label="Management / Agency / Company"
+                      name="managementCompany"
                     />
-                  </div>
 
-                  <div className="field">
-                    <label htmlFor="managerEmail">
-                      REPRESENTATIVE EMAIL
-                    </label>
-
-                    <input
-                      id="managerEmail"
-                      name="managerEmail"
+                    <Field
+                      label="Management Email"
+                      name="managementEmail"
                       type="email"
-                      disabled={selfRepresented}
-                      placeholder="Representative email"
                     />
-                  </div>
 
-                  <div className="field">
-                    <label htmlFor="managerPhone">
-                      REPRESENTATIVE PHONE
-                    </label>
-
-                    <input
-                      id="managerPhone"
-                      name="managerPhone"
+                    <Field
+                      label="Management Phone"
+                      name="managementPhone"
                       type="tel"
-                      disabled={selfRepresented}
-                      placeholder="Representative phone"
                     />
-                  </div>
 
-                </div>
+                  </div>
+                )}
+
               </div>
             </div>
 
-            {/* =========================================
-                BACKGROUND
-            ========================================= */}
-            <div className="form-section">
+            {/* =================================================
+                SECTION 3 — STORY
+            ================================================== */}
 
-              <div className="form-section-heading">
+            <div className="form-card">
+
+              <div className="form-card-header">
                 <span>03</span>
 
                 <div>
-                  <p>GUEST PROFILE</p>
-                  <h3>Your Story</h3>
+                  <p>
+                    YOUR STORY
+                  </p>
+
+                  <h3>
+                    CAN&apos;T MAKE THIS UP!
+                  </h3>
                 </div>
               </div>
 
-              <div className="form-grid">
+              <div className="form-body">
 
-                <div className="field">
-                  <label htmlFor="profession">
-                    PROFESSION / INDUSTRY *
-                  </label>
+                <div className="form-grid">
 
-                  <input
-                    id="profession"
-                    name="profession"
-                    type="text"
+                  <Field
+                    label="Story / Episode Topic"
+                    name="storyTopic"
                     required
-                    placeholder="Music, entertainment, business, sports, etc."
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="bio">
-                    SHORT BIO *
-                  </label>
-
-                  <textarea
-                    id="bio"
-                    name="bio"
-                    required
-                    rows={5}
-                    placeholder="Tell us briefly about yourself and your career."
+                  <Field
+                    label="How Did You Hear About The Podcast?"
+                    name="referralSource"
                   />
-                </div>
 
-                <div className="field">
-                  <label htmlFor="story">
-                    WHAT MAKES YOUR STORY SOMETHING WE CAN&apos;T MAKE UP? *
-                  </label>
+                  <div className="field full">
 
-                  <textarea
-                    id="story"
-                    name="story"
-                    required
-                    rows={6}
-                    placeholder="Tell us about the story, experience, or perspective you would like to share."
-                  />
-                </div>
+                    <label htmlFor="story">
+                      Tell Us Your Story *
+                    </label>
 
-                <div className="field">
-                  <label htmlFor="topics">
-                    TOPICS YOU WOULD LIKE TO DISCUSS
-                  </label>
+                    <textarea
+                      id="story"
+                      name="story"
+                      rows={7}
+                      required
+                      placeholder="Tell us what happened, why it matters, and why you believe it would make a great conversation on Can't Make This Up!"
+                    />
 
-                  <textarea
-                    id="topics"
-                    name="topics"
-                    rows={5}
-                    placeholder="List the topics, projects, experiences, or stories you would like to discuss."
-                  />
+                  </div>
+
                 </div>
 
               </div>
             </div>
 
-            {/* =========================================
-                AVAILABILITY
-            ========================================= */}
-            <div className="form-section">
+            {/* =================================================
+                SECTION 4 — TAPING AVAILABILITY
+            ================================================== */}
 
-              <div className="form-section-heading">
+            <div className="form-card">
+
+              <div className="form-card-header">
                 <span>04</span>
 
                 <div>
-                  <p>PRODUCTION SCHEDULING</p>
-                  <h3>Taping Availability</h3>
+                  <p>
+                    TAPING AVAILABILITY
+                  </p>
+
+                  <h3>
+                    WHEN CAN WE RECORD?
+                  </h3>
                 </div>
               </div>
 
-              <p className="form-help">
-                Please provide several dates when you may be available
-                for recording. Dates are subject to production
-                scheduling and confirmation.
-              </p>
+              <div className="form-body">
 
-              <div className="form-grid three">
-
-                <div className="field">
-                  <label htmlFor="dateOne">
-                    AVAILABLE DATE 1 *
-                  </label>
-
-                  <input
-                    id="dateOne"
-                    name="dateOne"
-                    type="date"
-                    required
-                  />
+                <div className="availability-label">
+                  Preferred Appearance Format *
                 </div>
 
-                <div className="field">
-                  <label htmlFor="dateTwo">
-                    AVAILABLE DATE 2
-                  </label>
+                <div className="choice-grid">
 
-                  <input
-                    id="dateTwo"
-                    name="dateTwo"
-                    type="date"
-                  />
-                </div>
+                  <label className="choice-card">
 
-                <div className="field">
-                  <label htmlFor="dateThree">
-                    AVAILABLE DATE 3
-                  </label>
+                    <input
+                      type="radio"
+                      name="appearanceType"
+                      value="Live"
+                      required
+                      checked={appearanceType === "Live"}
+                      onChange={(event) =>
+                        setAppearanceType(
+                          event.target.value
+                        )
+                      }
+                    />
 
-                  <input
-                    id="dateThree"
-                    name="dateThree"
-                    type="date"
-                  />
-                </div>
-
-              </div>
-
-              <div className="form-grid two">
-
-                <div className="field">
-                  <label htmlFor="preferredTime">
-                    PREFERRED TIME / AVAILABILITY WINDOW
-                  </label>
-
-                  <input
-                    id="preferredTime"
-                    name="preferredTime"
-                    type="text"
-                    placeholder="Example: Weekdays after 3:00 PM"
-                  />
-                </div>
-
-                <div className="field">
-                  <label htmlFor="timeZone">
-                    TIME ZONE
-                  </label>
-
-                  <select
-                    id="timeZone"
-                    name="timeZone"
-                    defaultValue=""
-                  >
-                    <option value="">
-                      Select time zone
-                    </option>
-                    <option value="Eastern">
-                      Eastern
-                    </option>
-                    <option value="Central">
-                      Central
-                    </option>
-                    <option value="Mountain">
-                      Mountain
-                    </option>
-                    <option value="Pacific">
-                      Pacific
-                    </option>
-                    <option value="Alaska">
-                      Alaska
-                    </option>
-                    <option value="Hawaii">
-                      Hawaii
-                    </option>
-                    <option value="Other">
-                      Other
-                    </option>
-                  </select>
-                </div>
-
-              </div>
-
-              <div className="field">
-                <label htmlFor="availabilityNotes">
-                  ADDITIONAL AVAILABILITY INFORMATION
-                </label>
-
-                <textarea
-                  id="availabilityNotes"
-                  name="availabilityNotes"
-                  rows={4}
-                  placeholder="Anything else we should know about your availability?"
-                />
-              </div>
-            </div>
-
-            {/* =========================================
-                APPEARANCE
-            ========================================= */}
-            <div className="form-section">
-
-              <div className="form-section-heading">
-                <span>05</span>
-
-                <div>
-                  <p>APPEARANCE</p>
-                  <h3>Live or Virtual?</h3>
-                </div>
-              </div>
-
-              <div className="radio-grid">
-
-                <label className="choice-card">
-                  <input
-                    type="radio"
-                    name="appearanceType"
-                    value="Live / In Person"
-                    required
-                  />
-
-                  <span className="choice-mark" />
-
-                  <div>
-                    <strong>
-                      LIVE / IN PERSON
-                    </strong>
+                    <span className="choice-title">
+                      LIVE
+                    </span>
 
                     <small>
-                      Available to record in person.
+                      In-person taping
                     </small>
-                  </div>
-                </label>
 
-                <label className="choice-card">
-                  <input
-                    type="radio"
-                    name="appearanceType"
-                    value="Virtual"
-                  />
+                  </label>
 
-                  <span className="choice-mark" />
+                  <label className="choice-card">
 
-                  <div>
-                    <strong>
+                    <input
+                      type="radio"
+                      name="appearanceType"
+                      value="Virtual"
+                      checked={appearanceType === "Virtual"}
+                      onChange={(event) =>
+                        setAppearanceType(
+                          event.target.value
+                        )
+                      }
+                    />
+
+                    <span className="choice-title">
                       VIRTUAL
-                    </strong>
+                    </span>
 
                     <small>
-                      Available to record remotely.
+                      Remote recording
                     </small>
-                  </div>
-                </label>
 
-                <label className="choice-card">
-                  <input
-                    type="radio"
-                    name="appearanceType"
-                    value="Either"
+                  </label>
+
+                  <label className="choice-card">
+
+                    <input
+                      type="radio"
+                      name="appearanceType"
+                      value="Either"
+                      checked={appearanceType === "Either"}
+                      onChange={(event) =>
+                        setAppearanceType(
+                          event.target.value
+                        )
+                      }
+                    />
+
+                    <span className="choice-title">
+                      EITHER
+                    </span>
+
+                    <small>
+                      Live or virtual
+                    </small>
+
+                  </label>
+
+                </div>
+
+                <div className="availability-label">
+                  Preferred Taping Dates
+                </div>
+
+                <div className="form-grid">
+
+                  <div className="field">
+                    <label htmlFor="dateOne">
+                      First Choice
+                    </label>
+
+                    <input
+                      id="dateOne"
+                      name="dateOne"
+                      type="date"
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="dateTwo">
+                      Second Choice
+                    </label>
+
+                    <input
+                      id="dateTwo"
+                      name="dateTwo"
+                      type="date"
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="dateThree">
+                      Third Choice
+                    </label>
+
+                    <input
+                      id="dateThree"
+                      name="dateThree"
+                      type="date"
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="timePreference">
+                      Preferred Time / Time Zone
+                    </label>
+
+                    <input
+                      id="timePreference"
+                      name="timePreference"
+                      type="text"
+                      placeholder="Example: Afternoons ET"
+                    />
+                  </div>
+
+                </div>
+
+                <div className="field full">
+
+                  <label htmlFor="availabilityNotes">
+                    Additional Availability Notes
+                  </label>
+
+                  <textarea
+                    id="availabilityNotes"
+                    name="availabilityNotes"
+                    rows={4}
+                    placeholder="Let us know about scheduling restrictions, travel, blackout dates, etc."
                   />
 
-                  <span className="choice-mark" />
+                </div>
 
-                  <div>
-                    <strong>
-                      EITHER
-                    </strong>
-
-                    <small>
-                      Open to either format.
-                    </small>
-                  </div>
-                </label>
-
-              </div>
-
-              <div className="field location-field">
-                <label htmlFor="location">
-                  LOCATION / CITY / STATE
-                </label>
-
-                <input
-                  id="location"
-                  name="location"
-                  type="text"
-                  placeholder="City, State"
-                />
               </div>
             </div>
 
-            {/* =========================================
-                PRODUCTION INFORMATION
-            ========================================= */}
-            <div className="form-section">
+            {/* =================================================
+                SECTION 5 — LIVE TAPING EMERGENCY CONTACT
+            ================================================== */}
 
-              <div className="form-section-heading">
+            {appearanceType === "Live" ||
+            appearanceType === "Either" ? (
+              <div className="form-card">
+
+                <div className="form-card-header">
+                  <span>05</span>
+
+                  <div>
+                    <p>
+                      LIVE TAPINGS
+                    </p>
+
+                    <h3>
+                      EMERGENCY CONTACT
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="form-body">
+
+                  <div className="optional-banner">
+                    OPTIONAL — FOR LIVE TAPINGS USE ONLY
+                  </div>
+
+                  <p className="field-help">
+                    This information is requested only for
+                    in-person/live tapings and is optional.
+                  </p>
+
+                  <div className="form-grid">
+
+                    <Field
+                      label="Emergency Contact Name"
+                      name="emergencyContact"
+                    />
+
+                    <Field
+                      label="Relationship"
+                      name="emergencyRelationship"
+                    />
+
+                    <Field
+                      label="Emergency Contact Phone"
+                      name="emergencyPhone"
+                      type="tel"
+                    />
+
+                  </div>
+
+                </div>
+              </div>
+            ) : null}
+
+            {/* =================================================
+                SECTION 6 — PRIVACY / ANONYMITY
+            ================================================== */}
+
+            <div className="form-card">
+
+              <div className="form-card-header">
                 <span>06</span>
 
                 <div>
-                  <p>PRODUCTION NOTES</p>
-                  <h3>Anything Else?</h3>
+                  <p>
+                    PRIVACY PREFERENCES
+                  </p>
+
+                  <h3>
+                    NAME &amp; ORGANIZATION
+                  </h3>
                 </div>
               </div>
 
-              <div className="field">
-                <label htmlFor="productionNotes">
-                  ADDITIONAL INFORMATION FOR THE PRODUCTION TEAM
+              <div className="form-body">
+
+                <p className="privacy-intro">
+                  Please tell us if you would like your identity
+                  or organization kept anonymous in connection
+                  with the podcast.
+                </p>
+
+                <label className="check-row">
+
+                  <input
+                    type="checkbox"
+                    name="anonymousName"
+                  />
+
+                  <span>
+                    Keep my name anonymous in published podcast
+                    content and promotional materials unless I
+                    later provide written authorization otherwise.
+                  </span>
+
                 </label>
 
-                <textarea
-                  id="productionNotes"
-                  name="productionNotes"
-                  rows={6}
-                  placeholder="Anything the Scotti Brothers production team should know before contacting you?"
-                />
+                <label className="check-row">
+
+                  <input
+                    type="checkbox"
+                    name="anonymousOrganization"
+                  />
+
+                  <span>
+                    Keep my organization/company name anonymous
+                    in published podcast content and promotional
+                    materials unless I later provide written
+                    authorization otherwise.
+                  </span>
+
+                </label>
+
               </div>
             </div>
 
-            {/* =========================================
-                AGREEMENTS
-            ========================================= */}
-            <div className="form-section agreement-section">
+            {/* =================================================
+                SECTION 7 — AGREEMENT ACKNOWLEDGMENT
+            ================================================== */}
 
-              <div className="form-section-heading">
+            <div className="form-card agreement-confirmation">
+
+              <div className="form-card-header">
                 <span>07</span>
 
                 <div>
-                  <p>REQUIRED ACKNOWLEDGMENTS</p>
-                  <h3>Terms & Permissions</h3>
+                  <p>
+                    AGREEMENT
+                  </p>
+
+                  <h3>
+                    REVIEW &amp; ACKNOWLEDGMENT
+                  </h3>
                 </div>
               </div>
 
-              <label className="checkbox-card required-check">
+              <div className="form-body">
 
-                <input
-                  type="checkbox"
-                  name="termsAgreement"
-                  required
-                />
+                <div className="agreement-mini-card">
 
-                <span className="custom-checkbox" />
+                  <div>
+                    <strong>
+                      SCOTTI BROTHERS &quot;CAN&apos;T MAKE THIS UP!&quot;
+                    </strong>
 
-                <div>
-                  <strong>
-                    I have read and agree to the Terms of Agreement. *
-                  </strong>
-
-                  <small>
-                    I understand that submitting this inquiry does
-                    not guarantee an appearance on the podcast.
-                  </small>
-                </div>
-
-              </label>
-
-              <label className="checkbox-card">
-
-                <input
-                  type="checkbox"
-                  name="recordingAuthorization"
-                  required
-                />
-
-                <span className="custom-checkbox" />
-
-                <div>
-                  <strong>
-                    I understand that the podcast appearance may
-                    be recorded, edited, reproduced, and distributed. *
-                  </strong>
-
-                  <small>
-                    I understand that production may use portions
-                    of the recorded conversation for podcast,
-                    promotional, social, digital, and related media.
-                  </small>
-                </div>
-
-              </label>
-
-              <label className="checkbox-card">
-
-                <input
-                  type="checkbox"
-                  name="nameAndLikeness"
-                  required
-                />
-
-                <span className="custom-checkbox" />
-
-                <div>
-                  <strong>
-                    I authorize use of my name, likeness, voice,
-                    and submitted information in connection with
-                    the podcast. *
-                  </strong>
-
-                  <small>
-                    This acknowledgment is subject to the applicable
-                    Terms of Agreement.
-                  </small>
-                </div>
-
-              </label>
-
-              <label className="checkbox-card">
-
-                <input
-                  type="checkbox"
-                  name="anonymity"
-                />
-
-                <span className="custom-checkbox" />
-
-                <div>
-                  <strong>
-                    I request anonymity for my name and/or organization.
-                  </strong>
-
-                  <small>
-                    Check this box if you are requesting that your
-                    name and/or organization not be publicly identified.
-                    The production team will review this request.
-                  </small>
-                </div>
-
-              </label>
-
-            </div>
-
-            {/* =========================================
-                SUBMIT
-            ========================================= */}
-            <div className="submit-area">
-
-              {!submitted ? (
-                <>
-                  <button
-                    type="submit"
-                    className="submit-button"
-                  >
-                    SUBMIT GUEST INQUIRY
-                  </button>
-
-                  <p>
-                    By submitting this form, you acknowledge the
-                    information and permissions above.
-                  </p>
-                </>
-              ) : (
-                <div className="success-message">
-                  <div className="success-symbol">
-                    ✓
+                    <span>
+                      Podcast Appearance &amp; Release Agreement
+                    </span>
                   </div>
 
-                  <h3>
-                    INQUIRY RECEIVED
-                  </h3>
+                  <a
+                    href="/documents/scotti-brothers-podcast-appearance-release-agreement.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    READ &amp; SIGN
+                  </a>
 
-                  <p>
-                    Thank you for your interest in{" "}
-                    <strong>
-                      Can&apos;t Make This Up!
-                    </strong>
-                    . Your guest inquiry has been recorded.
-                  </p>
                 </div>
-              )}
+
+                <label className="check-row required-check">
+
+                  <input
+                    type="checkbox"
+                    name="agreementRead"
+                    required
+                  />
+
+                  <span>
+                    <strong>
+                      I have read the Podcast Appearance &amp;
+                      Release Agreement and understand that I must
+                      review and sign the agreement before my
+                      appearance is recorded. *
+                    </strong>
+                  </span>
+
+                </label>
+
+                <label className="check-row required-check">
+
+                  <input
+                    type="checkbox"
+                    name="recordingConsent"
+                    required
+                  />
+
+                  <span>
+                    I understand that my appearance may be
+                    audio and/or video recorded and may be edited,
+                    published, distributed, and promoted in
+                    accordance with the Agreement. *
+                  </span>
+
+                </label>
+
+                <label className="check-row required-check">
+
+                  <input
+                    type="checkbox"
+                    name="informationAccurate"
+                    required
+                  />
+
+                  <span>
+                    I certify that the information I have provided
+                    in this guest inquiry is accurate to the best
+                    of my knowledge. *
+                  </span>
+
+                </label>
+
+              </div>
+            </div>
+
+            {/* =================================================
+                SUBMIT
+            ================================================== */}
+
+            <div className="submit-section">
+
+              <p>
+                By submitting this inquiry, you are requesting
+                consideration as a guest on the Scotti Brothers
+                &quot;Can&apos;t Make This Up!&quot; Podcast.
+                Submission does not guarantee an appearance.
+              </p>
+
+              <button
+                type="submit"
+                className="submit-button"
+              >
+                SUBMIT GUEST INQUIRY
+                <span>→</span>
+              </button>
 
             </div>
 
           </form>
+
         </section>
 
-        {/* =========================================
-            CONNECT SECTION
-        ========================================= */}
+        {/* =====================================================
+            CONNECT
+        ====================================================== */}
+
         <section className="connect-section">
 
           <div className="connect-content">
@@ -867,7 +907,9 @@ export default function ContactPage() {
 
             <p>
               Follow{" "}
-              <strong>Can&apos;t Make This Up!</strong>{" "}
+              <strong>
+                Can&apos;t Make This Up!
+              </strong>{" "}
               for new episodes, guests, stories, and everything
               happening with the Scotti Brothers.
             </p>
@@ -880,11 +922,13 @@ export default function ContactPage() {
             </Link>
 
           </div>
+
         </section>
 
-        {/* =========================================
+        {/* =====================================================
             FOOTER
-        ========================================= */}
+        ====================================================== */}
+
         <footer className="site-footer">
 
           <img
@@ -911,29 +955,37 @@ export default function ContactPage() {
           </span>
 
         </footer>
+
       </div>
 
+      {/* =======================================================
+          STYLES
+      ======================================================== */}
+
       <style>{`
+
         * {
           box-sizing: border-box;
         }
 
-        .contact-page {
-          --gold: ${GOLD};
+        /* =====================================================
+           PAGE
+        ====================================================== */
 
+        .contact-page {
           min-height: 100vh;
           position: relative;
           overflow-x: hidden;
 
           background:
             radial-gradient(
-              circle at 20% 20%,
-              rgba(139, 0, 0, 0.18),
+              circle at 18% 15%,
+              rgba(214,0,0,0.18),
               transparent 30%
             ),
             radial-gradient(
-              circle at 80% 60%,
-              rgba(242, 201, 76, 0.08),
+              circle at 82% 50%,
+              rgba(242,201,76,0.08),
               transparent 32%
             ),
             linear-gradient(
@@ -963,20 +1015,20 @@ export default function ContactPage() {
 
           background:
             radial-gradient(
-              circle at 20% 30%,
-              rgba(139, 0, 0, 0.12),
+              circle at 25% 25%,
+              rgba(139,0,0,0.12),
               transparent 30%
             ),
             radial-gradient(
-              circle at 80% 70%,
-              rgba(242, 201, 76, 0.06),
+              circle at 75% 75%,
+              rgba(242,201,76,0.06),
               transparent 30%
             );
         }
 
         .grid-overlay {
           z-index: 1;
-          opacity: 0.25;
+          opacity: 0.24;
 
           background-image:
             linear-gradient(
@@ -998,11 +1050,16 @@ export default function ContactPage() {
           width: 100%;
         }
 
-        /* HEADER */
+        /* =====================================================
+           HEADER
+        ====================================================== */
 
         .site-header {
           min-height: 82px;
-          padding: 24px 42px;
+
+          padding:
+            24px
+            42px;
 
           display: flex;
           align-items: center;
@@ -1018,7 +1075,9 @@ export default function ContactPage() {
           align-items: center;
           gap: 5px;
 
-          padding: 8px 10px;
+          padding:
+            8px
+            10px;
 
           border-radius: 999px;
 
@@ -1029,8 +1088,8 @@ export default function ContactPage() {
             1px solid
             rgba(255,255,255,0.12);
 
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
+          backdrop-filter:
+            blur(8px);
         }
 
         .site-nav a {
@@ -1038,7 +1097,9 @@ export default function ContactPage() {
           align-items: center;
           justify-content: center;
 
-          padding: 8px 12px;
+          padding:
+            8px
+            12px;
 
           border-radius: 999px;
 
@@ -1051,36 +1112,56 @@ export default function ContactPage() {
           white-space: nowrap;
 
           transition:
-            color 0.2s ease,
-            background 0.2s ease;
+            color .2s ease,
+            background .2s ease;
         }
 
         .site-nav a:hover {
-          color: var(--gold);
+          color: ${GOLD};
         }
 
         .site-nav a.active {
-          background: #8b0000;
+          background: ${RED};
           color: #fff;
         }
 
-        /* HERO */
+        /* =====================================================
+           HERO
+        ====================================================== */
 
         .hero {
-          width: min(1280px, 100%);
-          min-height: 500px;
+          width:
+            min(
+              1280px,
+              100%
+            );
 
-          margin: 0 auto;
-          padding: 45px 45px 75px;
+          min-height: 460px;
+
+          margin:
+            0 auto;
+
+          padding:
+            35px
+            45px
+            65px;
 
           display: grid;
-          grid-template-columns: 48% 52%;
+
+          grid-template-columns:
+            48%
+            52%;
 
           align-items: center;
         }
 
         .desktop-logo {
-          width: min(100%, 560px);
+          width:
+            min(
+              100%,
+              560px
+            );
+
           justify-self: start;
         }
 
@@ -1099,6 +1180,7 @@ export default function ContactPage() {
         .hero-copy {
           width: 100%;
           max-width: 650px;
+
           justify-self: end;
 
           padding: 20px;
@@ -1109,31 +1191,47 @@ export default function ContactPage() {
         .eyebrow {
           margin: 0;
 
-          color: var(--gold);
+          color: ${GOLD};
 
           font-size: 11px;
           font-weight: 900;
 
-          letter-spacing: 0.42em;
-          text-transform: uppercase;
+          letter-spacing:
+            .42em;
+
+          text-transform:
+            uppercase;
         }
 
         .hero h1 {
-          margin: 17px 0 0;
+          margin:
+            17px
+            0
+            0;
 
           color: #fff;
 
-          font-size: clamp(55px, 7vw, 96px);
-          line-height: 0.9;
+          font-size:
+            clamp(
+              55px,
+              7vw,
+              96px
+            );
+
+          line-height: .9;
 
           font-weight: 900;
-          letter-spacing: -0.045em;
 
-          text-transform: uppercase;
+          letter-spacing:
+            -.045em;
+
+          text-transform:
+            uppercase;
 
           text-shadow:
-            4px 4px 0 #8b0000,
-            8px 8px 0 rgba(242,201,76,0.30);
+            4px 4px 0 ${RED},
+            8px 8px 0
+            rgba(242,201,76,.3);
         }
 
         .gold-line {
@@ -1141,9 +1239,15 @@ export default function ContactPage() {
           align-items: center;
           gap: 16px;
 
-          width: min(500px, 90%);
+          width:
+            min(
+              500px,
+              90%
+            );
 
-          margin: 28px auto;
+          margin:
+            28px
+            auto;
         }
 
         .gold-line span {
@@ -1151,21 +1255,23 @@ export default function ContactPage() {
           height: 1px;
 
           background:
-            rgba(242,201,76,0.7);
+            rgba(242,201,76,.7);
         }
 
         .gold-line b {
-          color: var(--gold);
+          color: ${GOLD};
           font-size: 14px;
         }
 
         .hero-subtitle {
           max-width: 650px;
 
-          margin: 0 auto;
+          margin:
+            0
+            auto;
 
           color:
-            rgba(255,255,255,0.78);
+            rgba(255,255,255,.78);
 
           font-size: 16px;
           line-height: 1.8;
@@ -1173,494 +1279,1096 @@ export default function ContactPage() {
         }
 
         .hero-subtitle strong {
-          color: var(--gold);
+          color: ${GOLD};
         }
 
-        /* CONTACT */
+        /* =====================================================
+           INTRO
+        ====================================================== */
 
-        .contact-section {
-          width: min(1100px, 100%);
+        .intro-section {
+          width:
+            min(
+              850px,
+              100%
+            );
 
-          margin: 0 auto;
+          margin:
+            0
+            auto;
 
-          padding: 20px 32px 100px;
-        }
+          padding:
+            35px
+            30px
+            70px;
 
-        .section-heading {
-          margin-bottom: 55px;
           text-align: center;
         }
 
-        .section-heading h2 {
-          margin: 9px 0 0;
+        .intro-section h2 {
+          margin:
+            14px
+            0
+            0;
 
-          color: #fff;
+          font-size:
+            clamp(
+              38px,
+              6vw,
+              68px
+            );
 
-          font-size: clamp(34px, 5vw, 58px);
-          line-height: 1;
+          line-height: .95;
 
           font-weight: 900;
 
-          text-transform: uppercase;
+          text-shadow:
+            4px 4px 0 ${RED};
+        }
+
+        .intro-copy {
+          max-width: 750px;
+
+          margin:
+            22px
+            auto
+            0;
+
+          color:
+            rgba(255,255,255,.68);
+
+          font-size: 15px;
+          line-height: 1.85;
         }
 
         .red-line {
           width: 65px;
           height: 4px;
 
-          margin: 20px auto 0;
-
-          background: #c62828;
-        }
-
-        .section-description {
-          max-width: 760px;
-
-          margin: 25px auto 0;
-
-          color:
-            rgba(255,255,255,0.62);
-
-          font-size: 15px;
-          line-height: 1.8;
-        }
-
-        .section-description strong {
-          color: var(--gold);
-        }
-
-        /* FORM */
-
-        .guest-form {
-          width: 100%;
-        }
-
-        .form-section {
-          margin-bottom: 35px;
-
-          padding: 35px;
+          margin:
+            20px
+            auto
+            0;
 
           background:
-            rgba(13,13,13,0.92);
+            ${BRIGHT_RED};
+        }
+
+        /* =====================================================
+           AGREEMENT
+        ====================================================== */
+
+        .agreement-section {
+          width:
+            min(
+              1150px,
+              100%
+            );
+
+          margin:
+            0
+            auto;
+
+          padding:
+            0
+            25px
+            75px;
+        }
+
+        .agreement-card {
+          position: relative;
+
+          display: grid;
+
+          grid-template-columns:
+            auto
+            1fr;
+
+          overflow: hidden;
 
           border:
-            1px solid
-            rgba(242,201,76,0.20);
+            2px
+            solid
+            ${GOLD};
+
+          background:
+            linear-gradient(
+              135deg,
+              #8b0000,
+              #520000
+            );
 
           box-shadow:
-            0 18px 45px
-            rgba(0,0,0,0.35);
+            0
+            20px
+            55px
+            rgba(0,0,0,.55);
         }
 
-        .form-section-heading {
-          display: flex;
-          align-items: center;
-          gap: 18px;
+        .agreement-badge {
+          writing-mode:
+            vertical-rl;
 
-          margin-bottom: 30px;
+          transform:
+            rotate(180deg);
 
-          padding-bottom: 20px;
-
-          border-bottom:
-            1px solid
-            rgba(255,255,255,0.08);
-        }
-
-        .form-section-heading > span {
-          width: 42px;
-          height: 42px;
-
-          flex: 0 0 42px;
+          padding:
+            25px
+            13px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
-          border:
-            1px solid
-            var(--gold);
+          background:
+            ${GOLD};
 
-          border-radius: 50%;
-
-          color: var(--gold);
-
-          font-size: 11px;
-          font-weight: 900;
-        }
-
-        .form-section-heading p {
-          margin: 0 0 5px;
-
-          color: #c62828;
+          color:
+            #050505;
 
           font-size: 9px;
           font-weight: 900;
 
-          letter-spacing: 0.25em;
+          letter-spacing:
+            .2em;
         }
 
-        .form-section-heading h3 {
+        .agreement-content {
+          padding:
+            42px
+            48px;
+        }
+
+        .agreement-eyebrow {
           margin: 0;
 
-          color: #fff;
+          color:
+            ${GOLD};
 
-          font-size: 25px;
+          font-size: 10px;
           font-weight: 900;
 
-          text-transform: uppercase;
+          letter-spacing:
+            .3em;
+
+          text-transform:
+            uppercase;
+        }
+
+        .agreement-content h2 {
+          margin:
+            10px
+            0
+            0;
+
+          font-size:
+            clamp(
+              32px,
+              5vw,
+              52px
+            );
+
+          line-height: .95;
+
+          font-weight: 900;
+        }
+
+        .agreement-content p:not(.agreement-eyebrow):not(.agreement-note) {
+          max-width: 750px;
+
+          margin:
+            18px
+            0
+            0;
+
+          color:
+            rgba(255,255,255,.78);
+
+          font-size: 14px;
+          line-height: 1.7;
+        }
+
+        .agreement-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 16px;
+
+          margin-top: 28px;
+
+          padding:
+            17px
+            28px;
+
+          background:
+            ${BRIGHT_RED};
+
+          border:
+            2px
+            solid
+            ${GOLD};
+
+          color:
+            #fff;
+
+          text-decoration:
+            none;
+
+          font-size: 12px;
+          font-weight: 900;
+
+          letter-spacing:
+            .2em;
+
+          transition:
+            transform .2s ease,
+            background .2s ease,
+            box-shadow .2s ease;
+        }
+
+        .agreement-button:hover {
+          transform:
+            translateY(-2px);
+
+          background:
+            #ff1717;
+
+          box-shadow:
+            0
+            0
+            25px
+            rgba(242,201,76,.28);
+        }
+
+        .agreement-button span {
+          color:
+            ${GOLD};
+
+          font-size: 18px;
+        }
+
+        .agreement-note {
+          margin-top: 13px;
+
+          color:
+            rgba(255,255,255,.48);
+
+          font-size: 10px;
+
+          font-weight: 700;
+        }
+
+        /* =====================================================
+           FORM
+        ====================================================== */
+
+        .form-section {
+          width:
+            min(
+              1100px,
+              100%
+            );
+
+          margin:
+            0
+            auto;
+
+          padding:
+            15px
+            25px
+            100px;
+        }
+
+        .section-heading {
+          margin-bottom:
+            45px;
+
+          text-align:
+            center;
+        }
+
+        .section-heading h2 {
+          margin:
+            10px
+            0
+            0;
+
+          font-size:
+            clamp(
+              34px,
+              5vw,
+              58px
+            );
+
+          line-height: 1;
+
+          font-weight: 900;
+
+          text-transform:
+            uppercase;
+        }
+
+        .section-heading > p:not(.eyebrow) {
+          margin:
+            20px
+            auto
+            0;
+
+          max-width:
+            720px;
+
+          color:
+            rgba(255,255,255,.58);
+
+          font-size:
+            13px;
+
+          line-height:
+            1.7;
+        }
+
+        .guest-form {
+          display:
+            flex;
+
+          flex-direction:
+            column;
+
+          gap:
+            28px;
+        }
+
+        .form-card {
+          overflow:
+            hidden;
+
+          background:
+            #101010;
+
+          border:
+            1px
+            solid
+            rgba(242,201,76,.28);
+
+          box-shadow:
+            0
+            18px
+            45px
+            rgba(0,0,0,.42);
+        }
+
+        .form-card-header {
+          display:
+            flex;
+
+          align-items:
+            center;
+
+          gap:
+            20px;
+
+          padding:
+            20px
+            26px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #8b0000,
+              #c00000
+            );
+
+          border-bottom:
+            2px
+            solid
+            ${GOLD};
+        }
+
+        .form-card-header > span {
+          width:
+            48px;
+
+          height:
+            48px;
+
+          flex:
+            0
+            0
+            48px;
+
+          display:
+            flex;
+
+          align-items:
+            center;
+
+          justify-content:
+            center;
+
+          border:
+            2px
+            solid
+            ${GOLD};
+
+          border-radius:
+            50%;
+
+          color:
+            ${GOLD};
+
+          font-size:
+            12px;
+
+          font-weight:
+            900;
+        }
+
+        .form-card-header p {
+          margin:
+            0;
+
+          color:
+            ${GOLD};
+
+          font-size:
+            9px;
+
+          font-weight:
+            900;
+
+          letter-spacing:
+            .28em;
+        }
+
+        .form-card-header h3 {
+          margin:
+            5px
+            0
+            0;
+
+          color:
+            #fff;
+
+          font-size:
+            22px;
+
+          line-height:
+            1;
+
+          font-weight:
+            900;
+        }
+
+        .form-body {
+          padding:
+            32px;
         }
 
         .form-grid {
-          display: grid;
-          gap: 22px;
-        }
+          display:
+            grid;
 
-        .form-grid.two {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .form-grid.three {
           grid-template-columns:
-            repeat(3, 1fr);
+            1fr
+            1fr;
+
+          gap:
+            22px;
         }
 
         .field {
-          width: 100%;
+          display:
+            flex;
+
+          flex-direction:
+            column;
+
+          gap:
+            8px;
         }
 
-        .field label {
-          display: block;
+        .field.full {
+          grid-column:
+            1 / -1;
+        }
 
-          margin-bottom: 9px;
+        .field label,
+        .availability-label {
+          color:
+            ${GOLD};
 
-          color: var(--gold);
+          font-size:
+            10px;
 
-          font-size: 9px;
-          font-weight: 900;
+          font-weight:
+            900;
 
-          letter-spacing: 0.2em;
+          letter-spacing:
+            .14em;
+
+          text-transform:
+            uppercase;
         }
 
         .field input,
         .field textarea,
         .field select {
-          width: 100%;
-
-          padding: 14px 15px;
+          width:
+            100%;
 
           border:
-            1px solid
-            rgba(255,255,255,0.13);
+            2px
+            solid
+            #dedede;
 
-          border-radius: 0;
-
-          outline: none;
+          border-radius:
+            4px;
 
           background:
-            rgba(0,0,0,0.55);
+            #fff;
 
-          color: #fff;
+          color:
+            #111;
+
+          padding:
+            13px
+            14px;
 
           font-family:
             Arial,
             Helvetica,
             sans-serif;
 
-          font-size: 13px;
+          font-size:
+            14px;
+
+          outline:
+            none;
 
           transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+            border-color .2s ease,
+            box-shadow .2s ease;
         }
 
         .field textarea {
-          min-height: 130px;
-          resize: vertical;
-          line-height: 1.7;
+          resize:
+            vertical;
+
+          min-height:
+            120px;
         }
 
         .field input::placeholder,
         .field textarea::placeholder {
           color:
-            rgba(255,255,255,0.27);
+            #888;
         }
 
         .field input:focus,
         .field textarea:focus,
         .field select:focus {
           border-color:
-            rgba(242,201,76,0.75);
+            ${GOLD};
 
           box-shadow:
-            0 0 0 2px
-            rgba(242,201,76,0.08);
+            0
+            0
+            0
+            3px
+            rgba(242,201,76,.15);
         }
 
-        .field input:disabled {
-          opacity: 0.28;
-          cursor: not-allowed;
-        }
-
-        .field select option {
-          background: #090909;
-          color: #fff;
-        }
-
-        .form-help {
-          margin: -10px 0 25px;
-
-          color:
-            rgba(255,255,255,0.48);
-
-          font-size: 12px;
-          line-height: 1.7;
-        }
-
-        .location-field {
-          margin-top: 22px;
-        }
-
-        /* MANAGEMENT */
+        /* =====================================================
+           MANAGEMENT
+        ====================================================== */
 
         .management-fields {
-          transition:
-            opacity 0.25s ease;
+          margin-top:
+            25px;
         }
 
-        .management-fields.disabled {
-          opacity: 0.32;
-        }
-
-        /* CHECKBOXES */
-
-        .checkbox-card {
-          position: relative;
-
-          display: flex;
-          align-items: flex-start;
-
-          gap: 15px;
-
-          margin-bottom: 15px;
-
-          padding: 18px;
-
-          cursor: pointer;
+        .featured-check {
+          padding:
+            18px
+            20px;
 
           background:
-            rgba(255,255,255,0.025);
+            rgba(242,201,76,.08);
 
           border:
-            1px solid
-            rgba(255,255,255,0.08);
-
-          transition:
-            border-color 0.2s ease,
-            background 0.2s ease;
+            1px
+            solid
+            rgba(242,201,76,.3);
         }
 
-        .checkbox-card:hover {
-          border-color:
-            rgba(242,201,76,0.35);
+        /* =====================================================
+           CHECKBOXES
+        ====================================================== */
 
-          background:
-            rgba(242,201,76,0.035);
-        }
+        .check-row {
+          display:
+            flex;
 
-        .checkbox-card input {
-          position: absolute;
-          opacity: 0;
-          pointer-events: none;
-        }
+          align-items:
+            flex-start;
 
-        .custom-checkbox {
-          width: 20px;
-          height: 20px;
+          gap:
+            13px;
 
-          flex: 0 0 20px;
-
-          margin-top: 2px;
-
-          border:
-            1px solid
-            rgba(242,201,76,0.65);
-
-          background:
-            #050505;
-
-          position: relative;
-        }
-
-        .checkbox-card input:checked + .custom-checkbox {
-          background: var(--gold);
-        }
-
-        .checkbox-card input:checked + .custom-checkbox::after {
-          content: "✓";
-
-          position: absolute;
-
-          inset: 0;
-
-          display: flex;
-
-          align-items: center;
-          justify-content: center;
-
-          color: #050505;
-
-          font-size: 13px;
-          font-weight: 900;
-        }
-
-        .checkbox-card strong {
-          display: block;
-
-          color: #fff;
-
-          font-size: 12px;
-          line-height: 1.5;
-        }
-
-        .checkbox-card small {
-          display: block;
-
-          margin-top: 5px;
+          margin-top:
+            16px;
 
           color:
-            rgba(255,255,255,0.42);
+            rgba(255,255,255,.75);
 
-          font-size: 11px;
-          line-height: 1.6;
+          font-size:
+            13px;
+
+          line-height:
+            1.6;
+
+          cursor:
+            pointer;
         }
 
-        /* RADIO */
+        .check-row input {
+          width:
+            20px;
 
-        .radio-grid {
-          display: grid;
+          height:
+            20px;
+
+          flex:
+            0
+            0
+            20px;
+
+          margin:
+            2px
+            0
+            0;
+
+          accent-color:
+            ${RED};
+
+          cursor:
+            pointer;
+        }
+
+        .privacy-intro {
+          margin:
+            0
+            0
+            20px;
+
+          color:
+            rgba(255,255,255,.6);
+
+          font-size:
+            13px;
+
+          line-height:
+            1.7;
+        }
+
+        /* =====================================================
+           AVAILABILITY
+        ====================================================== */
+
+        .availability-label {
+          margin-bottom:
+            13px;
+        }
+
+        .choice-grid {
+          display:
+            grid;
 
           grid-template-columns:
             repeat(3, 1fr);
 
-          gap: 15px;
+          gap:
+            14px;
+
+          margin-bottom:
+            30px;
         }
 
         .choice-card {
-          position: relative;
+          position:
+            relative;
 
-          display: flex;
+          min-height:
+            105px;
 
-          align-items: flex-start;
+          padding:
+            18px;
 
-          gap: 13px;
+          display:
+            flex;
 
-          padding: 20px;
+          flex-direction:
+            column;
 
-          cursor: pointer;
-
-          background:
-            rgba(255,255,255,0.025);
+          justify-content:
+            center;
 
           border:
-            1px solid
-            rgba(255,255,255,0.08);
+            2px
+            solid
+            rgba(255,255,255,.14);
+
+          background:
+            #171717;
+
+          cursor:
+            pointer;
+
+          transition:
+            border-color .2s ease,
+            background .2s ease;
+        }
+
+        .choice-card:hover {
+          border-color:
+            ${GOLD};
         }
 
         .choice-card input {
-          position: absolute;
-          opacity: 0;
-          pointer-events: none;
+          position:
+            absolute;
+
+          top:
+            14px;
+
+          right:
+            14px;
+
+          accent-color:
+            ${RED};
         }
 
-        .choice-mark {
-          width: 19px;
-          height: 19px;
+        .choice-title {
+          color:
+            #fff;
 
-          flex: 0 0 19px;
+          font-size:
+            18px;
 
-          margin-top: 2px;
-
-          border:
-            1px solid
-            var(--gold);
-
-          border-radius: 50%;
-        }
-
-        .choice-card input:checked + .choice-mark {
-          box-shadow:
-            inset 0 0 0 5px #050505;
-
-          background:
-            var(--gold);
-        }
-
-        .choice-card strong {
-          display: block;
-
-          color: #fff;
-
-          font-size: 11px;
-          font-weight: 900;
+          font-weight:
+            900;
         }
 
         .choice-card small {
-          display: block;
-
-          margin-top: 6px;
+          margin-top:
+            7px;
 
           color:
-            rgba(255,255,255,0.42);
+            rgba(255,255,255,.48);
 
-          font-size: 10px;
-          line-height: 1.5;
+          font-size:
+            10px;
+
+          font-weight:
+            700;
         }
 
-        /* SUBMIT */
+        .optional-banner {
+          display:
+            inline-flex;
 
-        .submit-area {
-          padding: 45px 25px;
-
-          text-align: center;
-
-          border:
-            1px solid
-            rgba(242,201,76,0.20);
-
-          background:
-            linear-gradient(
-              135deg,
-              rgba(139,0,0,0.35),
-              rgba(5,5,5,0.95)
-            );
-        }
-
-        .submit-button {
           padding:
-            17px
-            35px;
-
-          border:
-            1px solid
-            var(--gold);
+            9px
+            13px;
 
           background:
-            var(--gold);
+            ${GOLD};
 
           color:
             #050505;
 
-          cursor: pointer;
+          font-size:
+            9px;
 
-          font-size: 11px;
-          font-weight: 900;
+          font-weight:
+            900;
 
-          letter-spacing: 0.25em;
+          letter-spacing:
+            .18em;
+        }
+
+        .field-help {
+          margin:
+            14px
+            0
+            22px;
+
+          color:
+            rgba(255,255,255,.55);
+
+          font-size:
+            12px;
+        }
+
+        /* =====================================================
+           AGREEMENT CONFIRMATION
+        ====================================================== */
+
+        .agreement-mini-card {
+          display:
+            flex;
+
+          align-items:
+            center;
+
+          justify-content:
+            space-between;
+
+          gap:
+            20px;
+
+          padding:
+            20px;
+
+          background:
+            #fff;
+
+          border-left:
+            6px
+            solid
+            ${RED};
+
+          color:
+            #111;
+        }
+
+        .agreement-mini-card div {
+          display:
+            flex;
+
+          flex-direction:
+            column;
+
+          gap:
+            5px;
+        }
+
+        .agreement-mini-card strong {
+          color:
+            ${RED};
+
+          font-size:
+            12px;
+
+          font-weight:
+            900;
+        }
+
+        .agreement-mini-card span {
+          color:
+            #555;
+
+          font-size:
+            11px;
+        }
+
+        .agreement-mini-card a {
+          flex:
+            0
+            0
+            auto;
+
+          padding:
+            12px
+            18px;
+
+          background:
+            ${RED};
+
+          color:
+            #fff;
+
+          text-decoration:
+            none;
+
+          font-size:
+            10px;
+
+          font-weight:
+            900;
+
+          letter-spacing:
+            .15em;
+
+          border:
+            2px
+            solid
+            ${GOLD};
 
           transition:
-            transform 0.2s ease,
-            background 0.2s ease,
-            box-shadow 0.2s ease;
+            background .2s ease;
+        }
+
+        .agreement-mini-card a:hover {
+          background:
+            #ff1717;
+        }
+
+        .required-check {
+          padding:
+            14px
+            16px;
+
+          border:
+            1px
+            solid
+            rgba(255,255,255,.09);
+
+          background:
+            rgba(255,255,255,.025);
+        }
+
+        .required-check strong {
+          color:
+            #fff;
+        }
+
+        /* =====================================================
+           SUCCESS
+        ====================================================== */
+
+        .success-message {
+          margin-bottom:
+            30px;
+
+          padding:
+            20px
+            25px;
+
+          display:
+            flex;
+
+          flex-direction:
+            column;
+
+          gap:
+            7px;
+
+          background:
+            #fff;
+
+          border-left:
+            7px
+            solid
+            ${GOLD};
+
+          color:
+            #111;
+        }
+
+        .success-message strong {
+          color:
+            ${RED};
+
+          font-size:
+            15px;
+
+          letter-spacing:
+            .1em;
+        }
+
+        .success-message span {
+          font-size:
+            13px;
+
+          color:
+            #555;
+        }
+
+        /* =====================================================
+           SUBMIT
+        ====================================================== */
+
+        .submit-section {
+          padding:
+            25px
+            0
+            10px;
+
+          text-align:
+            center;
+        }
+
+        .submit-section p {
+          max-width:
+            700px;
+
+          margin:
+            0
+            auto
+            25px;
+
+          color:
+            rgba(255,255,255,.48);
+
+          font-size:
+            11px;
+
+          line-height:
+            1.7;
+        }
+
+        .submit-button {
+          display:
+            inline-flex;
+
+          align-items:
+            center;
+
+          justify-content:
+            center;
+
+          gap:
+            20px;
+
+          padding:
+            18px
+            34px;
+
+          background:
+            ${BRIGHT_RED};
+
+          border:
+            2px
+            solid
+            ${GOLD};
+
+          color:
+            #fff;
+
+          font-size:
+            11px;
+
+          font-weight:
+            900;
+
+          letter-spacing:
+            .2em;
+
+          cursor:
+            pointer;
+
+          transition:
+            transform .2s ease,
+            box-shadow .2s ease,
+            background .2s ease;
+        }
+
+        .submit-button span {
+          color:
+            ${GOLD};
+
+          font-size:
+            20px;
         }
 
         .submit-button:hover {
@@ -1668,498 +2376,635 @@ export default function ContactPage() {
             translateY(-2px);
 
           background:
-            #fff0a3;
+            #ff1717;
 
           box-shadow:
-            0 10px 30px
-            rgba(242,201,76,0.18);
+            0
+            0
+            28px
+            rgba(242,201,76,.25);
         }
 
-        .submit-area > p {
-          margin: 18px auto 0;
-
-          max-width: 600px;
-
-          color:
-            rgba(255,255,255,0.35);
-
-          font-size: 10px;
-
-          line-height: 1.6;
-        }
-
-        .success-message {
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .success-symbol {
-          width: 55px;
-          height: 55px;
-
-          margin: 0 auto 15px;
-
-          display: flex;
-
-          align-items: center;
-          justify-content: center;
-
-          border:
-            1px solid
-            var(--gold);
-
-          border-radius: 50%;
-
-          color:
-            var(--gold);
-
-          font-size: 25px;
-        }
-
-        .success-message h3 {
-          margin: 0;
-
-          color: var(--gold);
-
-          font-size: 28px;
-          font-weight: 900;
-        }
-
-        .success-message p {
-          margin: 15px 0 0;
-
-          color:
-            rgba(255,255,255,0.60);
-
-          font-size: 13px;
-          line-height: 1.7;
-        }
-
-        .success-message strong {
-          color: var(--gold);
-        }
-
-        /* CONNECT */
+        /* =====================================================
+           CONNECT
+        ====================================================== */
 
         .connect-section {
-          padding: 110px 30px;
+          padding:
+            100px
+            30px;
 
           border-top:
-            1px solid
-            rgba(242,201,76,0.12);
+            1px
+            solid
+            rgba(242,201,76,.12);
 
           border-bottom:
-            1px solid
-            rgba(242,201,76,0.12);
+            1px
+            solid
+            rgba(242,201,76,.12);
 
-          text-align: center;
+          text-align:
+            center;
 
           background:
             radial-gradient(
               circle at center,
-              rgba(139,0,0,0.16),
+              rgba(139,0,0,.18),
               transparent 50%
             );
         }
 
         .connect-content {
-          width: min(760px, 100%);
-          margin: 0 auto;
+          width:
+            min(
+              760px,
+              100%
+            );
+
+          margin:
+            0
+            auto;
         }
 
         .connect-content h2 {
-          margin: 18px 0 0;
+          margin:
+            18px
+            0
+            0;
 
-          color: #fff;
+          color:
+            #fff;
 
           font-size:
-            clamp(45px, 7vw, 78px);
+            clamp(
+              45px,
+              7vw,
+              78px
+            );
 
-          line-height: 0.95;
+          line-height:
+            .95;
 
-          font-weight: 900;
+          font-weight:
+            900;
 
           text-shadow:
-            4px 4px 0 #8b0000;
+            4px 4px 0
+            ${RED};
         }
 
         .connect-content > p:not(.eyebrow) {
-          max-width: 650px;
+          max-width:
+            650px;
 
-          margin: 25px auto 0;
+          margin:
+            25px
+            auto
+            0;
 
           color:
-            rgba(255,255,255,0.62);
+            rgba(255,255,255,.62);
 
-          font-size: 16px;
-          line-height: 1.8;
+          font-size:
+            16px;
+
+          line-height:
+            1.8;
         }
 
         .connect-content strong {
-          color: var(--gold);
+          color:
+            ${GOLD};
         }
 
         .home-button {
-          display: inline-flex;
+          display:
+            inline-flex;
 
-          margin-top: 35px;
+          margin-top:
+            35px;
 
           padding:
-            15px 28px;
+            15px
+            28px;
 
           border:
-            1px solid
-            var(--gold);
+            1px
+            solid
+            ${GOLD};
 
           color:
-            var(--gold);
+            ${GOLD};
 
-          text-decoration: none;
+          text-decoration:
+            none;
 
-          font-size: 11px;
-          font-weight: 900;
+          font-size:
+            11px;
 
-          letter-spacing: 0.25em;
+          font-weight:
+            900;
 
-          transition: all 0.2s ease;
+          letter-spacing:
+            .25em;
+
+          transition:
+            all .2s ease;
         }
 
         .home-button:hover {
-          background: #c62828;
+          background:
+            ${RED};
 
-          border-color: #c62828;
+          border-color:
+            ${RED};
 
-          color: #fff;
+          color:
+            #fff;
         }
 
-        /* FOOTER */
+        /* =====================================================
+           FOOTER
+        ====================================================== */
 
         .site-footer {
-          padding: 28px 42px;
+          padding:
+            28px
+            42px;
 
-          display: flex;
+          display:
+            flex;
 
-          align-items: center;
-          justify-content: space-between;
+          align-items:
+            center;
 
-          gap: 25px;
+          justify-content:
+            space-between;
+
+          gap:
+            25px;
 
           border-top:
-            1px solid
-            rgba(242,201,76,0.15);
+            1px
+            solid
+            rgba(242,201,76,.15);
 
-          background: #050505;
+          background:
+            #050505;
         }
 
         .site-footer img {
-          display: block;
+          display:
+            block;
 
-          width: 110px;
-          height: auto;
+          width:
+            110px;
 
-          object-fit: contain;
+          height:
+            auto;
+
+          object-fit:
+            contain;
         }
 
         .site-footer p,
         .site-footer span {
-          margin: 0;
+          margin:
+            0;
 
           color:
-            rgba(255,255,255,0.35);
+            rgba(255,255,255,.35);
 
-          font-size: 9px;
-          font-weight: 700;
+          font-size:
+            9px;
 
-          letter-spacing: 0.2em;
+          font-weight:
+            700;
 
-          text-transform: uppercase;
+          letter-spacing:
+            .2em;
+
+          text-transform:
+            uppercase;
         }
 
         .site-footer span {
           color:
-            rgba(242,201,76,0.8);
+            rgba(242,201,76,.8);
         }
 
         .company-link {
-          color: #4da3ff;
+          color:
+            #4da3ff;
 
-          text-decoration: none;
+          text-decoration:
+            none;
 
-          font-size: 9px;
-          font-weight: 400;
+          font-size:
+            9px;
 
-          letter-spacing: 0.12em;
+          font-weight:
+            400;
+
+          letter-spacing:
+            .12em;
 
           transition:
-            color 0.2s ease;
+            color .2s ease;
         }
 
         .company-link:hover {
-          color: #7fc1ff;
-          text-decoration: underline;
+          color:
+            #7fc1ff;
+
+          text-decoration:
+            underline;
         }
 
-        /* TABLET */
+        /* =====================================================
+           TABLET
+        ====================================================== */
 
         @media (max-width: 900px) {
 
           .hero {
             grid-template-columns:
-              45% 55%;
+              45%
+              55%;
 
-            min-height: 450px;
+            min-height:
+              430px;
           }
 
           .desktop-logo {
-            width: 100%;
+            width:
+              100%;
           }
 
           .hero-copy {
-            padding: 10px;
+            padding:
+              10px;
           }
 
-          .form-grid.three {
-            grid-template-columns:
-              1fr;
-          }
-
-          .radio-grid {
-            grid-template-columns:
-              1fr;
-          }
         }
 
-        /* MOBILE */
+        /* =====================================================
+           MOBILE
+        ====================================================== */
 
         @media (max-width: 650px) {
 
           .site-header {
-            min-height: auto;
+            min-height:
+              auto;
 
             padding:
-              16px 12px 10px;
+              16px
+              12px
+              10px;
 
-            display: flex;
+            flex-direction:
+              column;
 
-            flex-direction: column;
+            justify-content:
+              flex-start;
 
-            justify-content: flex-start;
-
-            align-items: center;
+            align-items:
+              center;
           }
 
           .mobile-logo {
-            display: block;
+            display:
+              block;
 
-            width: 78%;
-            max-width: 330px;
+            width:
+              78%;
+
+            max-width:
+              330px;
 
             margin:
-              0 auto 18px;
+              0
+              auto
+              18px;
           }
 
           .mobile-logo a {
-            display: block;
-            line-height: 0;
+            display:
+              block;
+
+            line-height:
+              0;
           }
 
           .mobile-logo img {
-            display: block;
+            display:
+              block;
 
-            width: 100%;
-            height: auto;
+            width:
+              100%;
 
-            object-fit: contain;
+            height:
+              auto;
           }
 
           .site-nav {
-            width: 100%;
+            width:
+              100%;
 
-            display: flex;
+            flex-wrap:
+              wrap;
 
-            flex-wrap: wrap;
+            justify-content:
+              center;
 
-            justify-content: center;
+            gap:
+              3px;
 
-            gap: 3px;
+            padding:
+              7px;
 
-            padding: 7px;
-
-            border-radius: 18px;
+            border-radius:
+              18px;
           }
 
           .site-nav a {
-            font-size: 10px;
-            padding: 6px 8px;
+            font-size:
+              10px;
+
+            padding:
+              6px
+              8px;
           }
 
           .desktop-logo {
-            display: none;
+            display:
+              none;
           }
 
           .hero {
-            display: block;
+            display:
+              block;
 
-            min-height: auto;
+            min-height:
+              auto;
 
             padding:
-              35px 16px 55px;
+              35px
+              16px
+              45px;
           }
 
           .hero-copy {
-            width: 100%;
+            width:
+              100%;
 
-            max-width: 600px;
+            max-width:
+              600px;
 
-            margin: 0 auto;
+            margin:
+              0
+              auto;
 
-            padding: 0;
-
-            text-align: center;
+            padding:
+              0;
           }
 
           .eyebrow {
-            font-size: 8px;
+            font-size:
+              8px;
 
-            letter-spacing: 0.25em;
+            letter-spacing:
+              .25em;
           }
 
           .hero h1 {
-            font-size: 48px;
+            font-size:
+              48px;
 
-            letter-spacing: -2px;
+            letter-spacing:
+              -2px;
           }
 
           .hero-subtitle {
-            font-size: 12px;
+            font-size:
+              12px;
 
-            line-height: 1.6;
+            line-height:
+              1.6;
           }
 
           .gold-line {
-            width: 90%;
+            width:
+              90%;
 
-            margin: 20px auto;
+            margin:
+              20px
+              auto;
           }
 
-          .contact-section {
+          .intro-section {
             padding:
-              10px 12px 70px;
+              25px
+              20px
+              55px;
           }
 
-          .section-heading {
-            margin-bottom: 35px;
+          .intro-section h2 {
+            font-size:
+              40px;
           }
 
-          .section-heading h2 {
-            font-size: 29px;
-
-            line-height: 1.05;
+          .agreement-section {
+            padding:
+              0
+              14px
+              60px;
           }
 
-          .section-description {
-            font-size: 12px;
-            line-height: 1.7;
-          }
-
-          .form-section {
-            padding: 23px 18px;
-
-            margin-bottom: 20px;
-          }
-
-          .form-section-heading {
-            gap: 12px;
-          }
-
-          .form-section-heading > span {
-            width: 35px;
-            height: 35px;
-
-            flex: 0 0 35px;
-          }
-
-          .form-section-heading h3 {
-            font-size: 18px;
-          }
-
-          .form-section-heading p {
-            font-size: 7px;
-          }
-
-          .form-grid.two {
+          .agreement-card {
             grid-template-columns:
               1fr;
           }
 
-          .field input,
-          .field textarea,
-          .field select {
-            font-size: 13px;
+          .agreement-badge {
+            writing-mode:
+              horizontal-tb;
+
+            transform:
+              none;
 
             padding:
-              13px 12px;
+              10px;
+
+            font-size:
+              8px;
           }
 
-          .checkbox-card {
-            padding: 15px;
-          }
-
-          .checkbox-card strong {
-            font-size: 11px;
-          }
-
-          .checkbox-card small {
-            font-size: 10px;
-          }
-
-          .submit-area {
+          .agreement-content {
             padding:
-              35px 15px;
+              30px
+              24px;
+          }
+
+          .agreement-content h2 {
+            font-size:
+              34px;
+          }
+
+          .agreement-button {
+            width:
+              100%;
+
+            justify-content:
+              center;
+          }
+
+          .form-section {
+            padding:
+              10px
+              14px
+              70px;
+          }
+
+          .section-heading h2 {
+            font-size:
+              30px;
+          }
+
+          .form-card-header {
+            padding:
+              17px
+              18px;
+          }
+
+          .form-card-header > span {
+            width:
+              40px;
+
+            height:
+              40px;
+
+            flex:
+              0
+              0
+              40px;
+          }
+
+          .form-card-header h3 {
+            font-size:
+              17px;
+          }
+
+          .form-body {
+            padding:
+              22px
+              17px;
+          }
+
+          .form-grid {
+            grid-template-columns:
+              1fr;
+          }
+
+          .field.full {
+            grid-column:
+              auto;
+          }
+
+          .choice-grid {
+            grid-template-columns:
+              1fr;
+          }
+
+          .agreement-mini-card {
+            flex-direction:
+              column;
+
+            align-items:
+              stretch;
+          }
+
+          .agreement-mini-card a {
+            text-align:
+              center;
           }
 
           .submit-button {
-            width: 100%;
-
-            padding:
-              16px 15px;
-
-            font-size: 10px;
+            width:
+              100%;
           }
 
           .connect-section {
             padding:
-              80px 20px;
+              75px
+              20px;
           }
 
           .connect-content h2 {
-            font-size: 45px;
-          }
-
-          .connect-content > p:not(.eyebrow) {
-            font-size: 14px;
+            font-size:
+              45px;
           }
 
           .site-footer {
             padding:
-              30px 20px;
+              30px
+              20px;
 
-            flex-direction: column;
+            flex-direction:
+              column;
 
-            gap: 15px;
+            gap:
+              15px;
 
-            text-align: center;
+            text-align:
+              center;
           }
 
           .site-footer img {
-            width: 110px;
+            width:
+              110px;
           }
 
-          .company-link {
-            font-size: 10px;
-          }
         }
+
       `}</style>
+
     </main>
+  );
+}
+
+/* ============================================================
+   REUSABLE FIELD COMPONENT
+============================================================ */
+
+function Field({
+  label,
+  name,
+  type = "text",
+  required = false,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+}) {
+  return (
+    <div className="field">
+
+      <label htmlFor={name}>
+        {label}
+        {required ? " *" : ""}
+      </label>
+
+      <input
+        id={name}
+        name={name}
+        type={type}
+        required={required}
+      />
+
+    </div>
   );
 }
