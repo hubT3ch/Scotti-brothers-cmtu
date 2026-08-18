@@ -1265,30 +1265,19 @@ export default function ContactPage() {
             );
         }
 
-        .company-link {
-          color:
-            var(--gold);
+     .company-link {
+  color: #4da3ff;
+  text-decoration: none;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  transition: color 0.2s ease;
+}
 
-          text-decoration:
-            none;
-
-          font-size: 10px;
-
-          font-weight: 900;
-
-          letter-spacing:
-            0.15em;
-
-          transition:
-            color 0.2s ease;
-        }
-
-        .company-link:hover {
-          color: #fff;
-
-          text-decoration:
-            underline;
-        }
+.company-link:hover {
+  color: #7fc1ff;
+  text-decoration: underline;
+}
 
         /* =========================================
            TABLET
