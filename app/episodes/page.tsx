@@ -307,22 +307,22 @@ export default function EpisodesPage() {
           overflow: hidden;
         }
 
-        .hero-logo {
-          position: absolute;
-          left: 4%;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 44%;
-          max-width: 500px;
-          z-index: 2;
-        }
+     .hero-logo {
+  position: absolute;
+  left: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52%;
+  max-width: 650px;
+  z-index: 2;
+}
 
-        .hero-logo img {
-          display: block;
-          width: 100%;
-          height: auto;
-          object-fit: contain;
-        }
+.hero-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 
         .hero-content {
           position: relative;
@@ -750,10 +750,10 @@ export default function EpisodesPage() {
             padding: 55px 30px 70px;
           }
 
-          .hero-logo {
-            left: 2%;
-            width: 42%;
-          }
+       .hero-logo {
+  left: 1%;
+  width: 48%;
+}
 
           .hero-content {
             width: 58%;
@@ -801,10 +801,10 @@ export default function EpisodesPage() {
             padding: 45px 18px 60px;
           }
 
-          .hero-logo {
-            left: 1%;
-            width: 40%;
-          }
+        .hero-logo {
+  left: 1%;
+  width: 46%;
+}
 
           .hero-content {
             width: 59%;
