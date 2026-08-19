@@ -668,7 +668,7 @@ export default function ContactPage() {
               </div>
 
               <a
-                href="/documents/scotti-brothers-podcast-appearance-release-agreement.pdf"
+                href="/documents/scotti-brothers-podcast-guest-appearance-release-agreement.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="agreement-link-button"
