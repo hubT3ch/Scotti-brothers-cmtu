@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Contact submissions
+
+The Contact page submits inquiry fields and the guest-completed agreement as
+`multipart/form-data` to `/api/contact-submissions`. The route validates the
+required fields and PDF before delegating persistence to
+`lib/contact-submissions.ts`.
+
+The password-protected Management Hub is available at `/management`. Configure
+the server-only variables `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+`MANAGEMENT_HUB_PASSWORD`, and `MANAGEMENT_HUB_SESSION_SECRET` before deploying.
+The service-role key is never sent to the browser. Hub reads generate ten-minute
+signed URLs for the private `cmtu-submissions` bucket.
+
+The existing `submissions` table must contain `submission_id`, `guest_name`,
+`guest_email`, `fields` (JSON), `agreement_storage_path`, `original_filename`,
+`submitted_at`, and `status`; the `cmtu-submissions` storage bucket must also
+exist and remain private. No migration files are present in this repository, so
+an existing deployment must apply that schema and bucket configuration through
+its approved Supabase migration process rather than creating a second workflow.
+
 ## Getting Started
 
 First, run the development server:

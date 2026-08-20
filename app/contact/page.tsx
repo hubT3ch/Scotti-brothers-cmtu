@@ -19,10 +19,37 @@ export default function ContactPage() {
   const [selfRepresented, setSelfRepresented] = useState(false);
   const [appearanceType, setAppearanceType] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    const form = event.currentTarget;
+    setSubmitting(true);
+    setSubmissionError("");
+
+    try {
+      const response = await fetch("/api/contact-submissions", {
+        method: "POST",
+        body: new FormData(form),
+      });
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(result.error);
+      }
+
+      setSubmitted(true);
+      form.reset();
+    } catch (error) {
+      setSubmissionError(
+        error instanceof Error && error.message
+          ? error.message
+          : "The submission could not be completed. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -165,9 +192,18 @@ export default function ContactPage() {
               <strong>THANK YOU.</strong>
 
               <span>
-                Your guest inquiry has been prepared for submission.
-                Our team will review your information.
+                Your guest appearance information and completed agreement
+                have been submitted successfully. The CMTU team will review
+                your submission and contact you if additional information is
+                needed.
               </span>
+            </div>
+          )}
+
+          {submissionError && (
+            <div className="error-message" role="alert">
+              <strong>SUBMISSION NOT COMPLETED.</strong>
+              <span>{submissionError}</span>
             </div>
           )}
 
@@ -661,8 +697,8 @@ export default function ContactPage() {
                 </h3>
 
                 <p>
-                  Please review the agreement before submitting
-                  your guest inquiry.
+                  Please complete and sign the Guest Appearance Release
+                  Agreement, save the completed PDF, and upload it below.
                 </p>
 
               </div>
@@ -676,6 +712,25 @@ export default function ContactPage() {
                 READ &amp; SIGN AGREEMENT
                 <span>↗</span>
               </a>
+
+              <div className="agreement-upload field">
+                <label htmlFor="agreementFile">
+                  Completed / Signed Agreement PDF *
+                </label>
+
+                <input
+                  id="agreementFile"
+                  name="agreementFile"
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  required
+                />
+
+                <small>
+                  Upload the PDF after completing and signing it in a compatible
+                  PDF viewer. PDF files only, up to 10 MB.
+                </small>
+              </div>
 
               <div className="final-checks">
 
@@ -751,8 +806,9 @@ export default function ContactPage() {
               <button
                 type="submit"
                 className="submit-button"
+                disabled={submitting}
               >
-                SUBMIT GUEST INQUIRY
+                {submitting ? "SUBMITTING..." : "SUBMIT GUEST INQUIRY"}
                 <span>→</span>
               </button>
 
@@ -1971,6 +2027,86 @@ export default function ContactPage() {
 
           color:
             #555;
+        }
+
+        .error-message {
+          margin-bottom:
+            30px;
+
+          padding:
+            20px
+            25px;
+
+          display:
+            flex;
+
+          flex-direction:
+            column;
+
+          gap:
+            7px;
+
+          background:
+            #fff;
+
+          border-left:
+            7px
+            solid
+            ${RED};
+
+          color:
+            #111;
+        }
+
+        .error-message strong {
+          color:
+            ${RED};
+
+          font-size:
+            15px;
+
+          letter-spacing:
+            .1em;
+        }
+
+        .error-message span {
+          font-size:
+            13px;
+
+          color:
+            #555;
+        }
+
+        .agreement-upload {
+          max-width:
+            850px;
+
+          margin:
+            25px
+            auto
+            0;
+        }
+
+        .agreement-upload input {
+          border-color:
+            rgba(242,201,76,.55);
+
+          background:
+            #171717;
+
+          color:
+            #fff;
+        }
+
+        .agreement-upload small {
+          color:
+            rgba(255,255,255,.55);
+
+          font-size:
+            11px;
+
+          line-height:
+            1.6;
         }
 
         /* SUBMIT */
