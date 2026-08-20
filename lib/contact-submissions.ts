@@ -51,10 +51,11 @@ export async function saveContactSubmission(
     throw error;
   }
 
+  const agreementBytes = await submission.agreement.arrayBuffer();
   const { error: uploadError } = await supabase.storage
     .from(SUBMISSIONS_BUCKET)
-    .upload(submission.agreementStoragePath, submission.agreement, {
-      contentType: "application/pdf",
+    .upload(submission.agreementStoragePath, agreementBytes, {
+      contentType: submission.agreement.type,
       upsert: false,
     });
 

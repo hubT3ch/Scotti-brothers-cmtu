@@ -23,6 +23,10 @@ function errorResponse(message: string, status: number) {
   return Response.json({ error: message }, { status });
 }
 
+function normalizePdfFilename(filename: string) {
+  return filename.replace(/(?:\.pdf)+$/i, ".pdf");
+}
+
 export async function POST(request: Request) {
   const contentType = request.headers.get("content-type") ?? "";
 
@@ -95,12 +99,17 @@ export async function POST(request: Request) {
       guestEmail: email,
       fields,
       agreementStoragePath: `contact-submissions/${submissionId}/agreement.pdf`,
-      originalFilename: filename,
+      originalFilename: normalizePdfFilename(filename),
       submittedAt: new Date().toISOString(),
       status: "submitted",
       agreement,
     });
   } catch (error) {
+    console.error("Contact submission persistence failed", {
+      submissionId,
+      error,
+    });
+
     if (error instanceof SubmissionStoreNotConfiguredError) {
       return errorResponse(
         "Submissions are temporarily unavailable. Please try again later.",
