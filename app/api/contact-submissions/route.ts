@@ -75,7 +75,6 @@ export async function POST(request: Request) {
   if (
     !hasPdfExtension ||
     !hasSafeFilename ||
-    agreement.type.toLowerCase() !== "application/pdf" ||
     !isPdf
   ) {
     return errorResponse("The agreement must be a valid PDF file.", 400);

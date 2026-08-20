@@ -4,6 +4,8 @@ import {
 } from "@/lib/supabase-server";
 
 const SUBMISSIONS_BUCKET = "cmtu-submissions";
+const CONTACT_SUBMISSIONS_TABLE = "cmtu_contact_submissions";
+const RELEASE_AGREEMENTS_TABLE = "cmtu_release_agreements";
 
 export type ManagementSubmission = {
   submissionId: string;
@@ -63,13 +65,11 @@ export async function saveContactSubmission(
     throw new Error("The agreement could not be stored.", { cause: uploadError });
   }
 
-  const { error: insertError } = await supabase.from("submissions").insert({
+  const { error: insertError } = await supabase.from(CONTACT_SUBMISSIONS_TABLE).insert({
     submission_id: submission.submissionId,
     guest_name: submission.guestName,
     guest_email: submission.guestEmail,
     fields: submission.fields,
-    agreement_storage_path: submission.agreementStoragePath,
-    original_filename: submission.originalFilename,
     submitted_at: submission.submittedAt,
     status: submission.status,
   });
@@ -80,6 +80,27 @@ export async function saveContactSubmission(
       .remove([submission.agreementStoragePath]);
 
     throw new Error("The submission could not be recorded.", { cause: insertError });
+  }
+
+  const { error: agreementInsertError } = await supabase
+    .from(RELEASE_AGREEMENTS_TABLE)
+    .insert({
+      submission_id: submission.submissionId,
+      agreement_storage_path: submission.agreementStoragePath,
+      original_filename: submission.originalFilename,
+      submitted_at: submission.submittedAt,
+      status: submission.status,
+    });
+
+  if (agreementInsertError) {
+    await Promise.all([
+      supabase.from(CONTACT_SUBMISSIONS_TABLE).delete().eq("submission_id", submission.submissionId),
+      supabase.storage.from(SUBMISSIONS_BUCKET).remove([submission.agreementStoragePath]),
+    ]);
+
+    throw new Error("The agreement could not be recorded.", {
+      cause: agreementInsertError,
+    });
   }
 }
 
@@ -97,9 +118,9 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
   }
 
   const { data, error } = await supabase
-    .from("submissions")
+    .from(CONTACT_SUBMISSIONS_TABLE)
     .select(
-      "submission_id, guest_name, guest_email, fields, agreement_storage_path, original_filename, submitted_at, status",
+      "submission_id, guest_name, guest_email, fields, submitted_at, status",
     )
     .order("submitted_at", { ascending: false });
 
@@ -110,9 +131,21 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
   const submissions = data ?? [];
   const signedSubmissions = await Promise.all(
     submissions.map(async (submission) => {
+      const { data: agreement, error: agreementError } = await supabase
+        .from(RELEASE_AGREEMENTS_TABLE)
+        .select("agreement_storage_path, original_filename")
+        .eq("submission_id", submission.submission_id)
+        .single();
+
+      if (agreementError || !agreement) {
+        throw new Error("An agreement could not be loaded.", {
+          cause: agreementError,
+        });
+      }
+
       const { data: signedUrl, error: signedUrlError } = await supabase.storage
         .from(SUBMISSIONS_BUCKET)
-        .createSignedUrl(submission.agreement_storage_path, 60 * 10);
+        .createSignedUrl(agreement.agreement_storage_path, 60 * 10);
 
       if (signedUrlError || !signedUrl?.signedUrl) {
         throw new Error("An agreement could not be opened.", {
@@ -125,8 +158,8 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         guestName: submission.guest_name,
         guestEmail: submission.guest_email,
         fields: submission.fields ?? {},
-        agreementStoragePath: submission.agreement_storage_path,
-        originalFilename: submission.original_filename,
+        agreementStoragePath: agreement.agreement_storage_path,
+        originalFilename: agreement.original_filename,
         submittedAt: submission.submitted_at,
         status: submission.status,
         agreementUrl: signedUrl.signedUrl,

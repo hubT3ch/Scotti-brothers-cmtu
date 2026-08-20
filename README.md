@@ -13,12 +13,14 @@ the server-only variables `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
 The service-role key is never sent to the browser. Hub reads generate ten-minute
 signed URLs for the private `cmtu-submissions` bucket.
 
-The existing `submissions` table must contain `submission_id`, `guest_name`,
-`guest_email`, `fields` (JSON), `agreement_storage_path`, `original_filename`,
-`submitted_at`, and `status`; the `cmtu-submissions` storage bucket must also
-exist and remain private. No migration files are present in this repository, so
-an existing deployment must apply that schema and bucket configuration through
-its approved Supabase migration process rather than creating a second workflow.
+The existing `cmtu_contact_submissions` table must contain `submission_id`,
+`guest_name`, `guest_email`, `fields` (JSON), `submitted_at`, and `status`. The
+existing `cmtu_release_agreements` table must contain `submission_id`,
+`agreement_storage_path`, `original_filename`, `submitted_at`, and `status`.
+The `cmtu-submissions` storage bucket must also exist and remain private. No
+migration files are present in this repository, so an existing deployment must
+apply that schema and bucket configuration through its approved Supabase
+migration process rather than creating a second workflow.
 
 ## Getting Started
 
