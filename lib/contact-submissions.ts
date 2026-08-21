@@ -12,11 +12,11 @@ export type ManagementSubmission = {
   guestName: string;
   guestEmail: string;
   fields: Record<string, string>;
-  agreementStoragePath: string;
-  originalFilename: string;
+  agreementStoragePath?: string;
+  originalFilename?: string;
   submittedAt: string;
   status: string;
-  agreementUrl: string;
+  agreementUrl?: string;
 };
 
 export type ContactSubmission = {
@@ -24,11 +24,11 @@ export type ContactSubmission = {
   guestName: string;
   guestEmail: string;
   fields: Record<string, string>;
-  agreementStoragePath: string;
-  originalFilename: string;
+  agreementStoragePath?: string;
+  originalFilename?: string;
   submittedAt: string;
-  status: "submitted";
-  agreement: File;
+  status: string;
+  agreement?: File;
 };
 
 export class SubmissionStoreNotConfiguredError extends Error {
@@ -53,18 +53,6 @@ export async function saveContactSubmission(
     throw error;
   }
 
-  const agreementBytes = await submission.agreement.arrayBuffer();
-  const { error: uploadError } = await supabase.storage
-    .from(SUBMISSIONS_BUCKET)
-    .upload(submission.agreementStoragePath, agreementBytes, {
-      contentType: submission.agreement.type,
-      upsert: false,
-    });
-
-  if (uploadError) {
-    throw new Error("The agreement could not be stored.", { cause: uploadError });
-  }
-
   const { error: insertError } = await supabase.from(CONTACT_SUBMISSIONS_TABLE).insert({
     submission_id: submission.submissionId,
     guest_name: submission.guestName,
@@ -75,11 +63,27 @@ export async function saveContactSubmission(
   });
 
   if (insertError) {
-    await supabase.storage
-      .from(SUBMISSIONS_BUCKET)
-      .remove([submission.agreementStoragePath]);
-
     throw new Error("The submission could not be recorded.", { cause: insertError });
+  }
+
+  if (!submission.agreement || !submission.agreementStoragePath || !submission.originalFilename) {
+    return;
+  }
+
+  const agreementBytes = await submission.agreement.arrayBuffer();
+  const { error: uploadError } = await supabase.storage
+    .from(SUBMISSIONS_BUCKET)
+    .upload(submission.agreementStoragePath, agreementBytes, {
+      contentType: submission.agreement.type,
+      upsert: false,
+    });
+
+  if (uploadError) {
+    await supabase.from(CONTACT_SUBMISSIONS_TABLE)
+      .delete()
+      .eq("submission_id", submission.submissionId);
+
+    throw new Error("The agreement could not be stored.", { cause: uploadError });
   }
 
   const { error: agreementInsertError } = await supabase
@@ -135,12 +139,23 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         .from(RELEASE_AGREEMENTS_TABLE)
         .select("agreement_storage_path, original_filename")
         .eq("submission_id", submission.submission_id)
-        .single();
+        .maybeSingle();
 
-      if (agreementError || !agreement) {
+      if (agreementError && agreementError.code !== "PGRST116") {
         throw new Error("An agreement could not be loaded.", {
           cause: agreementError,
         });
+      }
+
+      if (!agreement) {
+        return {
+          submissionId: submission.submission_id,
+          guestName: submission.guest_name,
+          guestEmail: submission.guest_email,
+          fields: submission.fields ?? {},
+          submittedAt: submission.submitted_at,
+          status: submission.status,
+        };
       }
 
       const { data: signedUrl, error: signedUrlError } = await supabase.storage
@@ -148,9 +163,16 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         .createSignedUrl(agreement.agreement_storage_path, 60 * 10);
 
       if (signedUrlError || !signedUrl?.signedUrl) {
-        throw new Error("An agreement could not be opened.", {
-          cause: signedUrlError,
-        });
+        return {
+          submissionId: submission.submission_id,
+          guestName: submission.guest_name,
+          guestEmail: submission.guest_email,
+          fields: submission.fields ?? {},
+          agreementStoragePath: agreement.agreement_storage_path,
+          originalFilename: agreement.original_filename,
+          submittedAt: submission.submitted_at,
+          status: submission.status,
+        };
       }
 
       return {

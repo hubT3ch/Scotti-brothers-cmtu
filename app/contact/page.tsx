@@ -192,10 +192,9 @@ export default function ContactPage() {
               <strong>THANK YOU.</strong>
 
               <span>
-                Your guest appearance information and completed agreement
-                have been submitted successfully. The CMTU team will review
-                your submission and contact you if additional information is
-                needed.
+                Your guest appearance information has been submitted
+                successfully. The CMTU team will review your inquiry and
+                contact you if additional information is needed.
               </span>
             </div>
           )}
@@ -624,7 +623,7 @@ export default function ContactPage() {
             )}
 
             {/* =================================================
-                06 — PRIVACY
+                06 — STORY CONFIDENTIALITY
             ================================================== */}
 
             <div className="form-card">
@@ -633,49 +632,35 @@ export default function ContactPage() {
                 <span>06</span>
 
                 <div>
-                  <p>PRIVACY PREFERENCES</p>
-                  <h3>NAME &amp; ORGANIZATION</h3>
+                  <p>STORY DETAILS</p>
+                  <h3>STORY CONFIDENTIALITY</h3>
                 </div>
               </div>
 
               <div className="form-body">
 
                 <p className="privacy-intro">
-                  Please tell us if you would like your identity
-                  or organization kept anonymous in connection
-                  with the podcast.
+                  Your real identity and organization are collected for communication,
+                  scheduling, recording/taping, production, and airing of the podcast.
+                  Confidentiality applies only to people, companies, organizations,
+                  or other parties mentioned in your story.
                 </p>
 
-                <label className="check-row">
+                <div className="field full">
 
-                  <input
-                    type="checkbox"
-                    name="anonymousName"
+                  <label htmlFor="storyConfidentiality">
+                    People, companies, organizations, or other parties in your story
+                    that you would like the production team to treat as confidential
+                  </label>
+
+                  <textarea
+                    id="storyConfidentiality"
+                    name="storyConfidentiality"
+                    rows={4}
+                    placeholder="List any names, companies, organizations, or related parties you want treated as confidential in your story."
                   />
 
-                  <span>
-                    Keep my name anonymous in published podcast
-                    content and promotional materials unless I
-                    later provide written authorization otherwise.
-                  </span>
-
-                </label>
-
-                <label className="check-row">
-
-                  <input
-                    type="checkbox"
-                    name="anonymousOrganization"
-                  />
-
-                  <span>
-                    Keep my organization/company name anonymous
-                    in published podcast content and promotional
-                    materials unless I later provide written
-                    authorization otherwise.
-                  </span>
-
-                </label>
+                </div>
 
               </div>
             </div>
@@ -689,7 +674,7 @@ export default function ContactPage() {
               <div className="agreement-final-heading">
 
                 <p className="eyebrow">
-                  REQUIRED BEFORE RECORDING
+                  REQUIRED FOR INITIAL INQUIRY
                 </p>
 
                 <h3>
@@ -697,8 +682,9 @@ export default function ContactPage() {
                 </h3>
 
                 <p>
-                  Please complete and sign the Guest Appearance Release
-                  Agreement, save the completed PDF, and upload it below.
+                  Please read the Guest Appearance Release Agreement. If your
+                  story is a fit for the show, our team will contact you about the
+                  next steps and the signed agreement process before recording.
                 </p>
 
               </div>
@@ -709,45 +695,26 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 className="agreement-link-button"
               >
-                READ &amp; SIGN AGREEMENT
+                READ AGREEMENT
                 <span>↗</span>
               </a>
 
-              <div className="agreement-upload field">
-                <label htmlFor="agreementFile">
-                  Completed / Signed Agreement PDF *
-                </label>
-
-                <input
-                  id="agreementFile"
-                  name="agreementFile"
-                  type="file"
-                  accept="application/pdf,.pdf"
-                  required
-                />
-
-                <small>
-                  Upload the PDF after completing and signing it in a compatible
-                  PDF viewer. PDF files only, up to 10 MB.
-                </small>
-              </div>
-
               <div className="final-checks">
 
-                <label className="check-row required-check">
+                <label className="check-row">
 
                   <input
                     type="checkbox"
                     name="agreementRead"
-                    required
+                    
                   />
 
                   <span>
                     <strong>
                       I have read the Podcast Appearance &amp;
-                      Release Agreement and understand that I must
-                      review and sign the agreement before my
-                      appearance is recorded. *
+                      Release Agreement and understand that a signed
+                      agreement will be completed later if my inquiry
+                      proceeds. *
                     </strong>
                   </span>
 

@@ -141,15 +141,19 @@ export default function ManagementClient({
                     <h2>{submission.guestName}</h2>
                     <p>{submission.guestEmail}</p>
                   </div>
-                  <a href={submission.agreementUrl} target="_blank" rel="noreferrer">
-                    View Agreement
-                  </a>
+                      {submission.agreementUrl ? (
+                    <a href={submission.agreementUrl} target="_blank" rel="noreferrer">
+                      View Agreement
+                    </a>
+                  ) : (
+                    <span>No signed agreement on file</span>
+                  )}
                 </div>
                 <dl className="submission-meta">
                   <div><dt>Submitted</dt><dd>{new Date(submission.submittedAt).toLocaleString()}</dd></div>
                   <div><dt>Status</dt><dd>{submission.status}</dd></div>
-                  <div><dt>Agreement</dt><dd>{submission.originalFilename}</dd></div>
-                  <div><dt>Storage path</dt><dd>{submission.agreementStoragePath}</dd></div>
+                  <div><dt>Agreement</dt><dd>{submission.originalFilename ?? "Not yet signed"}</dd></div>
+                  <div><dt>Storage path</dt><dd>{submission.agreementStoragePath ?? "Not applicable"}</dd></div>
                 </dl>
                 <details>
                   <summary>View complete submission fields</summary>

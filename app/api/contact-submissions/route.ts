@@ -27,17 +27,37 @@ function normalizePdfFilename(filename: string) {
   return filename.replace(/(?:\.pdf)+$/i, ".pdf");
 }
 
-export async function POST(request: Request) {
+async function parseFormData(request: Request) {
   const contentType = request.headers.get("content-type") ?? "";
+  const lowerContentType = contentType.toLowerCase();
 
-  if (!contentType.toLowerCase().startsWith("multipart/form-data")) {
-    return errorResponse("Please submit the form with its completed PDF.", 415);
+  if (lowerContentType.includes("multipart/form-data")) {
+    return request.formData();
   }
 
+  if (lowerContentType.includes("application/x-www-form-urlencoded")) {
+    const body = await request.text();
+    const data = new FormData();
+
+    for (const [key, value] of new URLSearchParams(body)) {
+      data.append(key, value);
+    }
+
+    return data;
+  }
+
+  if (!contentType) {
+    return request.formData();
+  }
+
+  throw new Error("Unsupported content type.");
+}
+
+export async function POST(request: Request) {
   let formData: FormData;
 
   try {
-    formData = await request.formData();
+    formData = await parseFormData(request);
   } catch {
     return errorResponse("The submission could not be read. Please try again.", 400);
   }
@@ -62,26 +82,24 @@ export async function POST(request: Request) {
     return errorResponse("Please choose a valid appearance format.", 400);
   }
 
-  if (!(agreement instanceof File) || agreement.size === 0) {
-    return errorResponse("Please upload your completed and signed PDF.", 400);
-  }
+  if (agreement instanceof File) {
+    if (agreement.size === 0) {
+      return errorResponse("Please upload a valid agreement PDF if you are submitting one.", 400);
+    }
 
-  const filename = agreement.name.trim();
-  const hasPdfExtension = filename.toLowerCase().endsWith(".pdf");
-  const hasSafeFilename = filename.length > 0 && !/[\\/\0]/.test(filename);
-  const header = new Uint8Array(await agreement.slice(0, 5).arrayBuffer());
-  const isPdf = new TextDecoder().decode(header) === "%PDF-";
+    const filename = agreement.name.trim();
+    const hasPdfExtension = filename.toLowerCase().endsWith(".pdf");
+    const hasSafeFilename = filename.length > 0 && !/[\\/\0]/.test(filename);
+    const header = new Uint8Array(await agreement.slice(0, 5).arrayBuffer());
+    const isPdf = new TextDecoder().decode(header) === "%PDF-";
 
-  if (
-    !hasPdfExtension ||
-    !hasSafeFilename ||
-    !isPdf
-  ) {
-    return errorResponse("The agreement must be a valid PDF file.", 400);
-  }
+    if (!hasPdfExtension || !hasSafeFilename || !isPdf) {
+      return errorResponse("The agreement must be a valid PDF file.", 400);
+    }
 
-  if (agreement.size > MAX_AGREEMENT_BYTES) {
-    return errorResponse("The agreement PDF must be 10 MB or smaller.", 413);
+    if (agreement.size > MAX_AGREEMENT_BYTES) {
+      return errorResponse("The agreement PDF must be 10 MB or smaller.", 413);
+    }
   }
 
   const submissionId = crypto.randomUUID();
@@ -91,17 +109,23 @@ export async function POST(request: Request) {
     ),
   ) as Record<string, string>;
 
+  const submissionPayload = {
+    submissionId,
+    guestName: String(formData.get("fullName")),
+    guestEmail: email,
+    fields,
+    submittedAt: new Date().toISOString(),
+    status: "submitted",
+  } as const;
+
   try {
     await saveContactSubmission({
-      submissionId,
-      guestName: String(formData.get("fullName")),
-      guestEmail: email,
-      fields,
-      agreementStoragePath: `contact-submissions/${submissionId}/agreement.pdf`,
-      originalFilename: normalizePdfFilename(filename),
-      submittedAt: new Date().toISOString(),
-      status: "submitted",
-      agreement,
+      ...submissionPayload,
+      ...(agreement instanceof File ? {
+        agreementStoragePath: `contact-submissions/${submissionId}/agreement.pdf`,
+        originalFilename: normalizePdfFilename(agreement.name.trim()),
+        agreement,
+      } : {}),
     });
   } catch (error) {
     console.error("Contact submission persistence failed", {
