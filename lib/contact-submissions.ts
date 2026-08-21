@@ -56,7 +56,7 @@ export async function saveContactSubmission(
   const { error: insertError } = await supabase.from(CONTACT_SUBMISSIONS_TABLE).insert({
     submission_id: submission.submissionId,
     guest_name: submission.guestName,
-    guest_email: submission.guestEmail,
+    email: submission.guestEmail,
     fields: submission.fields,
     submitted_at: submission.submittedAt,
     status: submission.status,
@@ -124,7 +124,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
   const { data, error } = await supabase
     .from(CONTACT_SUBMISSIONS_TABLE)
     .select(
-      "submission_id, guest_name, guest_email, fields, submitted_at, status",
+      "submission_id, guest_name, email, fields, submitted_at, status",
     )
     .order("submitted_at", { ascending: false });
 
@@ -151,7 +151,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         return {
           submissionId: submission.submission_id,
           guestName: submission.guest_name,
-          guestEmail: submission.guest_email,
+          guestEmail: submission.email,
           fields: submission.fields ?? {},
           submittedAt: submission.submitted_at,
           status: submission.status,
@@ -166,7 +166,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         return {
           submissionId: submission.submission_id,
           guestName: submission.guest_name,
-          guestEmail: submission.guest_email,
+          guestEmail: submission.email,
           fields: submission.fields ?? {},
           agreementStoragePath: agreement.agreement_storage_path,
           originalFilename: agreement.original_filename,
@@ -178,7 +178,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
       return {
         submissionId: submission.submission_id,
         guestName: submission.guest_name,
-        guestEmail: submission.guest_email,
+        guestEmail: submission.email,
         fields: submission.fields ?? {},
         agreementStoragePath: agreement.agreement_storage_path,
         originalFilename: agreement.original_filename,
