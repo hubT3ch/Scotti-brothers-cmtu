@@ -151,7 +151,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         return {
           submissionId: submission.submission_id,
           guestName: submission.guest_name,
-          guestEmail: submission.email,
+          guestEmail: submission.guest_email,
           fields: submission.fields ?? {},
           submittedAt: submission.submitted_at,
           status: submission.status,
@@ -166,7 +166,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         return {
           submissionId: submission.submission_id,
           guestName: submission.guest_name,
-          guestEmail: submission.email,
+          guestEmail: submission.guest_email,
           fields: submission.fields ?? {},
           agreementStoragePath: agreement.agreement_storage_path,
           originalFilename: agreement.original_filename,
@@ -178,7 +178,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
       return {
         submissionId: submission.submission_id,
         guestName: submission.guest_name,
-        guestEmail: submission.email,
+        guestEmail: submission.guest_email,
         fields: submission.fields ?? {},
         agreementStoragePath: agreement.agreement_storage_path,
         originalFilename: agreement.original_filename,
