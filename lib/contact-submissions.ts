@@ -13,9 +13,9 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
 
   const { data, error } = await supabase
     .from(CONTACT_SUBMISSIONS_TABLE)
-    .select(
-      "id, guest_name, email, phone, segment_heading, discussion, fields, submitted_at, status"
-    )
+   .select(
+  "id, guest_name, email, phone, segment_heading, discussion, fields, submitted_at, status",
+)
     .order("submitted_at", { ascending: false });
 
   if (error) {
