@@ -29,7 +29,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
       const { data: agreement, error: agreementError } = await supabase
         .from(RELEASE_AGREEMENTS_TABLE)
         .select("storage_path, document_name")
-        id: submission.submissionId,
+        .eq("submission_id", submission.id)
         .maybeSingle();
 
       if (agreementError && agreementError.code !== "PGRST116") {
