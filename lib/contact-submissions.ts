@@ -1,7 +1,8 @@
+
 import {
   getSupabaseAdminClient,
   SupabaseConfigurationError,
-} from "@/lib/supabase/admin";
+} from "@/lib/supabase-server";
 
 const CONTACT_SUBMISSIONS_TABLE = "cmtu_contact_submissions";
 const RELEASE_AGREEMENTS_TABLE = "cmtu_release_agreements";
@@ -199,7 +200,10 @@ export async function listContactSubmissions(): Promise<
         error: signedUrlError,
       } = await supabase.storage
         .from(SUBMISSIONS_BUCKET)
-        .createSignedUrl(agreement.storage_path, 60 * 10);
+        .createSignedUrl(
+          agreement.storage_path,
+          60 * 10,
+        );
 
       if (signedUrlError || !signedUrlData?.signedUrl) {
         return {
