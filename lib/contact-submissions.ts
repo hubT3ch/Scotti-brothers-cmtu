@@ -11,6 +11,9 @@ export type ManagementSubmission = {
   submissionId: string;
   guestName: string;
   guestEmail: string;
+  guestPhone: string;
+  segmentHeading: string;
+  discussion: string;
   fields: Record<string, string>;
   agreementStoragePath?: string;
   originalFilename?: string;
@@ -23,6 +26,9 @@ export type ContactSubmission = {
   submissionId: string;
   guestName: string;
   guestEmail: string;
+  guestPhone: string;
+  segmentHeading: string;
+  discussion: string;
   fields: Record<string, string>;
   agreementStoragePath?: string;
   originalFilename?: string;
@@ -56,7 +62,10 @@ export async function saveContactSubmission(
   const { error: insertError } = await supabase.from(CONTACT_SUBMISSIONS_TABLE).insert({
     submission_id: submission.submissionId,
     guest_name: submission.guestName,
-    guest_email: submission.guestEmail,
+    email: submission.guestEmail,
+    phone: submission.guestPhone,
+    segment_heading: submission.segmentHeading,
+    discussion: submission.discussion,
     fields: submission.fields,
     submitted_at: submission.submittedAt,
     status: submission.status,
@@ -124,7 +133,7 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
   const { data, error } = await supabase
     .from(CONTACT_SUBMISSIONS_TABLE)
     .select(
-      "submission_id, guest_name, guest_email, fields, submitted_at, status",
+      "submission_id, guest_name, email, phone, segment_heading, discussion, fields, submitted_at, status",
     )
     .order("submitted_at", { ascending: false });
 
@@ -151,7 +160,10 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         return {
           submissionId: submission.submission_id,
           guestName: submission.guest_name,
-          guestEmail: submission.guest_email,
+          guestEmail: submission.email,
+      guestPhone: submission.phone,
+      segmentHeading: submission.segment_heading,
+      discussion: submission.discussion,
           fields: submission.fields ?? {},
           submittedAt: submission.submitted_at,
           status: submission.status,
@@ -166,7 +178,10 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
         return {
           submissionId: submission.submission_id,
           guestName: submission.guest_name,
-          guestEmail: submission.guest_email,
+          guestEmail: submission.email,
+      guestPhone: submission.phone,
+      segmentHeading: submission.segment_heading,
+      discussion: submission.discussion,
           fields: submission.fields ?? {},
           agreementStoragePath: agreement.agreement_storage_path,
           originalFilename: agreement.original_filename,
@@ -178,7 +193,10 @@ export async function listContactSubmissions(): Promise<ManagementSubmission[]> 
       return {
         submissionId: submission.submission_id,
         guestName: submission.guest_name,
-        guestEmail: submission.guest_email,
+        guestEmail: submission.email,
+      guestPhone: submission.phone,
+      segmentHeading: submission.segment_heading,
+      discussion: submission.discussion,
         fields: submission.fields ?? {},
         agreementStoragePath: agreement.agreement_storage_path,
         originalFilename: agreement.original_filename,

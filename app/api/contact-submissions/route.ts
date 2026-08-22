@@ -113,9 +113,12 @@ export async function POST(request: Request) {
     submissionId,
     guestName: String(formData.get("fullName")),
     guestEmail: email,
+    guestPhone: String(formData.get("phone")),
+    segmentHeading: String(formData.get("storyTopic")),
+    discussion: String(formData.get("story")),
     fields,
     submittedAt: new Date().toISOString(),
-    status: "submitted",
+    status: "new",
   } as const;
 
   try {
