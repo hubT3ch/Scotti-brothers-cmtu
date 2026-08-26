@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import {
+  formatMoney,
+  getPublicMerchandiseCatalog,
+  type MerchandiseProduct,
+} from "@/lib/commerce";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -12,72 +17,6 @@ const navigation = [
 ];
 
 const GOLD = "#F2C94C";
-
-type MerchandiseProduct = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  image: string | null;
-  active: boolean;
-  publicDisplay: boolean;
-  featured: boolean;
-  inventoryQuantity: number;
-};
-
-/*
- * PUBLIC MERCHANDISE CATALOG
- *
- * This is intentionally kept separate from the Clifton Lighty
- * Merchandise Desk.
- *
- * The Merchandise Desk will eventually supply the persistent
- * product/pricing/inventory data through a backend/API connection.
- *
- * Stripe/PayPal will be connected later.
- */
-const merchandiseProducts: MerchandiseProduct[] = [
-  {
-    id: "coming-soon-1",
-    name: "Official CMTU Apparel",
-    description:
-      "Official Can't Make This Up! apparel featuring the Scotti Brothers brand.",
-    category: "Apparel",
-    price: 0,
-    image: null,
-    active: true,
-    publicDisplay: true,
-    featured: true,
-    inventoryQuantity: 0,
-  },
-  {
-    id: "coming-soon-2",
-    name: "Scotti Brothers Collection",
-    description:
-      "Exclusive Scotti Brothers merchandise and collectible designs.",
-    category: "Collection",
-    price: 0,
-    image: null,
-    active: true,
-    publicDisplay: true,
-    featured: true,
-    inventoryQuantity: 0,
-  },
-  {
-    id: "coming-soon-3",
-    name: "Can't Make This Up! Collectibles",
-    description:
-      "Special merchandise inspired by the stories and personalities behind the show.",
-    category: "Collectibles",
-    price: 0,
-    image: null,
-    active: true,
-    publicDisplay: true,
-    featured: true,
-    inventoryQuantity: 0,
-  },
-];
 
 type CartItem = {
   product: MerchandiseProduct;
@@ -100,14 +39,29 @@ function MobileLogo() {
   );
 }
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
-}
-
 export default function MerchandisePage() {
+  /*
+   * PUBLIC MERCHANDISE CATALOG
+   *
+   * This page now uses the same merchandise catalog
+   * used by the CMTU Merchandise Desk.
+   *
+   * Product visibility is controlled by:
+   *   active
+   *   publicDisplay
+   *   displayOrder
+   *
+   * Product images come from:
+   *   product.images[]
+   *
+   * The existing gallery images are NOT deleted,
+   * moved, or modified.
+   */
+  const products = useMemo(
+    () => getPublicMerchandiseCatalog(),
+    [],
+  );
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [category, setCategory] = useState("All");
@@ -117,21 +71,28 @@ export default function MerchandisePage() {
       "All",
       ...Array.from(
         new Set(
-          merchandiseProducts
+          products
             .filter(
               (product) =>
                 product.active &&
                 product.publicDisplay,
             )
-            .map((product) => product.category),
+            .map(
+              (product) =>
+                product.category,
+            )
+            .filter(Boolean),
         ),
       ),
     ];
-  }, []);
+  }, [products]);
 
   const visibleProducts = useMemo(() => {
-    return merchandiseProducts.filter((product) => {
-      if (!product.active || !product.publicDisplay) {
+    return products.filter((product) => {
+      if (
+        !product.active ||
+        !product.publicDisplay
+      ) {
         return false;
       }
 
@@ -141,40 +102,75 @@ export default function MerchandisePage() {
 
       return product.category === category;
     });
-  }, [category]);
+  }, [category, products]);
 
   const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
+    (total, item) =>
+      total + item.quantity,
     0,
   );
 
   const cartTotal = cart.reduce(
-    (total, item) =>
-      total + item.product.price * item.quantity,
+    (total, item) => {
+      const customerPrice =
+        item.product.salePrice ??
+        item.product.price;
+
+      return (
+        total +
+        customerPrice *
+          item.quantity
+      );
+    },
     0,
   );
 
-  function addToCart(product: MerchandiseProduct) {
-    if (product.inventoryQuantity <= 0) {
+  function getCustomerPrice(
+    product: MerchandiseProduct,
+  ) {
+    return (
+      product.salePrice ??
+      product.price
+    );
+  }
+
+  function addToCart(
+    product: MerchandiseProduct,
+  ) {
+    const customerPrice =
+      getCustomerPrice(product);
+
+    if (
+      product.inventoryQuantity <=
+        0 ||
+      customerPrice <= 0
+    ) {
       return;
     }
 
     setCart((current) => {
-      const existing = current.find(
-        (item) => item.product.id === product.id,
-      );
+      const existing =
+        current.find(
+          (item) =>
+            item.product.id ===
+            product.id,
+        );
 
       if (existing) {
-        return current.map((item) =>
-          item.product.id === product.id
-            ? {
-                ...item,
-                quantity: Math.min(
-                  item.quantity + 1,
-                  product.inventoryQuantity,
-                ),
-              }
-            : item,
+        return current.map(
+          (item) =>
+            item.product.id ===
+            product.id
+              ? {
+                  ...item,
+                  quantity:
+                    Math.min(
+                      item.quantity +
+                        1,
+                      product.inventoryQuantity,
+                    ),
+                }
+              : item,
         );
       }
 
@@ -194,18 +190,34 @@ export default function MerchandisePage() {
     productId: string,
     quantity: number,
   ) {
+    const cartItem = cart.find(
+      (item) =>
+        item.product.id ===
+        productId,
+    );
+
+    if (!cartItem) {
+      return;
+    }
+
     if (quantity <= 0) {
       setCart((current) =>
         current.filter(
-          (item) => item.product.id !== productId,
+          (item) =>
+            item.product.id !==
+            productId,
         ),
       );
+
       return;
     }
 
     setCart((current) =>
       current.map((item) => {
-        if (item.product.id !== productId) {
+        if (
+          item.product.id !==
+          productId
+        ) {
           return item;
         }
 
@@ -213,17 +225,22 @@ export default function MerchandisePage() {
           ...item,
           quantity: Math.min(
             quantity,
-            item.product.inventoryQuantity,
+            item.product
+              .inventoryQuantity,
           ),
         };
       }),
     );
   }
 
-  function removeFromCart(productId: string) {
+  function removeFromCart(
+    productId: string,
+  ) {
     setCart((current) =>
       current.filter(
-        (item) => item.product.id !== productId,
+        (item) =>
+          item.product.id !==
+          productId,
       ),
     );
   }
@@ -252,19 +269,22 @@ export default function MerchandisePage() {
             className="site-nav"
             aria-label="Main navigation"
           >
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  item.href === "/merchandise"
-                    ? "active"
-                    : ""
-                }
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navigation.map(
+              (item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={
+                    item.href ===
+                    "/merchandise"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
 
             <button
               type="button"
@@ -275,6 +295,7 @@ export default function MerchandisePage() {
               aria-label={`Shopping cart with ${cartCount} items`}
             >
               CART
+
               <span className="cart-count">
                 {cartCount}
               </span>
@@ -313,12 +334,14 @@ export default function MerchandisePage() {
             </div>
 
             <p className="hero-subtitle">
-              Official merchandise from{" "}
+              Official merchandise
+              from{" "}
               <strong>
                 Can&apos;t Make This Up!
               </strong>
               <br />
-              Wear the stories. Represent the show.
+              Wear the stories.
+              Represent the show.
             </p>
 
             <button
@@ -330,7 +353,8 @@ export default function MerchandisePage() {
                     "shop-the-show",
                   )
                   ?.scrollIntoView({
-                    behavior: "smooth",
+                    behavior:
+                      "smooth",
                   });
               }}
             >
@@ -357,41 +381,65 @@ export default function MerchandisePage() {
             <div className="red-line" />
 
             <p className="section-description">
-              Official Scotti Brothers and
-              Can&apos;t Make This Up! merchandise.
+              Official Scotti
+              Brothers and
+              Can&apos;t Make This Up!
+              merchandise.
             </p>
           </div>
 
           {/* CATEGORY FILTER */}
 
-          <div className="category-filter">
-            {categories.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() =>
-                  setCategory(item)
-                }
-                className={
-                  category === item
-                    ? "category-button active"
-                    : "category-button"
-                }
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+          {categories.length > 1 && (
+            <div className="category-filter">
+              {categories.map(
+                (item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() =>
+                      setCategory(
+                        item,
+                      )
+                    }
+                    className={
+                      category ===
+                      item
+                        ? "category-button active"
+                        : "category-button"
+                    }
+                  >
+                    {item}
+                  </button>
+                ),
+              )}
+            </div>
+          )}
 
           {/* PRODUCT GRID */}
 
           <div className="merch-grid">
             {visibleProducts.map(
               (product) => {
+                const customerPrice =
+                  getCustomerPrice(
+                    product,
+                  );
+
                 const available =
                   product.inventoryQuantity >
                     0 &&
-                  product.price > 0;
+                  customerPrice > 0;
+
+                const primaryImage =
+                  product.images[0] ??
+                  null;
+
+                const hasSale =
+                  product.salePrice !==
+                    null &&
+                  product.salePrice <
+                    product.price;
 
                 return (
                   <article
@@ -403,10 +451,10 @@ export default function MerchandisePage() {
                         {/* PRODUCT IMAGE */}
 
                         <div className="product-image">
-                          {product.image ? (
+                          {primaryImage ? (
                             <img
                               src={
-                                product.image
+                                primaryImage
                               }
                               alt={
                                 product.name
@@ -450,7 +498,9 @@ export default function MerchandisePage() {
                           </p>
 
                           <h3>
-                            {product.name}
+                            {
+                              product.name
+                            }
                           </h3>
 
                           <p className="product-description">
@@ -460,12 +510,26 @@ export default function MerchandisePage() {
                           </p>
 
                           <div className="product-price">
-                            {product.price >
-                            0
-                              ? formatPrice(
-                                  product.price,
-                                )
-                              : "COMING SOON"}
+                            {customerPrice >
+                            0 ? (
+                              <>
+                                {hasSale && (
+                                  <span className="regular-price">
+                                    {formatMoney(
+                                      product.price,
+                                    )}
+                                  </span>
+                                )}
+
+                                <span>
+                                  {formatMoney(
+                                    customerPrice,
+                                  )}
+                                </span>
+                              </>
+                            ) : (
+                              "COMING SOON"
+                            )}
                           </div>
 
                           {available ? (
@@ -482,7 +546,10 @@ export default function MerchandisePage() {
                             </button>
                           ) : (
                             <div className="coming-soon">
-                              COMING SOON
+                              {product.inventoryQuantity ===
+                              0
+                                ? "SOLD OUT"
+                                : "COMING SOON"}
                             </div>
                           )}
                         </div>
@@ -491,6 +558,22 @@ export default function MerchandisePage() {
                   </article>
                 );
               },
+            )}
+
+            {visibleProducts.length ===
+              0 && (
+              <div className="empty-catalog">
+                <p>
+                  MERCHANDISE COMING
+                  SOON
+                </p>
+
+                <span>
+                  The official
+                  collection is being
+                  prepared.
+                </span>
+              </div>
             )}
           </div>
         </section>
@@ -518,13 +601,12 @@ export default function MerchandisePage() {
             </div>
 
             <p>
-              Official Scotti Brothers
-              merchandise is being prepared
-              for the show. Apparel,
-              collectibles, and exclusive
-              designs inspired by the stories
-              behind Can&apos;t Make This Up!
-              will be available here.
+              Official Scotti
+              Brothers merchandise
+              inspired by the stories
+              and personalities behind
+              Can&apos;t Make This Up!
+              is available here.
             </p>
 
             <div className="feature-badge">
@@ -544,8 +626,10 @@ export default function MerchandisePage() {
           />
 
           <p>
-            © {new Date().getFullYear()} Scotti
-            Brothers Ent. All rights reserved.
+            ©{" "}
+            {new Date().getFullYear()}{" "}
+            Scotti Brothers Ent.
+            All rights reserved.
           </p>
 
           <a
@@ -590,7 +674,9 @@ export default function MerchandisePage() {
                   YOUR SELECTION
                 </p>
 
-                <h2>SHOPPING CART</h2>
+                <h2>
+                  SHOPPING CART
+                </h2>
               </div>
 
               <button
@@ -605,15 +691,18 @@ export default function MerchandisePage() {
               </button>
             </div>
 
-            {cart.length === 0 ? (
+            {cart.length ===
+            0 ? (
               <div className="empty-cart">
                 <p>
-                  YOUR CART IS EMPTY
+                  YOUR CART IS
+                  EMPTY
                 </p>
 
                 <span>
-                  Add merchandise to
-                  begin your order.
+                  Add merchandise
+                  to begin your
+                  order.
                 </span>
 
                 <button
@@ -629,99 +718,115 @@ export default function MerchandisePage() {
             ) : (
               <>
                 <div className="cart-items">
-                  {cart.map((item) => (
-                    <div
-                      className="cart-item"
-                      key={
-                        item.product.id
-                      }
-                    >
-                      <div className="cart-item-image">
-                        {item.product
-                          .image ? (
-                          <img
-                            src={
-                              item.product
-                                .image
-                            }
-                            alt=""
-                          />
-                        ) : (
-                          <span>
-                            CMTU
-                          </span>
-                        )}
-                      </div>
+                  {cart.map(
+                    (item) => {
+                      const customerPrice =
+                        getCustomerPrice(
+                          item.product,
+                        );
 
-                      <div className="cart-item-details">
-                        <h3>
-                          {
-                            item.product
-                              .name
+                      const primaryImage =
+                        item.product
+                          .images[0] ??
+                        null;
+
+                      return (
+                        <div
+                          className="cart-item"
+                          key={
+                            item
+                              .product
+                              .id
                           }
-                        </h3>
+                        >
+                          <div className="cart-item-image">
+                            {primaryImage ? (
+                              <img
+                                src={
+                                  primaryImage
+                                }
+                                alt=""
+                              />
+                            ) : (
+                              <span>
+                                CMTU
+                              </span>
+                            )}
+                          </div>
 
-                        <p>
-                          {formatPrice(
-                            item.product
-                              .price,
-                          )}
-                        </p>
-
-                        <div className="quantity-row">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateCartQuantity(
+                          <div className="cart-item-details">
+                            <h3>
+                              {
                                 item
                                   .product
-                                  .id,
-                                item.quantity -
-                                  1,
-                              )
-                            }
-                          >
-                            −
-                          </button>
+                                  .name
+                              }
+                            </h3>
 
-                          <span>
-                            {
-                              item.quantity
-                            }
-                          </span>
+                            <p>
+                              {formatMoney(
+                                customerPrice,
+                              )}
+                            </p>
 
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateCartQuantity(
-                                item
-                                  .product
-                                  .id,
-                                item.quantity +
-                                  1,
-                              )
-                            }
-                          >
-                            +
-                          </button>
+                            <div className="quantity-row">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateCartQuantity(
+                                    item
+                                      .product
+                                      .id,
+                                    item.quantity -
+                                      1,
+                                  )
+                                }
+                                aria-label={`Decrease quantity of ${item.product.name}`}
+                              >
+                                −
+                              </button>
 
-                          <button
-                            type="button"
-                            className="remove-item"
-                            onClick={() =>
-                              removeFromCart(
-                                item
-                                  .product
-                                  .id,
-                              )
-                            }
-                          >
-                            REMOVE
-                          </button>
+                              <span>
+                                {
+                                  item.quantity
+                                }
+                              </span>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateCartQuantity(
+                                    item
+                                      .product
+                                      .id,
+                                    item.quantity +
+                                      1,
+                                  )
+                                }
+                                aria-label={`Increase quantity of ${item.product.name}`}
+                              >
+                                +
+                              </button>
+
+                              <button
+                                type="button"
+                                className="remove-item"
+                                onClick={() =>
+                                  removeFromCart(
+                                    item
+                                      .product
+                                      .id,
+                                  )
+                                }
+                              >
+                                REMOVE
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    },
+                  )}
                 </div>
 
                 <div className="cart-summary">
@@ -731,15 +836,16 @@ export default function MerchandisePage() {
                     </span>
 
                     <strong>
-                      {formatPrice(
+                      {formatMoney(
                         cartTotal,
                       )}
                     </strong>
                   </div>
 
                   <p>
-                    Shipping and taxes will
-                    be calculated during
+                    Shipping and
+                    taxes will be
+                    calculated during
                     checkout.
                   </p>
 
@@ -755,8 +861,9 @@ export default function MerchandisePage() {
                     Secure payment
                     checkout will be
                     activated when the
-                    Scotti Brothers payment
-                    account is connected.
+                    Scotti Brothers
+                    payment account is
+                    connected.
                   </small>
                 </div>
               </>
@@ -1411,10 +1518,25 @@ export default function MerchandisePage() {
         .product-price {
           margin-top: 15px;
 
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+
           color: #fff;
 
           font-size: 20px;
           font-weight: 900;
+        }
+
+        .regular-price {
+          color:
+            rgba(255,255,255,0.38);
+
+          font-size: 13px;
+
+          text-decoration: line-through;
         }
 
         .coming-soon {
@@ -1464,6 +1586,43 @@ export default function MerchandisePage() {
         .add-cart-button:hover {
           background: var(--gold);
           color: #000;
+        }
+
+        .empty-catalog {
+          grid-column: 1 / -1;
+
+          padding: 80px 20px;
+
+          border:
+            1px solid
+            rgba(242,201,76,0.18);
+
+          background:
+            rgba(255,255,255,0.02);
+
+          text-align: center;
+        }
+
+        .empty-catalog p {
+          margin: 0;
+
+          color: var(--gold);
+
+          font-size: 14px;
+          font-weight: 900;
+
+          letter-spacing: 0.22em;
+        }
+
+        .empty-catalog span {
+          display: block;
+
+          margin-top: 12px;
+
+          color:
+            rgba(255,255,255,0.4);
+
+          font-size: 12px;
         }
 
         /* FEATURE */
@@ -1603,7 +1762,8 @@ export default function MerchandisePage() {
 
           letter-spacing: 0.12em;
 
-          transition: color 0.2s ease;
+          transition:
+            color 0.2s ease;
         }
 
         .company-link:hover {
