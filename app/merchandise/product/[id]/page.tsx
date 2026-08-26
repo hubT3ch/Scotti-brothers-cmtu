@@ -1,108 +1,36 @@
-"use client";
-
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { notFound } from "next/navigation";
 import {
   formatMoney,
   getPublicMerchandiseCatalog,
   type MerchandiseProduct,
 } from "@/lib/commerce";
 
-const GOLD = "#F2C94C";
+type ProductPageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
 
-const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Episodes", href: "/episodes" },
-  { label: "Guests", href: "/guests" },
-  { label: "Merchandise", href: "/merchandise" },
-  { label: "Contact", href: "/contact" },
-];
+export default async function ProductPage({
+  params,
+}: ProductPageProps) {
+  const { id } = await params;
 
-function ProductNotFound() {
-  return (
-    <main className="product-page">
-      <div className="page-content">
-        <header className="site-header">
-          <Link href="/" className="logo">
-            <img
-              src="/images/logo.png"
-              alt="Scotti Brothers Can't Make This Up!"
-            />
-          </Link>
-
-          <nav className="site-nav">
-            {navigation.map((item) => (
-              <Link key={item.href} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </header>
-
-        <section className="not-found">
-          <p className="eyebrow">
-            MERCHANDISE
-          </p>
-
-          <h1>PRODUCT NOT FOUND</h1>
-
-          <div className="gold-line">
-            <span />
-            <b>◆</b>
-            <span />
-          </div>
-
-          <p>
-            This merchandise item is
-            unavailable or is no longer
-            published.
-          </p>
-
-          <Link
-            href="/merchandise"
-            className="gold-button"
-          >
-            RETURN TO MERCHANDISE
-          </Link>
-        </section>
-      </div>
-    </main>
-  );
-}
-
-export default function ProductPage() {
-  const params = useParams();
-
-  const productId =
-    typeof params.id === "string"
-      ? params.id
-      : Array.isArray(params.id)
-        ? params.id[0]
-        : "";
-
-  const product = useMemo(() => {
-    return getPublicMerchandiseCatalog().find(
+  const product: MerchandiseProduct | undefined =
+    getPublicMerchandiseCatalog().find(
       (item) =>
-        item.id === productId &&
+        item.id === id &&
         item.active &&
         item.publicDisplay,
     );
-  }, [productId]);
-
-  const [selectedImage, setSelectedImage] =
-    useState(0);
-
-  const [quantity, setQuantity] =
-    useState(1);
 
   if (!product) {
-    return <ProductNotFound />;
+    notFound();
   }
 
   const customerPrice =
-    product.salePrice ??
-    product.price;
+    product.salePrice ?? product.price;
 
   const hasSale =
     product.salePrice !== null &&
@@ -115,44 +43,7 @@ export default function ProductPage() {
   const images =
     product.images.length > 0
       ? product.images
-      : ["/images/logo.png"];
-
-  const currentImage =
-    images[
-      Math.min(
-        selectedImage,
-        images.length - 1,
-      )
-    ];
-
-  function increaseQuantity() {
-    setQuantity((current) =>
-      Math.min(
-        current + 1,
-        product.inventoryQuantity,
-      ),
-    );
-  }
-
-  function decreaseQuantity() {
-    setQuantity((current) =>
-      Math.max(current - 1, 1),
-    );
-  }
-
-  function addToCart() {
-    /*
-     * Checkout/cart integration will be
-     * connected after the payment processor
-     * is activated.
-     *
-     * For now this deliberately does not
-     * attempt to process payment.
-     */
-    alert(
-      "This product is ready for checkout. Payment processing will be activated when the Scotti Brothers payment account is connected.",
-    );
-  }
+      : [];
 
   return (
     <main className="product-page">
@@ -171,8 +62,15 @@ export default function ProductPage() {
 
         <header className="site-header">
           <Link
+            href="/merchandise"
+            className="back-link"
+          >
+            ← BACK TO MERCHANDISE
+          </Link>
+
+          <Link
             href="/"
-            className="logo"
+            className="header-logo"
             aria-label="Scotti Brothers Can't Make This Up!"
           >
             <img
@@ -181,239 +79,232 @@ export default function ProductPage() {
             />
           </Link>
 
-          <nav
-            className="site-nav"
-            aria-label="Main navigation"
-          >
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  item.href ===
-                  "/merchandise"
-                    ? "active"
-                    : ""
-                }
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </header>
-
-        {/* BREADCRUMB */}
-
-        <div className="breadcrumb-wrap">
-          <Link href="/merchandise">
-            Merchandise
-          </Link>
-
-          <span> / </span>
-
           <Link
-            href={`/merchandise/${getCategorySlug(
-              product.category,
-            )}`}
+            href="/merchandise"
+            className="cart-link"
           >
-            {product.category}
+            MERCHANDISE
           </Link>
-
-          <span> / </span>
-
-          <strong>
-            {product.name}
-          </strong>
-        </div>
+        </header>
 
         {/* PRODUCT */}
 
         <section className="product-section">
-          {/* IMAGE AREA */}
-
           <div className="product-gallery">
-            <div className="main-image-frame">
-              <div className="main-image">
-                {currentImage ? (
-                  <img
-                    src={currentImage}
-                    alt={product.name}
-                  />
-                ) : (
-                  <div className="placeholder">
-                    SCOTTI BROTHERS
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {images.length > 1 && (
-              <div className="thumbnail-row">
+            {images.length > 0 ? (
+              <div className="image-grid">
                 {images.map(
                   (image, index) => (
-                    <button
+                    <div
+                      className="image-frame"
                       key={`${image}-${index}`}
-                      type="button"
-                      onClick={() =>
-                        setSelectedImage(
-                          index,
-                        )
-                      }
-                      className={
-                        selectedImage ===
-                        index
-                          ? "thumbnail active"
-                          : "thumbnail"
-                      }
                     >
-                      <img
-                        src={image}
-                        alt={`${product.name} image ${
-                          index + 1
-                        }`}
-                      />
-                    </button>
+                      <div className="image-inner">
+                        <img
+                          src={image}
+                          alt={`${product.name} ${
+                            index + 1
+                          }`}
+                        />
+                      </div>
+                    </div>
                   ),
                 )}
               </div>
+            ) : (
+              <div className="no-image-frame">
+                <div className="no-image">
+                  <span>
+                    SCOTTI BROTHERS
+                  </span>
+
+                  <strong>
+                    CAN&apos;T MAKE
+                    <br />
+                    THIS UP!
+                  </strong>
+
+                  <small>
+                    OFFICIAL
+                    MERCHANDISE
+                  </small>
+
+                  <p>
+                    PRODUCT IMAGE
+                    COMING SOON
+                  </p>
+                </div>
+              </div>
             )}
           </div>
-
-          {/* PRODUCT DETAILS */}
 
           <div className="product-details">
             <p className="eyebrow">
               {product.category}
             </p>
 
-            {product.featured && (
-              <div className="featured">
-                FEATURED
-              </div>
-            )}
-
             <h1>{product.name}</h1>
 
-            <div className="red-line" />
-
-            <div className="price">
-              {customerPrice > 0 ? (
-                <>
-                  {hasSale && (
-                    <span className="old-price">
-                      {formatMoney(
-                        product.price,
-                      )}
-                    </span>
-                  )}
-
-                  <strong>
-                    {formatMoney(
-                      customerPrice,
-                    )}
-                  </strong>
-                </>
-              ) : (
-                <strong>
-                  COMING SOON
-                </strong>
-              )}
+            <div className="gold-line">
+              <span />
+              <b>◆</b>
+              <span />
             </div>
+
+            {product.featured && (
+              <div className="featured">
+                FEATURED COLLECTION
+              </div>
+            )}
 
             <p className="description">
               {product.description ||
                 "Official Scotti Brothers merchandise from Can't Make This Up!"}
             </p>
 
-            <div className="product-divider" />
+            <div className="price">
+              {hasSale && (
+                <span className="regular-price">
+                  {formatMoney(
+                    product.price,
+                  )}
+                </span>
+              )}
+
+              {customerPrice > 0 ? (
+                <span>
+                  {formatMoney(
+                    customerPrice,
+                  )}
+                </span>
+              ) : (
+                <span>
+                  COMING SOON
+                </span>
+              )}
+            </div>
 
             <div className="availability">
-              <span>AVAILABILITY</span>
-
-              <strong
-                className={
-                  available
-                    ? "available"
-                    : "unavailable"
-                }
-              >
-                {product.inventoryQuantity >
-                0
-                  ? `${product.inventoryQuantity} IN STOCK`
-                  : "SOLD OUT"}
-              </strong>
+              {available ? (
+                <>
+                  <span className="available-dot" />
+                  IN STOCK
+                </>
+              ) : product.inventoryQuantity ===
+                0 ? (
+                <>
+                  <span className="sold-dot" />
+                  SOLD OUT
+                </>
+              ) : (
+                <>
+                  <span className="coming-dot" />
+                  COMING SOON
+                </>
+              )}
             </div>
 
             {available && (
-              <div className="purchase-area">
-                <div className="quantity-control">
-                  <button
-                    type="button"
-                    onClick={
-                      decreaseQuantity
-                    }
-                    aria-label="Decrease quantity"
-                  >
-                    −
-                  </button>
-
-                  <span>
-                    {quantity}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={
-                      increaseQuantity
-                    }
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={addToCart}
-                  className="add-button"
-                >
-                  ADD TO CART
-                </button>
-              </div>
-            )}
-
-            {!available && (
-              <div className="sold-out-button">
-                {customerPrice <= 0
-                  ? "COMING SOON"
-                  : "SOLD OUT"}
-              </div>
+              <button
+                type="button"
+                className="add-button"
+                onClick={() => {
+                  window.alert(
+                    "Shopping cart checkout will be connected when the merchandise payment processor is activated.",
+                  );
+                }}
+              >
+                ADD TO CART
+              </button>
             )}
 
             <div className="product-meta">
               <div>
+                <span>
+                  CATEGORY
+                </span>
+
+                <strong>
+                  {product.category}
+                </strong>
+              </div>
+
+              <div>
                 <span>SKU</span>
+
                 <strong>
                   {product.sku}
                 </strong>
               </div>
 
-              <div>
-                <span>CATEGORY</span>
-                <strong>
-                  {product.category}
-                </strong>
-              </div>
+              {product.inventoryQuantity >
+                0 && (
+                <div>
+                  <span>
+                    AVAILABILITY
+                  </span>
+
+                  <strong>
+                    {
+                      product.inventoryQuantity
+                    }{" "}
+                    AVAILABLE
+                  </strong>
+                </div>
+              )}
             </div>
+
+            <Link
+              href={`/merchandise/${
+                categoryPath(
+                  product.category,
+                )
+              }`}
+              className="category-link"
+            >
+              ← VIEW MORE{" "}
+              {product.category.toUpperCase()}
+            </Link>
           </div>
         </section>
 
-        {/* RETURN */}
+        {/* SHOP MORE */}
 
-        <section className="return-section">
-          <Link href="/merchandise">
-            ← BACK TO MERCHANDISE
-          </Link>
+        <section className="shop-more">
+          <p className="eyebrow">
+            OFFICIAL COLLECTION
+          </p>
+
+          <h2>
+            MORE FROM THE SHOW
+          </h2>
+
+          <div className="red-line" />
+
+          <p>
+            Explore more official
+            Scotti Brothers and
+            Can&apos;t Make This Up!
+            merchandise.
+          </p>
+
+          <div className="shop-links">
+            <Link href="/merchandise">
+              ALL MERCHANDISE
+            </Link>
+
+            <Link href="/merchandise/apparel">
+              APPAREL
+            </Link>
+
+            <Link href="/merchandise/collection">
+              COLLECTIONS
+            </Link>
+
+            <Link href="/merchandise/collectibles">
+              COLLECTIBLES
+            </Link>
+          </div>
         </section>
 
         {/* FOOTER */}
@@ -425,8 +316,7 @@ export default function ProductPage() {
           />
 
           <p>
-            ©{" "}
-            {new Date().getFullYear()}{" "}
+            © {new Date().getFullYear()}{" "}
             Scotti Brothers Ent.
             All rights reserved.
           </p>
@@ -435,7 +325,6 @@ export default function ProductPage() {
             href="https://scottibrothersent.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="company-link"
           >
             SCOTTIBROTHERSENT.COM
           </a>
@@ -452,7 +341,7 @@ export default function ProductPage() {
         }
 
         .product-page {
-          --gold: ${GOLD};
+          --gold: #F2C94C;
 
           min-height: 100vh;
 
@@ -462,13 +351,13 @@ export default function ProductPage() {
 
           background:
             radial-gradient(
-              circle at 20% 20%,
+              circle at 15% 20%,
               rgba(139,0,0,0.18),
               transparent 30%
             ),
             radial-gradient(
-              circle at 80% 60%,
-              rgba(242,201,76,0.08),
+              circle at 85% 65%,
+              rgba(242,201,76,0.07),
               transparent 32%
             ),
             linear-gradient(
@@ -486,29 +375,47 @@ export default function ProductPage() {
             sans-serif;
         }
 
-        .background,
+        .background {
+          position: fixed;
+
+          inset: 0;
+
+          z-index: 0;
+
+          pointer-events: none;
+
+          background:
+            radial-gradient(
+              circle at 30% 40%,
+              rgba(139,0,0,0.10),
+              transparent 32%
+            ),
+            radial-gradient(
+              circle at 75% 70%,
+              rgba(242,201,76,0.05),
+              transparent 30%
+            );
+        }
+
         .grid-overlay {
           position: fixed;
+
           inset: 0;
-          pointer-events: none;
-        }
 
-        .background {
-          z-index: 0;
-        }
-
-        .grid-overlay {
           z-index: 1;
-          opacity: .25;
+
+          pointer-events: none;
+
+          opacity: 0.22;
 
           background-image:
             linear-gradient(
-              rgba(255,255,255,.012) 1px,
+              rgba(255,255,255,0.012) 1px,
               transparent 1px
             ),
             linear-gradient(
               90deg,
-              rgba(255,255,255,.012) 1px,
+              rgba(255,255,255,0.012) 1px,
               transparent 1px
             );
 
@@ -517,239 +424,262 @@ export default function ProductPage() {
 
         .page-content {
           position: relative;
+
           z-index: 2;
+
+          width: 100%;
         }
+
+        /* HEADER */
 
         .site-header {
-          min-height: 82px;
+          min-height: 90px;
 
-          padding:
-            24px
-            42px;
-
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          gap: 25px;
-        }
-
-        .logo {
-          display: block;
-
-          width: 145px;
-
-          line-height: 0;
-        }
-
-        .logo img {
-          width: 100%;
-          height: auto;
-        }
-
-        .site-nav {
-          display: flex;
-          align-items: center;
-
-          gap: 5px;
-
-          padding: 8px 10px;
-
-          border-radius: 999px;
-
-          background:
-            rgba(255,255,255,.08);
-
-          border:
-            1px solid
-            rgba(255,255,255,.12);
-
-          backdrop-filter: blur(6px);
-        }
-
-        .site-nav a {
-          padding:
-            8px
-            12px;
-
-          border-radius: 999px;
-
-          color: #fff;
-
-          text-decoration: none;
-
-          font-size: 14px;
-          font-weight: 800;
-        }
-
-        .site-nav a:hover {
-          color: var(--gold);
-        }
-
-        .site-nav a.active {
-          background: #8b0000;
-        }
-
-        .breadcrumb-wrap {
-          width:
-            min(
-              1250px,
-              100%
-            );
-
-          margin:
-            0
-            auto;
-
-          padding:
-            15px
-            32px;
-
-          color:
-            rgba(255,255,255,.4);
-
-          font-size: 10px;
-
-          letter-spacing: .08em;
-
-          text-transform: uppercase;
-        }
-
-        .breadcrumb-wrap a {
-          color: var(--gold);
-
-          text-decoration: none;
-        }
-
-        .breadcrumb-wrap span {
-          margin: 0 7px;
-        }
-
-        .breadcrumb-wrap strong {
-          color:
-            rgba(255,255,255,.7);
-        }
-
-        .product-section {
-          width:
-            min(
-              1200px,
-              100%
-            );
-
-          margin:
-            30px
-            auto
-            0;
-
-          padding:
-            20px
-            32px
-            90px;
+          padding: 20px 42px;
 
           display: grid;
 
           grid-template-columns:
-            minmax(0,1fr)
-            minmax(0,1fr);
+            1fr
+            auto
+            1fr;
+
+          align-items: center;
+
+          gap: 25px;
+
+          border-bottom:
+            1px solid
+            rgba(242,201,76,0.15);
+        }
+
+        .back-link,
+        .cart-link {
+          color:
+            rgba(255,255,255,0.55);
+
+          font-size: 10px;
+
+          font-weight: 900;
+
+          letter-spacing: 0.18em;
+
+          text-decoration: none;
+
+          transition:
+            color 0.2s ease;
+        }
+
+        .back-link:hover,
+        .cart-link:hover {
+          color: var(--gold);
+        }
+
+        .cart-link {
+          justify-self: end;
+        }
+
+        .header-logo {
+          display: block;
+
+          width: 130px;
+
+          line-height: 0;
+        }
+
+        .header-logo img {
+          display: block;
+
+          width: 100%;
+
+          height: auto;
+        }
+
+        /* PRODUCT SECTION */
+
+        .product-section {
+          width:
+            min(1250px, 100%);
+
+          margin: 0 auto;
+
+          padding:
+            70px
+            32px
+            100px;
+
+          display: grid;
+
+          grid-template-columns:
+            minmax(0, 1.15fr)
+            minmax(360px, 0.85fr);
 
           gap: 70px;
 
           align-items: start;
         }
 
+        /* GALLERY */
+
         .product-gallery {
-          min-width: 0;
+          width: 100%;
         }
 
-        .main-image-frame {
-          padding: 8px;
+        .image-grid {
+          display: grid;
+
+          grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+          gap: 18px;
+        }
+
+        .image-frame,
+        .no-image-frame {
+          padding: 7px;
 
           background:
             linear-gradient(
               135deg,
-              #fff0a3,
+              #fff0a3 0%,
               #f2c94c 18%,
               #9f7612 45%,
               #f7d85d 65%,
-              #a67b12
+              #a67b12 100%
+            );
+
+          box-shadow:
+            0 15px 35px
+            rgba(0,0,0,0.65);
+        }
+
+        .image-inner {
+          padding: 8px;
+
+          background:
+            linear-gradient(
+              145deg,
+              #b30000,
+              #650000 55%,
+              #9b0000
             );
         }
 
-        .main-image {
+        .image-inner img {
+          display: block;
+
+          width: 100%;
+
           aspect-ratio: 1 / 1;
 
-          overflow: hidden;
+          object-fit: cover;
+
+          background: #111;
+        }
+
+        .no-image-frame {
+          width: 100%;
+        }
+
+        .no-image {
+          min-height: 600px;
+
+          padding: 50px 30px;
 
           display: flex;
+
+          flex-direction: column;
+
           align-items: center;
+
           justify-content: center;
+
+          text-align: center;
 
           background:
             radial-gradient(
-              circle,
-              rgba(242,201,76,.18),
-              transparent 55%
+              circle at center,
+              rgba(242,201,76,0.14),
+              transparent 50%
             ),
-            #090909;
+            linear-gradient(
+              145deg,
+              #151515,
+              #050505
+            );
+
+          border:
+            8px solid
+            #650000;
         }
 
-        .main-image img {
-          width: 100%;
-          height: 100%;
+        .no-image span {
+          color: #c62828;
 
-          object-fit: cover;
-        }
+          font-size: 11px;
 
-        .placeholder {
-          color: var(--gold);
-
-          font-size: 20px;
           font-weight: 900;
 
-          letter-spacing: .2em;
+          letter-spacing: 0.3em;
         }
 
-        .thumbnail-row {
-          display: flex;
+        .no-image strong {
+          margin-top: 18px;
 
-          gap: 10px;
+          color: #fff;
 
-          margin-top: 15px;
+          font-size:
+            clamp(42px, 6vw, 78px);
 
-          overflow-x: auto;
+          line-height: 0.88;
+
+          font-weight: 900;
+
+          text-shadow:
+            4px 4px 0 #8b0000;
         }
 
-        .thumbnail {
-          width: 75px;
-          height: 75px;
+        .no-image small {
+          margin-top: 25px;
 
-          flex-shrink: 0;
+          color: var(--gold);
 
-          padding: 3px;
+          font-size: 9px;
+
+          font-weight: 900;
+
+          letter-spacing: 0.25em;
+        }
+
+        .no-image p {
+          margin-top: 40px;
+
+          padding:
+            12px 18px;
 
           border:
             1px solid
-            rgba(242,201,76,.3);
+            rgba(242,201,76,0.4);
 
-          background: #090909;
+          color:
+            rgba(255,255,255,0.4);
 
-          cursor: pointer;
+          font-size: 9px;
+
+          font-weight: 900;
+
+          letter-spacing: 0.2em;
         }
 
-        .thumbnail.active {
-          border-color: var(--gold);
-        }
-
-        .thumbnail img {
-          width: 100%;
-          height: 100%;
-
-          object-fit: cover;
-        }
+        /* DETAILS */
 
         .product-details {
-          padding-top: 10px;
+          position: sticky;
+
+          top: 30px;
+
+          padding:
+            15px 0;
         }
 
         .eyebrow {
@@ -758,50 +688,30 @@ export default function ProductPage() {
           color: var(--gold);
 
           font-size: 10px;
+
           font-weight: 900;
 
-          letter-spacing: .35em;
+          letter-spacing: 0.35em;
 
           text-transform: uppercase;
         }
 
-        .featured {
-          display: inline-flex;
-
-          margin-top: 16px;
-
-          padding:
-            5px
-            9px;
-
-          border:
-            1px solid
-            rgba(242,201,76,.45);
-
-          color: var(--gold);
-
-          font-size: 8px;
-          font-weight: 900;
-
-          letter-spacing: .2em;
-        }
-
         .product-details h1 {
           margin:
-            18px
+            14px
             0
             0;
 
-          font-size:
-            clamp(
-              38px,
-              5vw,
-              68px
-            );
+          color: #fff;
 
-          line-height: .95;
+          font-size:
+            clamp(40px, 5vw, 70px);
+
+          line-height: 0.95;
 
           font-weight: 900;
+
+          letter-spacing: -0.04em;
 
           text-transform: uppercase;
 
@@ -809,150 +719,149 @@ export default function ProductPage() {
             4px 4px 0 #8b0000;
         }
 
-        .red-line {
-          width: 65px;
-          height: 4px;
-
-          margin-top: 24px;
-
-          background: #c62828;
-        }
-
-        .price {
+        .gold-line {
           display: flex;
+
           align-items: center;
 
-          gap: 12px;
+          gap: 14px;
 
-          margin-top: 28px;
+          margin:
+            28px
+            0;
+
+          width: 100%;
         }
 
-        .price strong {
+        .gold-line span {
+          flex: 1;
+
+          height: 1px;
+
+          background:
+            rgba(242,201,76,0.65);
+        }
+
+        .gold-line b {
           color: var(--gold);
 
-          font-size: 32px;
-          font-weight: 900;
+          font-size: 13px;
         }
 
-        .old-price {
-          color:
-            rgba(255,255,255,.35);
+        .featured {
+          display: inline-flex;
 
-          font-size: 16px;
+          padding:
+            6px 10px;
 
-          text-decoration: line-through;
+          border:
+            1px solid
+            rgba(242,201,76,0.55);
+
+          color: var(--gold);
+
+          font-size: 8px;
+
+          font-weight: 900;
+
+          letter-spacing: 0.2em;
         }
 
         .description {
-          margin-top: 25px;
-
-          max-width: 600px;
+          margin:
+            25px
+            0
+            0;
 
           color:
-            rgba(255,255,255,.65);
+            rgba(255,255,255,0.68);
 
           font-size: 15px;
 
           line-height: 1.8;
         }
 
-        .product-divider {
-          margin:
-            30px
-            0;
+        .price {
+          margin-top: 28px;
 
-          border-top:
-            1px solid
-            rgba(255,255,255,.1);
+          display: flex;
+
+          align-items: center;
+
+          flex-wrap: wrap;
+
+          gap: 12px;
+
+          color: #fff;
+
+          font-size: 32px;
+
+          font-weight: 900;
+        }
+
+        .regular-price {
+          color:
+            rgba(255,255,255,0.35);
+
+          font-size: 18px;
+
+          text-decoration: line-through;
         }
 
         .availability {
+          margin-top: 14px;
+
           display: flex;
 
           align-items: center;
-          justify-content: space-between;
 
-          gap: 20px;
+          gap: 8px;
 
-          padding-bottom: 20px;
-        }
-
-        .availability span {
           color:
-            rgba(255,255,255,.4);
+            rgba(255,255,255,0.45);
 
           font-size: 9px;
-          font-weight: 900;
-
-          letter-spacing: .18em;
-        }
-
-        .availability strong {
-          font-size: 10px;
-
-          letter-spacing: .12em;
-        }
-
-        .available {
-          color: var(--gold);
-        }
-
-        .unavailable {
-          color: #e11d22;
-        }
-
-        .purchase-area {
-          display: flex;
-
-          gap: 12px;
-        }
-
-        .quantity-control {
-          display: flex;
-
-          align-items: center;
-
-          border:
-            1px solid
-            rgba(242,201,76,.4);
-        }
-
-        .quantity-control button {
-          width: 42px;
-          height: 48px;
-
-          border: 0;
-
-          background: #111;
-
-          color: var(--gold);
-
-          font-size: 20px;
-
-          cursor: pointer;
-        }
-
-        .quantity-control span {
-          min-width: 42px;
-
-          text-align: center;
 
           font-weight: 900;
+
+          letter-spacing: 0.2em;
         }
 
-        .add-button,
-        .sold-out-button,
-        .gold-button {
-          display: inline-flex;
+        .available-dot,
+        .sold-dot,
+        .coming-dot {
+          width: 7px;
 
-          align-items: center;
-          justify-content: center;
+          height: 7px;
 
-          min-height: 48px;
+          display: inline-block;
 
-          padding:
-            0
-            24px;
+          border-radius: 50%;
+        }
+
+        .available-dot {
+          background: var(--gold);
+
+          box-shadow:
+            0 0 10px
+            rgba(242,201,76,0.5);
+        }
+
+        .sold-dot {
+          background: #e11d22;
+        }
+
+        .coming-dot {
+          background:
+            rgba(255,255,255,0.35);
+        }
+
+        .add-button {
+          width: 100%;
+
+          margin-top: 30px;
+
+          padding: 17px;
 
           border:
             1px solid
@@ -962,286 +871,368 @@ export default function ProductPage() {
 
           color: #fff;
 
-          text-decoration: none;
+          font-size: 10px;
 
-          font-size: 9px;
           font-weight: 900;
 
-          letter-spacing: .18em;
+          letter-spacing: 0.22em;
 
           cursor: pointer;
+
+          transition:
+            background 0.2s ease,
+            transform 0.2s ease;
         }
 
-        .add-button:hover,
-        .gold-button:hover {
+        .add-button:hover {
           background: #a80000;
-        }
 
-        .sold-out-button {
-          width: 100%;
-
-          opacity: .65;
-
-          cursor: default;
+          transform:
+            translateY(-2px);
         }
 
         .product-meta {
           margin-top: 35px;
 
-          padding-top: 20px;
-
           border-top:
             1px solid
-            rgba(255,255,255,.1);
+            rgba(255,255,255,0.1);
         }
 
-        .product-meta div {
+        .product-meta > div {
+          padding:
+            15px 0;
+
           display: flex;
+
+          align-items: center;
 
           justify-content: space-between;
 
-          padding:
-            8px
-            0;
+          gap: 20px;
+
+          border-bottom:
+            1px solid
+            rgba(255,255,255,0.08);
         }
 
         .product-meta span {
           color:
-            rgba(255,255,255,.35);
+            rgba(255,255,255,0.35);
 
-          font-size: 9px;
+          font-size: 8px;
 
-          letter-spacing: .15em;
+          font-weight: 900;
+
+          letter-spacing: 0.18em;
         }
 
         .product-meta strong {
           color:
-            rgba(255,255,255,.75);
+            rgba(255,255,255,0.72);
 
           font-size: 10px;
-        }
 
-        .return-section {
-          width:
-            min(
-              1200px,
-              100%
-            );
-
-          margin: 0 auto;
-
-          padding:
-            0
-            32px
-            80px;
-        }
-
-        .return-section a {
-          color: var(--gold);
-
-          text-decoration: none;
-
-          font-size: 10px;
           font-weight: 900;
 
-          letter-spacing: .16em;
+          text-align: right;
         }
 
-        .not-found {
-          width:
-            min(
-              800px,
-              100%
-            );
+        .category-link {
+          display: inline-block;
 
-          margin:
-            100px
-            auto;
+          margin-top: 28px;
 
+          color: var(--gold);
+
+          font-size: 9px;
+
+          font-weight: 900;
+
+          letter-spacing: 0.18em;
+
+          text-decoration: none;
+        }
+
+        .category-link:hover {
+          text-decoration: underline;
+        }
+
+        /* SHOP MORE */
+
+        .shop-more {
           padding:
-            50px
-            30px;
+            100px
+            25px;
+
+          border-top:
+            1px solid
+            rgba(242,201,76,0.12);
+
+          border-bottom:
+            1px solid
+            rgba(242,201,76,0.12);
+
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(139,0,0,0.16),
+              transparent 55%
+            );
 
           text-align: center;
         }
 
-        .not-found h1 {
-          margin-top: 15px;
+        .shop-more h2 {
+          margin:
+            12px
+            0
+            0;
 
           font-size:
-            clamp(
-              38px,
-              6vw,
-              70px
-            );
+            clamp(34px, 5vw, 58px);
 
           font-weight: 900;
+
+          line-height: 1;
         }
 
-        .not-found p {
+        .red-line {
+          width: 65px;
+
+          height: 4px;
+
+          margin:
+            20px auto;
+          
+          background: #c62828;
+        }
+
+        .shop-more > p:not(.eyebrow) {
+          max-width: 600px;
+
+          margin: 0 auto;
+
           color:
-            rgba(255,255,255,.5);
+            rgba(255,255,255,0.48);
+
+          font-size: 13px;
 
           line-height: 1.7;
         }
 
-        .gold-line {
+        .shop-links {
+          margin-top: 30px;
+
           display: flex;
-          align-items: center;
 
-          gap: 16px;
+          flex-wrap: wrap;
 
-          width: min(500px,90%);
+          justify-content: center;
 
-          margin:
-            28px
-            auto;
+          gap: 10px;
         }
 
-        .gold-line span {
-          flex: 1;
+        .shop-links a {
+          padding:
+            12px 18px;
 
-          height: 1px;
+          border:
+            1px solid
+            rgba(242,201,76,0.4);
 
-          background:
-            rgba(242,201,76,.7);
-        }
-
-        .gold-line b {
           color: var(--gold);
+
+          font-size: 9px;
+
+          font-weight: 900;
+
+          letter-spacing: 0.15em;
+
+          text-decoration: none;
+
+          transition:
+            background 0.2s ease,
+            border-color 0.2s ease;
         }
 
-        .gold-button {
-          margin-top: 20px;
+        .shop-links a:hover {
+          border-color: var(--gold);
+
+          background: #750000;
         }
+
+        /* FOOTER */
 
         .site-footer {
           padding:
-            28px
-            42px;
+            30px 42px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: space-between;
 
           gap: 25px;
 
           border-top:
             1px solid
-            rgba(242,201,76,.15);
+            rgba(242,201,76,0.15);
 
           background: #050505;
         }
 
         .site-footer img {
           width: 110px;
+
+          height: auto;
+        }
+
+        .site-footer p,
+        .site-footer span,
+        .site-footer a {
+          margin: 0;
+
+          font-size: 9px;
+
+          letter-spacing: 0.16em;
+
+          text-transform: uppercase;
+
+          text-decoration: none;
         }
 
         .site-footer p,
         .site-footer span {
-          margin: 0;
-
           color:
-            rgba(255,255,255,.35);
+            rgba(255,255,255,0.35);
+        }
 
-          font-size: 9px;
-          font-weight: 700;
+        .site-footer a {
+          color: #4da3ff;
+        }
 
-          letter-spacing: .2em;
-
-          text-transform: uppercase;
+        .site-footer a:hover {
+          text-decoration: underline;
         }
 
         .site-footer span {
           color:
-            rgba(242,201,76,.8);
+            rgba(242,201,76,0.8);
         }
 
-        .company-link {
-          color: #4da3ff;
+        /* TABLET */
 
-          text-decoration: none;
-
-          font-size: 9px;
-
-          letter-spacing: .12em;
-        }
-
-        @media (max-width: 800px) {
-          .site-header {
-            padding: 20px;
-            flex-direction: column;
-          }
-
+        @media (max-width: 950px) {
           .product-section {
             grid-template-columns: 1fr;
 
-            gap: 40px;
-
-            padding:
-              20px
-              18px
-              60px;
+            gap: 45px;
           }
 
-          .breadcrumb-wrap {
-            padding:
-              15px
-              18px;
-          }
+          .product-details {
+            position: static;
 
-          .return-section {
-            padding:
-              0
-              18px
-              60px;
+            max-width: 700px;
+
+            margin: 0 auto;
+
+            width: 100%;
           }
         }
 
-        @media (max-width: 600px) {
-          .logo {
-            width: 190px;
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+          .site-header {
+            padding:
+              18px 15px;
+
+            grid-template-columns:
+              1fr auto;
+
+            grid-template-areas:
+              "logo logo"
+              "back merch";
+
+            gap: 18px;
           }
 
-          .site-nav {
-            width: 100%;
+          .header-logo {
+            grid-area: logo;
 
-            justify-content: center;
+            width: 150px;
 
-            flex-wrap: wrap;
-
-            border-radius: 18px;
+            justify-self: center;
           }
 
-          .site-nav a {
-            font-size: 10px;
-            padding: 6px 8px;
+          .back-link {
+            grid-area: back;
+          }
+
+          .cart-link {
+            grid-area: merch;
+          }
+
+          .product-section {
+            padding:
+              40px
+              15px
+              70px;
+
+            gap: 35px;
+          }
+
+          .image-grid {
+            grid-template-columns: 1fr;
+
+            gap: 14px;
+          }
+
+          .no-image {
+            min-height: 430px;
           }
 
           .product-details h1 {
-            font-size: 38px;
+            font-size: 43px;
           }
 
-          .purchase-area {
+          .description {
+            font-size: 13px;
+          }
+
+          .price {
+            font-size: 28px;
+          }
+
+          .shop-more {
+            padding:
+              75px 20px;
+          }
+
+          .shop-links {
             flex-direction: column;
+
+            max-width: 320px;
+
+            margin-left: auto;
+            margin-right: auto;
           }
 
-          .quantity-control {
-            width: 100%;
-
-            justify-content: center;
-          }
-
-          .add-button {
+          .shop-links a {
             width: 100%;
           }
 
           .site-footer {
+            padding:
+              30px 20px;
+
             flex-direction: column;
 
             text-align: center;
 
-            padding: 30px 20px;
+            gap: 15px;
           }
         }
       `}</style>
@@ -1249,7 +1240,7 @@ export default function ProductPage() {
   );
 }
 
-function getCategorySlug(
+function categoryPath(
   category: string,
 ) {
   const normalized =
@@ -1277,9 +1268,8 @@ function getCategorySlug(
     normalized.includes(
       "collection",
     )
-  ) {
+  )
     return "collection";
-  }
 
-  return "merchandise";
+  return "collection";
 }
