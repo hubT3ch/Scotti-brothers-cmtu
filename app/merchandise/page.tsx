@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   formatMoney,
+  getPublicMerchandiseCatalog,
   type MerchandiseProduct,
 } from "@/lib/commerce";
 
@@ -15,16 +16,26 @@ const navigation = [
   { label: "Contact", href: "/contact" },
 ];
 
+const categories = [
+  {
+    label: "All Merchandise",
+    href: "/merchandise",
+  },
+  {
+    label: "Apparel",
+    href: "/merchandise/apparel",
+  },
+  {
+    label: "Collection",
+    href: "/merchandise/collection",
+  },
+  {
+    label: "Collectibles",
+    href: "/merchandise/collectibles",
+  },
+];
+
 const GOLD = "#F2C94C";
-
-type CartItem = {
-  product: MerchandiseProduct;
-  quantity: number;
-};
-
-type MerchandiseApiResponse = {
-  products?: MerchandiseProduct[];
-};
 
 function MobileLogo() {
   return (
@@ -42,280 +53,140 @@ function MobileLogo() {
   );
 }
 
-export default function MerchandisePage() {
-  const [products, setProducts] = useState<
-    MerchandiseProduct[]
-  >([]);
+function ProductCard({
+  product,
+}: {
+  product: MerchandiseProduct;
+}) {
+  const customerPrice =
+    product.salePrice ?? product.price;
 
-  const [loading, setLoading] =
-    useState(true);
+  const primaryImage =
+    product.images[0] ?? null;
 
-  const [loadError, setLoadError] =
-    useState<string | null>(null);
+  const hasSale =
+    product.salePrice !== null &&
+    product.salePrice < product.price;
 
-  const [cart, setCart] =
-    useState<CartItem[]>([]);
+  const available =
+    product.inventoryQuantity > 0 &&
+    customerPrice > 0;
 
-  const [cartOpen, setCartOpen] =
-    useState(false);
+  return (
+    <article className="merch-card">
+      <Link
+        href={`/merchandise/product/${product.id}`}
+        className="product-link"
+        aria-label={`View ${product.name}`}
+      >
+        <div className="gold-frame">
+          <div className="red-frame">
+            <div className="product-image">
+              {primaryImage ? (
+                <img
+                  src={primaryImage}
+                  alt={product.name}
+                />
+              ) : (
+                <div className="product-placeholder">
+                  <span>
+                    SCOTTI BROTHERS
+                  </span>
 
-  const [category, setCategory] =
-    useState("All");
+                  <strong>
+                    CAN&apos;T MAKE
+                    <br />
+                    THIS UP!
+                  </strong>
 
-  /*
-   * PUBLIC MERCHANDISE CATALOG
-   *
-   * Products are loaded from the CMTU
-   * merchandise API.
-   *
-   * The API is responsible for returning
-   * the public catalog.
-   *
-   * This keeps the public-facing page
-   * separate from the Management Desk.
-   */
-  useEffect(() => {
-    let cancelled = false;
+                  <small>
+                    OFFICIAL MERCHANDISE
+                  </small>
+                </div>
+              )}
+            </div>
 
-    async function loadProducts() {
-      try {
-        setLoading(true);
-        setLoadError(null);
+            <div className="product-info">
+              {product.featured && (
+                <div className="featured-label">
+                  FEATURED
+                </div>
+              )}
 
-        const response =
-          await fetch(
-            "/api/merchandise",
-            {
-              method: "GET",
-              cache: "no-store",
-            },
-          );
+              <p className="product-category">
+                {product.category}
+              </p>
 
-        if (!response.ok) {
-          throw new Error(
-            `Merchandise request failed with status ${response.status}.`,
-          );
-        }
+              <h3>
+                {product.name ||
+                  "Unnamed Product"}
+              </h3>
 
-        const data =
-          (await response.json()) as MerchandiseApiResponse;
+              <p className="product-description">
+                {product.description ||
+                  "Official Scotti Brothers merchandise."}
+              </p>
 
-        if (cancelled) {
-          return;
-        }
+              <div className="product-price">
+                {customerPrice > 0 ? (
+                  <>
+                    {hasSale && (
+                      <span className="regular-price">
+                        {formatMoney(
+                          product.price,
+                        )}
+                      </span>
+                    )}
 
-        setProducts(
-          Array.isArray(data.products)
-            ? data.products
-            : [],
-        );
-      } catch (error) {
-        if (cancelled) {
-          return;
-        }
+                    <span>
+                      {formatMoney(
+                        customerPrice,
+                      )}
+                    </span>
+                  </>
+                ) : (
+                  "COMING SOON"
+                )}
+              </div>
 
-        console.error(
-          "Unable to load public merchandise catalog:",
-          error,
-        );
-
-        setProducts([]);
-
-        setLoadError(
-          "The merchandise collection is temporarily unavailable.",
-        );
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadProducts();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const categories = useMemo(() => {
-    return [
-      "All",
-      ...Array.from(
-        new Set(
-          products
-            .filter(
-              (product) =>
-                product.active &&
-                product.publicDisplay,
-            )
-            .map(
-              (product) =>
-                product.category,
-            )
-            .filter(Boolean),
-        ),
-      ),
-    ];
-  }, [products]);
-
-  const visibleProducts = useMemo(() => {
-    return products.filter((product) => {
-      if (
-        !product.active ||
-        !product.publicDisplay
-      ) {
-        return false;
-      }
-
-      if (category === "All") {
-        return true;
-      }
-
-      return product.category === category;
-    });
-  }, [category, products]);
-
-  const cartCount = cart.reduce(
-    (total, item) =>
-      total + item.quantity,
-    0,
-  );
-
-  const cartTotal = cart.reduce(
-    (total, item) => {
-      const customerPrice =
-        item.product.salePrice ??
-        item.product.price;
-
-      return (
-        total +
-        customerPrice *
-          item.quantity
-      );
-    },
-    0,
-  );
-
-  function getCustomerPrice(
-    product: MerchandiseProduct,
-  ) {
-    return (
-      product.salePrice ??
-      product.price
-    );
-  }
-
-  function addToCart(
-    product: MerchandiseProduct,
-  ) {
-    const customerPrice =
-      getCustomerPrice(product);
-
-    if (
-      product.inventoryQuantity <=
-        0 ||
-      customerPrice <= 0
-    ) {
-      return;
-    }
-
-    setCart((current) => {
-      const existing =
-        current.find(
-          (item) =>
-            item.product.id ===
-            product.id,
-        );
-
-      if (existing) {
-        return current.map(
-          (item) =>
-            item.product.id ===
-            product.id
-              ? {
-                  ...item,
-                  quantity:
-                    Math.min(
-                      item.quantity +
-                        1,
-                      product.inventoryQuantity,
-                    ),
+              <div
+                className={
+                  available
+                    ? "view-product-button"
+                    : "coming-soon"
                 }
-              : item,
-        );
-      }
+              >
+                {available
+                  ? "VIEW PRODUCT"
+                  : product.inventoryQuantity ===
+                    0
+                  ? "SOLD OUT"
+                  : "COMING SOON"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </article>
+  );
+}
 
-      return [
-        ...current,
-        {
-          product,
-          quantity: 1,
-        },
-      ];
-    });
-
-    setCartOpen(true);
-  }
-
-  function updateCartQuantity(
-    productId: string,
-    quantity: number,
-  ) {
-    const cartItem = cart.find(
-      (item) =>
-        item.product.id ===
-        productId,
-    );
-
-    if (!cartItem) {
-      return;
-    }
-
-    if (quantity <= 0) {
-      setCart((current) =>
-        current.filter(
-          (item) =>
-            item.product.id !==
-            productId,
+export default function MerchandisePage() {
+  const products = useMemo(
+    () =>
+      getPublicMerchandiseCatalog()
+        .filter(
+          (product) =>
+            product.active &&
+            product.publicDisplay,
+        )
+        .sort(
+          (a, b) =>
+            a.displayOrder -
+            b.displayOrder,
         ),
-      );
-
-      return;
-    }
-
-    setCart((current) =>
-      current.map((item) => {
-        if (
-          item.product.id !==
-          productId
-        ) {
-          return item;
-        }
-
-        return {
-          ...item,
-          quantity: Math.min(
-            quantity,
-            item.product
-              .inventoryQuantity,
-          ),
-        };
-      }),
-    );
-  }
-
-  function removeFromCart(
-    productId: string,
-  ) {
-    setCart((current) =>
-      current.filter(
-        (item) =>
-          item.product.id !==
-          productId,
-      ),
-    );
-  }
+    [],
+  );
 
   return (
     <main className="merchandise-page">
@@ -330,9 +201,7 @@ export default function MerchandisePage() {
       />
 
       <div className="page-content">
-        {/* =========================================
-            HEADER
-        ========================================= */}
+        {/* HEADER */}
 
         <header className="site-header">
           <MobileLogo />
@@ -357,27 +226,10 @@ export default function MerchandisePage() {
                 </Link>
               ),
             )}
-
-            <button
-              type="button"
-              className="cart-button"
-              onClick={() =>
-                setCartOpen(true)
-              }
-              aria-label={`Shopping cart with ${cartCount} items`}
-            >
-              CART
-
-              <span className="cart-count">
-                {cartCount}
-              </span>
-            </button>
           </nav>
         </header>
 
-        {/* =========================================
-            HERO
-        ========================================= */}
+        {/* HERO */}
 
         <section className="hero">
           <div className="desktop-logo">
@@ -416,33 +268,18 @@ export default function MerchandisePage() {
               Represent the show.
             </p>
 
-            <button
-              type="button"
+            <a
+              href="#shop-the-show"
               className="hero-shop-button"
-              onClick={() => {
-                document
-                  .getElementById(
-                    "shop-the-show",
-                  )
-                  ?.scrollIntoView({
-                    behavior:
-                      "smooth",
-                  });
-              }}
             >
               SHOP THE COLLECTION
-            </button>
+            </a>
           </div>
         </section>
 
-        {/* =========================================
-            SHOP SECTION
-        ========================================= */}
+        {/* CATEGORY NAVIGATION */}
 
-        <section
-          id="shop-the-show"
-          className="merch-section"
-        >
+        <section className="category-section">
           <div className="section-heading">
             <p className="eyebrow">
               OFFICIAL COLLECTION
@@ -453,245 +290,92 @@ export default function MerchandisePage() {
             <div className="red-line" />
 
             <p className="section-description">
-              Official Scotti
-              Brothers and
+              Choose a collection to
+              explore the official
+              Scotti Brothers and
               Can&apos;t Make This Up!
               merchandise.
             </p>
           </div>
 
-          {/* CATEGORY FILTER */}
+          <div
+            id="shop-the-show"
+            className="category-grid"
+          >
+            {categories.map(
+              (category) => (
+                <Link
+                  key={category.href}
+                  href={category.href}
+                  className="category-card"
+                >
+                  <div className="category-card-inner">
+                    <span className="category-kicker">
+                      SCOTTI BROTHERS
+                    </span>
 
-          {!loading &&
-            !loadError &&
-            categories.length > 1 && (
-              <div className="category-filter">
-                {categories.map(
-                  (item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() =>
-                        setCategory(
-                          item,
-                        )
-                      }
-                      className={
-                        category ===
-                        item
-                          ? "category-button active"
-                          : "category-button"
-                      }
-                    >
-                      {item}
-                    </button>
-                  ),
-                )}
-              </div>
+                    <h3>
+                      {category.label}
+                    </h3>
+
+                    <div className="category-arrow">
+                      EXPLORE
+                      <span>→</span>
+                    </div>
+                  </div>
+                </Link>
+              ),
             )}
+          </div>
+        </section>
 
-          {/* LOADING */}
+        {/* FEATURED / CURRENT PRODUCTS */}
 
-          {loading && (
-            <div className="catalog-status">
-              <p>
-                LOADING THE
-                COLLECTION
-              </p>
+        <section className="merch-section">
+          <div className="section-heading">
+            <p className="eyebrow">
+              CURRENTLY AVAILABLE
+            </p>
 
-              <span>
-                Please wait while
-                the official
-                merchandise catalog
-                loads.
-              </span>
-            </div>
-          )}
+            <h2>FEATURED MERCHANDISE</h2>
 
-          {/* ERROR */}
+            <div className="red-line" />
 
-          {!loading &&
-            loadError && (
-              <div className="catalog-status error">
+            <p className="section-description">
+              Browse the merchandise
+              currently published to
+              the public store.
+            </p>
+          </div>
+
+          <div className="merch-grid">
+            {products.length > 0 ? (
+              products.map(
+                (product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                  />
+                ),
+              )
+            ) : (
+              <div className="empty-catalog">
                 <p>
-                  MERCHANDISE
-                  TEMPORARILY
-                  UNAVAILABLE
+                  MERCHANDISE COMING
+                  SOON
                 </p>
 
                 <span>
-                  {loadError}
+                  The official
+                  collection is being
+                  prepared.
                 </span>
               </div>
             )}
-
-          {/* PRODUCT GRID */}
-
-          {!loading &&
-            !loadError && (
-              <div className="merch-grid">
-                {visibleProducts.map(
-                  (product) => {
-                    const customerPrice =
-                      getCustomerPrice(
-                        product,
-                      );
-
-                    const available =
-                      product.inventoryQuantity >
-                        0 &&
-                      customerPrice > 0;
-
-                    const primaryImage =
-                      product
-                        .images[0] ??
-                      null;
-
-                    const hasSale =
-                      product.salePrice !==
-                        null &&
-                      product.salePrice <
-                        product.price;
-
-                    return (
-                      <article
-                        className="merch-card"
-                        key={
-                          product.id
-                        }
-                      >
-                        <div className="gold-frame">
-                          <div className="red-frame">
-                            <div className="product-image">
-                              {primaryImage ? (
-                                <img
-                                  src={
-                                    primaryImage
-                                  }
-                                  alt={
-                                    product.name
-                                  }
-                                />
-                              ) : (
-                                <div className="product-placeholder">
-                                  <span>
-                                    SCOTTI
-                                    BROTHERS
-                                  </span>
-
-                                  <strong>
-                                    CAN&apos;T
-                                    MAKE
-                                    <br />
-                                    THIS UP!
-                                  </strong>
-
-                                  <small>
-                                    OFFICIAL
-                                    MERCHANDISE
-                                  </small>
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="product-info">
-                              {product.featured && (
-                                <div className="featured-label">
-                                  FEATURED
-                                </div>
-                              )}
-
-                              <p className="product-category">
-                                {
-                                  product.category
-                                }
-                              </p>
-
-                              <h3>
-                                {
-                                  product.name
-                                }
-                              </h3>
-
-                              <p className="product-description">
-                                {
-                                  product.description
-                                }
-                              </p>
-
-                              <div className="product-price">
-                                {customerPrice >
-                                0 ? (
-                                  <>
-                                    {hasSale && (
-                                      <span className="regular-price">
-                                        {formatMoney(
-                                          product.price,
-                                        )}
-                                      </span>
-                                    )}
-
-                                    <span>
-                                      {formatMoney(
-                                        customerPrice,
-                                      )}
-                                    </span>
-                                  </>
-                                ) : (
-                                  "COMING SOON"
-                                )}
-                              </div>
-
-                              {available ? (
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    addToCart(
-                                      product,
-                                    )
-                                  }
-                                  className="add-cart-button"
-                                >
-                                  ADD TO CART
-                                </button>
-                              ) : (
-                                <div className="coming-soon">
-                                  {product.inventoryQuantity ===
-                                  0
-                                    ? "SOLD OUT"
-                                    : "COMING SOON"}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </article>
-                    );
-                  },
-                )}
-
-                {visibleProducts.length ===
-                  0 && (
-                  <div className="empty-catalog">
-                    <p>
-                      MERCHANDISE
-                      COMING SOON
-                    </p>
-
-                    <span>
-                      The official
-                      collection is
-                      being prepared.
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
+          </div>
         </section>
 
-        {/* =========================================
-            FEATURE MESSAGE
-        ========================================= */}
+        {/* FEATURE MESSAGE */}
 
         <section className="feature-section">
           <div className="feature-content">
@@ -726,9 +410,7 @@ export default function MerchandisePage() {
           </div>
         </section>
 
-        {/* =========================================
-            FOOTER
-        ========================================= */}
+        {/* FOOTER */}
 
         <footer className="site-footer">
           <img
@@ -758,234 +440,13 @@ export default function MerchandisePage() {
         </footer>
       </div>
 
-      {/* =========================================
-          CART DRAWER
-      ========================================= */}
-
-      {cartOpen && (
-        <div
-          className="cart-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Shopping cart"
-        >
-          <button
-            type="button"
-            className="cart-backdrop"
-            aria-label="Close shopping cart"
-            onClick={() =>
-              setCartOpen(false)
-            }
-          />
-
-          <aside className="cart-drawer">
-            <div className="cart-header">
-              <div>
-                <p className="eyebrow">
-                  YOUR SELECTION
-                </p>
-
-                <h2>
-                  SHOPPING CART
-                </h2>
-              </div>
-
-              <button
-                type="button"
-                className="cart-close"
-                onClick={() =>
-                  setCartOpen(false)
-                }
-                aria-label="Close cart"
-              >
-                ×
-              </button>
-            </div>
-
-            {cart.length ===
-            0 ? (
-              <div className="empty-cart">
-                <p>
-                  YOUR CART IS
-                  EMPTY
-                </p>
-
-                <span>
-                  Add merchandise
-                  to begin your
-                  order.
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCartOpen(false)
-                  }
-                  className="continue-shopping"
-                >
-                  CONTINUE SHOPPING
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className="cart-items">
-                  {cart.map(
-                    (item) => {
-                      const customerPrice =
-                        getCustomerPrice(
-                          item.product,
-                        );
-
-                      const primaryImage =
-                        item.product
-                          .images[0] ??
-                        null;
-
-                      return (
-                        <div
-                          className="cart-item"
-                          key={
-                            item
-                              .product
-                              .id
-                          }
-                        >
-                          <div className="cart-item-image">
-                            {primaryImage ? (
-                              <img
-                                src={
-                                  primaryImage
-                                }
-                                alt=""
-                              />
-                            ) : (
-                              <span>
-                                CMTU
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="cart-item-details">
-                            <h3>
-                              {
-                                item
-                                  .product
-                                  .name
-                              }
-                            </h3>
-
-                            <p>
-                              {formatMoney(
-                                customerPrice,
-                              )}
-                            </p>
-
-                            <div className="quantity-row">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  updateCartQuantity(
-                                    item
-                                      .product
-                                      .id,
-                                    item.quantity -
-                                      1,
-                                  )
-                                }
-                                aria-label={`Decrease quantity of ${item.product.name}`}
-                              >
-                                −
-                              </button>
-
-                              <span>
-                                {
-                                  item.quantity
-                                }
-                              </span>
-
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  updateCartQuantity(
-                                    item
-                                      .product
-                                      .id,
-                                    item.quantity +
-                                      1,
-                                  )
-                                }
-                                aria-label={`Increase quantity of ${item.product.name}`}
-                              >
-                                +
-                              </button>
-
-                              <button
-                                type="button"
-                                className="remove-item"
-                                onClick={() =>
-                                  removeFromCart(
-                                    item
-                                      .product
-                                      .id,
-                                  )
-                                }
-                              >
-                                REMOVE
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    },
-                  )}
-                </div>
-
-                <div className="cart-summary">
-                  <div>
-                    <span>
-                      SUBTOTAL
-                    </span>
-
-                    <strong>
-                      {formatMoney(
-                        cartTotal,
-                      )}
-                    </strong>
-                  </div>
-
-                  <p>
-                    Shipping and
-                    taxes will be
-                    calculated during
-                    checkout.
-                  </p>
-
-                  <button
-                    type="button"
-                    className="checkout-button"
-                    disabled
-                  >
-                    CHECKOUT
-                  </button>
-
-                  <small>
-                    Secure payment
-                    checkout will be
-                    activated when the
-                    Scotti Brothers
-                    payment account is
-                    connected.
-                  </small>
-                </div>
-              </>
-            )}
-          </aside>
-        </div>
-      )}
-
       <style>{`
         * {
           box-sizing: border-box;
+        }
+
+        html {
+          scroll-behavior: smooth;
         }
 
         .merchandise-page {
@@ -1068,6 +529,8 @@ export default function MerchandisePage() {
           width: 100%;
         }
 
+        /* HEADER */
+
         .site-header {
           min-height: 82px;
           padding: 24px 42px;
@@ -1101,18 +564,14 @@ export default function MerchandisePage() {
           -webkit-backdrop-filter: blur(6px);
         }
 
-        .site-nav a,
-        .cart-button {
+        .site-nav a {
           display: inline-flex;
           align-items: center;
           justify-content: center;
 
           padding: 8px 12px;
 
-          border: 0;
           border-radius: 999px;
-
-          background: transparent;
 
           color: #fff;
 
@@ -1123,15 +582,12 @@ export default function MerchandisePage() {
 
           white-space: nowrap;
 
-          cursor: pointer;
-
           transition:
             color 0.2s ease,
             background 0.2s ease;
         }
 
-        .site-nav a:hover,
-        .cart-button:hover {
+        .site-nav a:hover {
           color: var(--gold);
         }
 
@@ -1140,27 +596,7 @@ export default function MerchandisePage() {
           color: #fff;
         }
 
-        .cart-button {
-          gap: 7px;
-          margin-left: 3px;
-        }
-
-        .cart-count {
-          min-width: 20px;
-          height: 20px;
-
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: var(--gold);
-          color: #000;
-
-          font-size: 9px;
-          font-weight: 900;
-        }
+        /* HERO */
 
         .hero {
           width: min(1280px, 100%);
@@ -1280,6 +716,10 @@ export default function MerchandisePage() {
         }
 
         .hero-shop-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
           margin-top: 28px;
 
           padding: 14px 24px;
@@ -1292,12 +732,12 @@ export default function MerchandisePage() {
 
           color: #fff;
 
+          text-decoration: none;
+
           font-size: 10px;
           font-weight: 900;
 
           letter-spacing: 0.2em;
-
-          cursor: pointer;
 
           transition:
             transform 0.2s ease,
@@ -1309,6 +749,9 @@ export default function MerchandisePage() {
           background: #a80000;
         }
 
+        /* SECTIONS */
+
+        .category-section,
         .merch-section {
           width: min(1250px, 100%);
 
@@ -1317,7 +760,7 @@ export default function MerchandisePage() {
           padding:
             20px
             32px
-            100px;
+            80px;
         }
 
         .section-heading {
@@ -1361,44 +804,122 @@ export default function MerchandisePage() {
           line-height: 1.7;
         }
 
-        .category-filter {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+        /* CATEGORY CARDS */
 
-          gap: 8px;
+        .category-grid {
+          display: grid;
 
-          margin-bottom: 35px;
+          grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+          gap: 20px;
         }
 
-        .category-button {
-          padding: 9px 14px;
+        .category-card {
+          min-height: 220px;
+
+          display: flex;
+
+          padding: 7px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff0a3 0%,
+              #f2c94c 18%,
+              #9f7612 45%,
+              #f7d85d 65%,
+              #a67b12 100%
+            );
+
+          text-decoration: none;
+
+          box-shadow:
+            0 12px 30px
+            rgba(0,0,0,0.5);
+
+          transition:
+            transform 0.25s ease,
+            filter 0.25s ease;
+        }
+
+        .category-card:hover {
+          transform: translateY(-7px);
+          filter: brightness(1.12);
+        }
+
+        .category-card-inner {
+          width: 100%;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          padding: 24px;
+
+          background:
+            linear-gradient(
+              145deg,
+              #b30000,
+              #650000 55%,
+              #9b0000
+            );
 
           border:
+            2px solid
+            rgba(0,0,0,0.45);
+        }
+
+        .category-kicker {
+          color:
+            rgba(242,201,76,0.8);
+
+          font-size: 8px;
+          font-weight: 900;
+
+          letter-spacing: 0.28em;
+        }
+
+        .category-card h3 {
+          margin: 20px 0;
+
+          color: #fff;
+
+          font-size:
+            clamp(24px, 2.4vw, 34px);
+
+          line-height: 0.95;
+
+          font-weight: 900;
+
+          text-transform: uppercase;
+        }
+
+        .category-arrow {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          padding-top: 15px;
+
+          border-top:
             1px solid
             rgba(242,201,76,0.35);
 
-          background: transparent;
-
-          color:
-            rgba(255,255,255,0.65);
+          color: var(--gold);
 
           font-size: 9px;
           font-weight: 900;
 
-          letter-spacing: 0.15em;
-
-          text-transform: uppercase;
-
-          cursor: pointer;
+          letter-spacing: 0.18em;
         }
 
-        .category-button:hover,
-        .category-button.active {
-          border-color: var(--gold);
-          background: #750000;
-          color: var(--gold);
+        .category-arrow span {
+          font-size: 20px;
+          line-height: 1;
         }
+
+        /* PRODUCT GRID */
 
         .merch-grid {
           display: grid;
@@ -1421,6 +942,16 @@ export default function MerchandisePage() {
           transform: translateY(-8px);
           filter: brightness(1.08);
         }
+
+        .product-link {
+          display: block;
+
+          color: inherit;
+
+          text-decoration: none;
+        }
+
+        /* FRAMES */
 
         .gold-frame {
           padding: 7px;
@@ -1459,6 +990,8 @@ export default function MerchandisePage() {
             2px
             rgba(0,0,0,0.5);
         }
+
+        /* PRODUCT IMAGE */
 
         .product-image {
           width: 100%;
@@ -1542,6 +1075,8 @@ export default function MerchandisePage() {
 
           letter-spacing: 0.22em;
         }
+
+        /* PRODUCT INFO */
 
         .product-info {
           padding:
@@ -1634,35 +1169,17 @@ export default function MerchandisePage() {
           text-decoration: line-through;
         }
 
+        .view-product-button,
         .coming-soon {
           display: inline-flex;
 
           margin-top: 16px;
 
-          padding: 9px 14px;
-
-          border:
-            1px solid
-            rgba(242,201,76,0.6);
-
-          color: var(--gold);
-
-          font-size: 9px;
-          font-weight: 900;
-
-          letter-spacing: 0.2em;
-        }
-
-        .add-cart-button {
-          margin-top: 16px;
-
-          padding: 11px 18px;
+          padding: 10px 16px;
 
           border:
             1px solid
             var(--gold);
-
-          background: #000;
 
           color: var(--gold);
 
@@ -1670,21 +1187,23 @@ export default function MerchandisePage() {
           font-weight: 900;
 
           letter-spacing: 0.18em;
+        }
 
-          cursor: pointer;
+        .view-product-button {
+          background: #000;
 
           transition:
             background 0.2s ease,
             color 0.2s ease;
         }
 
-        .add-cart-button:hover {
+        .product-link:hover
+          .view-product-button {
           background: var(--gold);
           color: #000;
         }
 
-        .empty-catalog,
-        .catalog-status {
+        .empty-catalog {
           grid-column: 1 / -1;
 
           padding: 80px 20px;
@@ -1699,17 +1218,7 @@ export default function MerchandisePage() {
           text-align: center;
         }
 
-        .catalog-status {
-          margin-top: 10px;
-        }
-
-        .catalog-status.error {
-          border-color:
-            rgba(198,40,40,0.45);
-        }
-
-        .empty-catalog p,
-        .catalog-status p {
+        .empty-catalog p {
           margin: 0;
 
           color: var(--gold);
@@ -1720,12 +1229,7 @@ export default function MerchandisePage() {
           letter-spacing: 0.22em;
         }
 
-        .catalog-status.error p {
-          color: #e11d22;
-        }
-
-        .empty-catalog span,
-        .catalog-status span {
+        .empty-catalog span {
           display: block;
 
           margin-top: 12px;
@@ -1735,6 +1239,8 @@ export default function MerchandisePage() {
 
           font-size: 12px;
         }
+
+        /* FEATURE */
 
         .feature-section {
           padding: 110px 30px;
@@ -1814,6 +1320,8 @@ export default function MerchandisePage() {
           letter-spacing: 0.25em;
         }
 
+        /* FOOTER */
+
         .site-footer {
           padding: 28px 42px;
 
@@ -1868,9 +1376,6 @@ export default function MerchandisePage() {
           font-weight: 400;
 
           letter-spacing: 0.12em;
-
-          transition:
-            color 0.2s ease;
         }
 
         .company-link:hover {
@@ -1878,344 +1383,18 @@ export default function MerchandisePage() {
           text-decoration: underline;
         }
 
-        .cart-overlay {
-          position: fixed;
-          inset: 0;
-
-          z-index: 100;
-
-          display: flex;
-          justify-content: flex-end;
-        }
-
-        .cart-backdrop {
-          position: absolute;
-          inset: 0;
-
-          border: 0;
-
-          background:
-            rgba(0,0,0,0.72);
-
-          cursor: pointer;
-        }
-
-        .cart-drawer {
-          position: relative;
-          z-index: 2;
-
-          width: min(470px, 94vw);
-          height: 100%;
-
-          overflow-y: auto;
-
-          padding: 28px;
-
-          border-left:
-            1px solid
-            rgba(242,201,76,0.45);
-
-          background:
-            linear-gradient(
-              180deg,
-              #090909,
-              #050505
-            );
-
-          box-shadow:
-            -20px 0 60px
-            rgba(0,0,0,0.6);
-        }
-
-        .cart-header {
-          display: flex;
-
-          align-items: flex-start;
-          justify-content: space-between;
-
-          padding-bottom: 20px;
-
-          border-bottom:
-            1px solid
-            rgba(255,255,255,0.1);
-        }
-
-        .cart-header h2 {
-          margin: 8px 0 0;
-
-          font-size: 26px;
-
-          font-weight: 900;
-        }
-
-        .cart-close {
-          width: 40px;
-          height: 40px;
-
-          border:
-            1px solid
-            rgba(242,201,76,0.4);
-
-          background: transparent;
-
-          color: var(--gold);
-
-          font-size: 28px;
-
-          cursor: pointer;
-        }
-
-        .cart-items {
-          padding-top: 10px;
-        }
-
-        .cart-item {
-          display: flex;
-          gap: 14px;
-
-          padding: 18px 0;
-
-          border-bottom:
-            1px solid
-            rgba(255,255,255,0.08);
-        }
-
-        .cart-item-image {
-          width: 82px;
-          height: 82px;
-
-          flex-shrink: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          overflow: hidden;
-
-          border:
-            1px solid
-            rgba(242,201,76,0.4);
-
-          background: #151515;
-
-          color: var(--gold);
-
-          font-size: 10px;
-          font-weight: 900;
-        }
-
-        .cart-item-image img {
-          width: 100%;
-          height: 100%;
-
-          object-fit: cover;
-        }
-
-        .cart-item-details {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .cart-item-details h3 {
-          margin: 0;
-
-          color: #fff;
-
-          font-size: 14px;
-          font-weight: 900;
-        }
-
-        .cart-item-details > p {
-          margin: 5px 0 0;
-
-          color: var(--gold);
-
-          font-size: 12px;
-          font-weight: 800;
-        }
-
-        .quantity-row {
-          display: flex;
-          align-items: center;
-
-          gap: 7px;
-
-          margin-top: 12px;
-        }
-
-        .quantity-row > button:not(.remove-item) {
-          width: 28px;
-          height: 28px;
-
-          border:
-            1px solid
-            rgba(242,201,76,0.35);
-
-          background: #111;
-
-          color: #fff;
-
-          cursor: pointer;
-        }
-
-        .quantity-row > span {
-          min-width: 24px;
-
-          text-align: center;
-
-          font-size: 12px;
-          font-weight: 800;
-        }
-
-        .remove-item {
-          margin-left: auto;
-
-          border: 0;
-
-          background: transparent;
-
-          color:
-            rgba(255,255,255,0.35);
-
-          font-size: 8px;
-          font-weight: 900;
-
-          letter-spacing: 0.12em;
-
-          cursor: pointer;
-        }
-
-        .remove-item:hover {
-          color: #e11d22;
-        }
-
-        .cart-summary {
-          margin-top: 25px;
-
-          padding-top: 22px;
-
-          border-top:
-            1px solid
-            rgba(242,201,76,0.25);
-        }
-
-        .cart-summary > div {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .cart-summary > div span {
-          color:
-            rgba(255,255,255,0.55);
-
-          font-size: 10px;
-          font-weight: 900;
-
-          letter-spacing: 0.18em;
-        }
-
-        .cart-summary > div strong {
-          color: var(--gold);
-
-          font-size: 24px;
-          font-weight: 900;
-        }
-
-        .cart-summary > p {
-          margin: 10px 0 0;
-
-          color:
-            rgba(255,255,255,0.4);
-
-          font-size: 11px;
-          line-height: 1.5;
-        }
-
-        .checkout-button {
-          width: 100%;
-
-          margin-top: 20px;
-
-          padding: 15px;
-
-          border: 0;
-
-          background: #8b0000;
-
-          color: #fff;
-
-          font-size: 10px;
-          font-weight: 900;
-
-          letter-spacing: 0.2em;
-
-          cursor: not-allowed;
-
-          opacity: 0.65;
-        }
-
-        .cart-summary small {
-          display: block;
-
-          margin-top: 12px;
-
-          color:
-            rgba(255,255,255,0.3);
-
-          font-size: 9px;
-          line-height: 1.5;
-
-          text-align: center;
-        }
-
-        .empty-cart {
-          padding: 80px 20px;
-
-          text-align: center;
-        }
-
-        .empty-cart p {
-          margin: 0;
-
-          color: var(--gold);
-
-          font-size: 13px;
-          font-weight: 900;
-
-          letter-spacing: 0.2em;
-        }
-
-        .empty-cart span {
-          display: block;
-
-          margin-top: 12px;
-
-          color:
-            rgba(255,255,255,0.4);
-
-          font-size: 12px;
-        }
-
-        .continue-shopping {
-          margin-top: 25px;
-
-          padding: 12px 18px;
-
-          border:
-            1px solid
-            var(--gold);
-
-          background: transparent;
-
-          color: var(--gold);
-
-          font-size: 9px;
-          font-weight: 900;
-
-          letter-spacing: 0.16em;
-
-          cursor: pointer;
+        /* TABLET */
+
+        @media (max-width: 1000px) {
+          .category-grid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr));
+          }
+
+          .merch-grid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr));
+          }
         }
 
         @media (max-width: 900px) {
@@ -2231,12 +1410,9 @@ export default function MerchandisePage() {
           .hero-copy {
             padding: 10px;
           }
-
-          .merch-grid {
-            grid-template-columns:
-              repeat(2, minmax(0, 1fr));
-          }
         }
+
+        /* MOBILE */
 
         @media (max-width: 650px) {
           .site-header {
@@ -2246,8 +1422,6 @@ export default function MerchandisePage() {
               16px
               12px
               10px;
-
-            display: flex;
 
             flex-direction: column;
 
@@ -2282,7 +1456,6 @@ export default function MerchandisePage() {
           .site-nav {
             width: 100%;
 
-            display: flex;
             flex-wrap: wrap;
 
             justify-content: center;
@@ -2294,8 +1467,7 @@ export default function MerchandisePage() {
             border-radius: 18px;
           }
 
-          .site-nav a,
-          .cart-button {
+          .site-nav a {
             font-size: 10px;
             padding: 6px 8px;
           }
@@ -2350,6 +1522,7 @@ export default function MerchandisePage() {
             margin: 20px auto;
           }
 
+          .category-section,
           .merch-section {
             padding:
               10px
@@ -2359,6 +1532,18 @@ export default function MerchandisePage() {
 
           .section-heading h2 {
             font-size: 30px;
+          }
+
+          .category-grid {
+            grid-template-columns: 1fr;
+
+            max-width: 430px;
+
+            margin: 0 auto;
+          }
+
+          .category-card {
+            min-height: 180px;
           }
 
           .merch-grid {
@@ -2403,11 +1588,6 @@ export default function MerchandisePage() {
 
           .company-link {
             font-size: 10px;
-          }
-
-          .cart-drawer {
-            width: 100%;
-            max-width: none;
           }
         }
       `}</style>
