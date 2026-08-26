@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -12,23 +13,76 @@ const navigation = [
 
 const GOLD = "#F2C94C";
 
-const merchandise = [
+type MerchandiseProduct = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  image: string | null;
+  active: boolean;
+  publicDisplay: boolean;
+  featured: boolean;
+  inventoryQuantity: number;
+};
+
+/*
+ * PUBLIC MERCHANDISE CATALOG
+ *
+ * This is intentionally kept separate from the Clifton Lighty
+ * Merchandise Desk.
+ *
+ * The Merchandise Desk will eventually supply the persistent
+ * product/pricing/inventory data through a backend/API connection.
+ *
+ * Stripe/PayPal will be connected later.
+ */
+const merchandiseProducts: MerchandiseProduct[] = [
   {
-    title: "COMING SOON",
+    id: "coming-soon-1",
+    name: "Official CMTU Apparel",
     description:
-      "Official Can't Make This Up! merchandise is coming soon.",
+      "Official Can't Make This Up! apparel featuring the Scotti Brothers brand.",
+    category: "Apparel",
+    price: 0,
+    image: null,
+    active: true,
+    publicDisplay: true,
+    featured: true,
+    inventoryQuantity: 0,
   },
   {
-    title: "COMING SOON",
+    id: "coming-soon-2",
+    name: "Scotti Brothers Collection",
     description:
-      "Exclusive Scotti Brothers designs, apparel, and collectibles.",
+      "Exclusive Scotti Brothers merchandise and collectible designs.",
+    category: "Collection",
+    price: 0,
+    image: null,
+    active: true,
+    publicDisplay: true,
+    featured: true,
+    inventoryQuantity: 0,
   },
   {
-    title: "COMING SOON",
+    id: "coming-soon-3",
+    name: "Can't Make This Up! Collectibles",
     description:
-      "Stay tuned for the first official merchandise collection.",
+      "Special merchandise inspired by the stories and personalities behind the show.",
+    category: "Collectibles",
+    price: 0,
+    image: null,
+    active: true,
+    publicDisplay: true,
+    featured: true,
+    inventoryQuantity: 0,
   },
 ];
+
+type CartItem = {
+  product: MerchandiseProduct;
+  quantity: number;
+};
 
 function MobileLogo() {
   return (
@@ -46,22 +100,158 @@ function MobileLogo() {
   );
 }
 
+function formatPrice(price: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(price);
+}
+
 export default function MerchandisePage() {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [category, setCategory] = useState("All");
+
+  const categories = useMemo(() => {
+    return [
+      "All",
+      ...Array.from(
+        new Set(
+          merchandiseProducts
+            .filter(
+              (product) =>
+                product.active &&
+                product.publicDisplay,
+            )
+            .map((product) => product.category),
+        ),
+      ),
+    ];
+  }, []);
+
+  const visibleProducts = useMemo(() => {
+    return merchandiseProducts.filter((product) => {
+      if (!product.active || !product.publicDisplay) {
+        return false;
+      }
+
+      if (category === "All") {
+        return true;
+      }
+
+      return product.category === category;
+    });
+  }, [category]);
+
+  const cartCount = cart.reduce(
+    (total, item) => total + item.quantity,
+    0,
+  );
+
+  const cartTotal = cart.reduce(
+    (total, item) =>
+      total + item.product.price * item.quantity,
+    0,
+  );
+
+  function addToCart(product: MerchandiseProduct) {
+    if (product.inventoryQuantity <= 0) {
+      return;
+    }
+
+    setCart((current) => {
+      const existing = current.find(
+        (item) => item.product.id === product.id,
+      );
+
+      if (existing) {
+        return current.map((item) =>
+          item.product.id === product.id
+            ? {
+                ...item,
+                quantity: Math.min(
+                  item.quantity + 1,
+                  product.inventoryQuantity,
+                ),
+              }
+            : item,
+        );
+      }
+
+      return [
+        ...current,
+        {
+          product,
+          quantity: 1,
+        },
+      ];
+    });
+
+    setCartOpen(true);
+  }
+
+  function updateCartQuantity(
+    productId: string,
+    quantity: number,
+  ) {
+    if (quantity <= 0) {
+      setCart((current) =>
+        current.filter(
+          (item) => item.product.id !== productId,
+        ),
+      );
+      return;
+    }
+
+    setCart((current) =>
+      current.map((item) => {
+        if (item.product.id !== productId) {
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: Math.min(
+            quantity,
+            item.product.inventoryQuantity,
+          ),
+        };
+      }),
+    );
+  }
+
+  function removeFromCart(productId: string) {
+    setCart((current) =>
+      current.filter(
+        (item) => item.product.id !== productId,
+      ),
+    );
+  }
+
   return (
     <main className="merchandise-page">
-      {/* BACKGROUND */}
-      <div className="background" aria-hidden="true" />
-      <div className="grid-overlay" aria-hidden="true" />
+      <div
+        className="background"
+        aria-hidden="true"
+      />
+
+      <div
+        className="grid-overlay"
+        aria-hidden="true"
+      />
 
       <div className="page-content">
         {/* =========================================
             HEADER
         ========================================= */}
+
         <header className="site-header">
-          {/* Mobile logo appears first */}
           <MobileLogo />
 
-          <nav className="site-nav" aria-label="Main navigation">
+          <nav
+            className="site-nav"
+            aria-label="Main navigation"
+          >
             {navigation.map((item) => (
               <Link
                 key={item.href}
@@ -75,14 +265,28 @@ export default function MerchandisePage() {
                 {item.label}
               </Link>
             ))}
+
+            <button
+              type="button"
+              className="cart-button"
+              onClick={() =>
+                setCartOpen(true)
+              }
+              aria-label={`Shopping cart with ${cartCount} items`}
+            >
+              CART
+              <span className="cart-count">
+                {cartCount}
+              </span>
+            </button>
           </nav>
         </header>
 
         {/* =========================================
             HERO
         ========================================= */}
+
         <section className="hero">
-          {/* Desktop / tablet logo */}
           <div className="desktop-logo">
             <Link
               href="/"
@@ -110,17 +314,39 @@ export default function MerchandisePage() {
 
             <p className="hero-subtitle">
               Official merchandise from{" "}
-              <strong>Can&apos;t Make This Up!</strong>
+              <strong>
+                Can&apos;t Make This Up!
+              </strong>
               <br />
               Wear the stories. Represent the show.
             </p>
+
+            <button
+              type="button"
+              className="hero-shop-button"
+              onClick={() => {
+                document
+                  .getElementById(
+                    "shop-the-show",
+                  )
+                  ?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+              }}
+            >
+              SHOP THE COLLECTION
+            </button>
           </div>
         </section>
 
         {/* =========================================
-            FEATURED MERCHANDISE
+            SHOP SECTION
         ========================================= */}
-        <section className="merch-section">
+
+        <section
+          id="shop-the-show"
+          className="merch-section"
+        >
           <div className="section-heading">
             <p className="eyebrow">
               OFFICIAL COLLECTION
@@ -129,55 +355,150 @@ export default function MerchandisePage() {
             <h2>SHOP THE SHOW</h2>
 
             <div className="red-line" />
+
+            <p className="section-description">
+              Official Scotti Brothers and
+              Can&apos;t Make This Up! merchandise.
+            </p>
           </div>
 
-          <div className="merch-grid">
-            {merchandise.map((item, index) => (
-              <article
-                className="merch-card"
-                key={`${item.title}-${index}`}
+          {/* CATEGORY FILTER */}
+
+          <div className="category-filter">
+            {categories.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() =>
+                  setCategory(item)
+                }
+                className={
+                  category === item
+                    ? "category-button active"
+                    : "category-button"
+                }
               >
-                <div className="gold-frame">
-                  <div className="red-frame">
-                    <div className="product-image">
-                      <div className="product-placeholder">
-                        <span>
-                          SCOTTI BROTHERS
-                        </span>
-
-                        <strong>
-                          CAN&apos;T MAKE
-                          <br />
-                          THIS UP!
-                        </strong>
-
-                        <small>
-                          OFFICIAL MERCHANDISE
-                        </small>
-                      </div>
-                    </div>
-
-                    <div className="product-info">
-                      <h3>{item.title}</h3>
-
-                      <p>
-                        {item.description}
-                      </p>
-
-                      <div className="coming-soon">
-                        COMING SOON
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
+                {item}
+              </button>
             ))}
+          </div>
+
+          {/* PRODUCT GRID */}
+
+          <div className="merch-grid">
+            {visibleProducts.map(
+              (product) => {
+                const available =
+                  product.inventoryQuantity >
+                    0 &&
+                  product.price > 0;
+
+                return (
+                  <article
+                    className="merch-card"
+                    key={product.id}
+                  >
+                    <div className="gold-frame">
+                      <div className="red-frame">
+                        {/* PRODUCT IMAGE */}
+
+                        <div className="product-image">
+                          {product.image ? (
+                            <img
+                              src={
+                                product.image
+                              }
+                              alt={
+                                product.name
+                              }
+                            />
+                          ) : (
+                            <div className="product-placeholder">
+                              <span>
+                                SCOTTI
+                                BROTHERS
+                              </span>
+
+                              <strong>
+                                CAN&apos;T
+                                MAKE
+                                <br />
+                                THIS UP!
+                              </strong>
+
+                              <small>
+                                OFFICIAL
+                                MERCHANDISE
+                              </small>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* PRODUCT INFORMATION */}
+
+                        <div className="product-info">
+                          {product.featured && (
+                            <div className="featured-label">
+                              FEATURED
+                            </div>
+                          )}
+
+                          <p className="product-category">
+                            {
+                              product.category
+                            }
+                          </p>
+
+                          <h3>
+                            {product.name}
+                          </h3>
+
+                          <p className="product-description">
+                            {
+                              product.description
+                            }
+                          </p>
+
+                          <div className="product-price">
+                            {product.price >
+                            0
+                              ? formatPrice(
+                                  product.price,
+                                )
+                              : "COMING SOON"}
+                          </div>
+
+                          {available ? (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                addToCart(
+                                  product,
+                                )
+                              }
+                              className="add-cart-button"
+                            >
+                              ADD TO CART
+                            </button>
+                          ) : (
+                            <div className="coming-soon">
+                              COMING SOON
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              },
+            )}
           </div>
         </section>
 
         {/* =========================================
             FEATURE MESSAGE
         ========================================= */}
+
         <section className="feature-section">
           <div className="feature-content">
             <p className="eyebrow">
@@ -197,10 +518,13 @@ export default function MerchandisePage() {
             </div>
 
             <p>
-              Official Scotti Brothers merchandise is
-              coming soon. Be ready for apparel,
-              collectibles, and exclusive designs
-              inspired by the stories behind the show.
+              Official Scotti Brothers
+              merchandise is being prepared
+              for the show. Apparel,
+              collectibles, and exclusive
+              designs inspired by the stories
+              behind Can&apos;t Make This Up!
+              will be available here.
             </p>
 
             <div className="feature-badge">
@@ -212,6 +536,7 @@ export default function MerchandisePage() {
         {/* =========================================
             FOOTER
         ========================================= */}
+
         <footer className="site-footer">
           <img
             src="/images/logo.png"
@@ -219,8 +544,8 @@ export default function MerchandisePage() {
           />
 
           <p>
-            © {new Date().getFullYear()} Scotti Brothers Ent.
-            All rights reserved.
+            © {new Date().getFullYear()} Scotti
+            Brothers Ent. All rights reserved.
           </p>
 
           <a
@@ -238,22 +563,218 @@ export default function MerchandisePage() {
         </footer>
       </div>
 
+      {/* =========================================
+          CART DRAWER
+      ========================================= */}
+
+      {cartOpen && (
+        <div
+          className="cart-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Shopping cart"
+        >
+          <button
+            type="button"
+            className="cart-backdrop"
+            aria-label="Close shopping cart"
+            onClick={() =>
+              setCartOpen(false)
+            }
+          />
+
+          <aside className="cart-drawer">
+            <div className="cart-header">
+              <div>
+                <p className="eyebrow">
+                  YOUR SELECTION
+                </p>
+
+                <h2>SHOPPING CART</h2>
+              </div>
+
+              <button
+                type="button"
+                className="cart-close"
+                onClick={() =>
+                  setCartOpen(false)
+                }
+                aria-label="Close cart"
+              >
+                ×
+              </button>
+            </div>
+
+            {cart.length === 0 ? (
+              <div className="empty-cart">
+                <p>
+                  YOUR CART IS EMPTY
+                </p>
+
+                <span>
+                  Add merchandise to
+                  begin your order.
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCartOpen(false)
+                  }
+                  className="continue-shopping"
+                >
+                  CONTINUE SHOPPING
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="cart-items">
+                  {cart.map((item) => (
+                    <div
+                      className="cart-item"
+                      key={
+                        item.product.id
+                      }
+                    >
+                      <div className="cart-item-image">
+                        {item.product
+                          .image ? (
+                          <img
+                            src={
+                              item.product
+                                .image
+                            }
+                            alt=""
+                          />
+                        ) : (
+                          <span>
+                            CMTU
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="cart-item-details">
+                        <h3>
+                          {
+                            item.product
+                              .name
+                          }
+                        </h3>
+
+                        <p>
+                          {formatPrice(
+                            item.product
+                              .price,
+                          )}
+                        </p>
+
+                        <div className="quantity-row">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateCartQuantity(
+                                item
+                                  .product
+                                  .id,
+                                item.quantity -
+                                  1,
+                              )
+                            }
+                          >
+                            −
+                          </button>
+
+                          <span>
+                            {
+                              item.quantity
+                            }
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateCartQuantity(
+                                item
+                                  .product
+                                  .id,
+                                item.quantity +
+                                  1,
+                              )
+                            }
+                          >
+                            +
+                          </button>
+
+                          <button
+                            type="button"
+                            className="remove-item"
+                            onClick={() =>
+                              removeFromCart(
+                                item
+                                  .product
+                                  .id,
+                              )
+                            }
+                          >
+                            REMOVE
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="cart-summary">
+                  <div>
+                    <span>
+                      SUBTOTAL
+                    </span>
+
+                    <strong>
+                      {formatPrice(
+                        cartTotal,
+                      )}
+                    </strong>
+                  </div>
+
+                  <p>
+                    Shipping and taxes will
+                    be calculated during
+                    checkout.
+                  </p>
+
+                  <button
+                    type="button"
+                    className="checkout-button"
+                    disabled
+                  >
+                    CHECKOUT
+                  </button>
+
+                  <small>
+                    Secure payment
+                    checkout will be
+                    activated when the
+                    Scotti Brothers payment
+                    account is connected.
+                  </small>
+                </div>
+              </>
+            )}
+          </aside>
+        </div>
+      )}
+
       <style>{`
         * {
           box-sizing: border-box;
         }
 
-        /* =========================================
-           PAGE
-        ========================================= */
-
         .merchandise-page {
           --gold: ${GOLD};
 
           min-height: 100vh;
-
           position: relative;
-
           overflow-x: hidden;
 
           background:
@@ -285,9 +806,7 @@ export default function MerchandisePage() {
         .background,
         .grid-overlay {
           position: fixed;
-
           inset: 0;
-
           pointer-events: none;
         }
 
@@ -309,7 +828,6 @@ export default function MerchandisePage() {
 
         .grid-overlay {
           z-index: 1;
-
           opacity: 0.25;
 
           background-image:
@@ -328,27 +846,18 @@ export default function MerchandisePage() {
 
         .page-content {
           position: relative;
-
           z-index: 2;
-
           width: 100%;
         }
 
-        /* =========================================
-           HEADER
-        ========================================= */
+        /* HEADER */
 
         .site-header {
           min-height: 82px;
-
-          padding:
-            24px
-            42px;
+          padding: 24px 42px;
 
           display: flex;
-
           align-items: center;
-
           justify-content: flex-end;
         }
 
@@ -358,140 +867,120 @@ export default function MerchandisePage() {
 
         .site-nav {
           display: flex;
-
           align-items: center;
-
           gap: 5px;
 
-          padding:
-            8px
-            10px;
+          padding: 8px 10px;
 
           border-radius: 999px;
 
           background:
-            rgba(
-              255,
-              255,
-              255,
-              0.08
-            );
+            rgba(255,255,255,0.08);
 
           border:
-            1px
-            solid
-            rgba(
-              255,
-              255,
-              255,
-              0.12
-            );
+            1px solid
+            rgba(255,255,255,0.12);
 
-          backdrop-filter:
-            blur(6px);
-
-          -webkit-backdrop-filter:
-            blur(6px);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
         }
 
-        .site-nav a {
+        .site-nav a,
+        .cart-button {
           display: inline-flex;
-
           align-items: center;
-
           justify-content: center;
 
-          padding:
-            8px
-            12px;
+          padding: 8px 12px;
 
+          border: 0;
           border-radius: 999px;
+
+          background: transparent;
 
           color: #fff;
 
           text-decoration: none;
 
           font-size: 14px;
-
           font-weight: 800;
 
           white-space: nowrap;
+
+          cursor: pointer;
 
           transition:
             color 0.2s ease,
             background 0.2s ease;
         }
 
-        .site-nav a:hover {
+        .site-nav a:hover,
+        .cart-button:hover {
           color: var(--gold);
         }
 
         .site-nav a.active {
           background: #8b0000;
-
           color: #fff;
         }
 
-        /* =========================================
-           HERO
-        ========================================= */
+        .cart-button {
+          gap: 7px;
+          margin-left: 3px;
+        }
+
+        .cart-count {
+          min-width: 20px;
+          height: 20px;
+
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 50%;
+
+          background: var(--gold);
+          color: #000;
+
+          font-size: 9px;
+          font-weight: 900;
+        }
+
+        /* HERO */
 
         .hero {
-          width:
-            min(
-              1280px,
-              100%
-            );
-
+          width: min(1280px, 100%);
           min-height: 500px;
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
-          padding:
-            45px
-            45px
-            75px;
+          padding: 45px 45px 75px;
 
           display: grid;
-
-          grid-template-columns:
-            48%
-            52%;
+          grid-template-columns: 48% 52%;
 
           align-items: center;
         }
 
         .desktop-logo {
-          width:
-            min(
-              100%,
-              560px
-            );
-
+          width: min(100%, 560px);
           justify-self: start;
         }
 
         .desktop-logo a {
           display: block;
-
           line-height: 0;
         }
 
         .desktop-logo img {
           display: block;
-
           width: 100%;
-
           height: auto;
-
           object-fit: contain;
         }
 
         .hero-copy {
           width: 100%;
-
           max-width: 650px;
 
           justify-self: end;
@@ -507,107 +996,66 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 11px;
-
           font-weight: 900;
 
-          letter-spacing:
-            0.42em;
+          letter-spacing: 0.42em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .hero h1 {
-          margin:
-            17px
-            0
-            0;
+          margin: 17px 0 0;
 
           color: #fff;
 
           font-size:
-            clamp(
-              48px,
-              6vw,
-              86px
-            );
+            clamp(48px, 6vw, 86px);
 
           line-height: 0.92;
 
           font-weight: 900;
 
-          letter-spacing:
-            -0.045em;
+          letter-spacing: -0.045em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
 
           text-shadow:
             4px 4px 0 #8b0000,
-            8px 8px 0
-            rgba(
-              242,
-              201,
-              76,
-              0.30
-            );
+            8px 8px 0 rgba(242,201,76,0.30);
         }
 
         .gold-line {
           display: flex;
-
           align-items: center;
-
           gap: 16px;
 
-          width:
-            min(
-              500px,
-              90%
-            );
+          width: min(500px, 90%);
 
-          margin:
-            28px
-            auto;
+          margin: 28px auto;
         }
 
         .gold-line span {
           flex: 1;
-
           height: 1px;
 
           background:
-            rgba(
-              242,
-              201,
-              76,
-              0.7
-            );
+            rgba(242,201,76,0.7);
         }
 
         .gold-line b {
           color: var(--gold);
-
           font-size: 14px;
         }
 
         .hero-subtitle {
           max-width: 650px;
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
           color:
-            rgba(
-              255,
-              255,
-              255,
-              0.78
-            );
+            rgba(255,255,255,0.78);
 
           font-size: 16px;
-
           line-height: 1.8;
 
           font-weight: 600;
@@ -617,20 +1065,42 @@ export default function MerchandisePage() {
           color: var(--gold);
         }
 
-        /* =========================================
-           MERCHANDISE SECTION
-        ========================================= */
+        .hero-shop-button {
+          margin-top: 28px;
+
+          padding: 14px 24px;
+
+          border:
+            1px solid
+            var(--gold);
+
+          background: #8b0000;
+
+          color: #fff;
+
+          font-size: 10px;
+          font-weight: 900;
+
+          letter-spacing: 0.2em;
+
+          cursor: pointer;
+
+          transition:
+            transform 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .hero-shop-button:hover {
+          transform: translateY(-2px);
+          background: #a80000;
+        }
+
+        /* MERCH SECTION */
 
         .merch-section {
-          width:
-            min(
-              1250px,
-              100%
-            );
+          width: min(1250px, 100%);
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
           padding:
             20px
@@ -639,60 +1109,94 @@ export default function MerchandisePage() {
         }
 
         .section-heading {
-          margin-bottom: 45px;
-
+          margin-bottom: 35px;
           text-align: center;
         }
 
         .section-heading h2 {
-          margin:
-            9px
-            0
-            0;
+          margin: 9px 0 0;
 
           color: #fff;
 
           font-size:
-            clamp(
-              34px,
-              5vw,
-              58px
-            );
+            clamp(34px, 5vw, 58px);
 
           line-height: 1;
 
           font-weight: 900;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .red-line {
           width: 65px;
-
           height: 4px;
 
-          margin:
-            20px
-            auto
-            0;
+          margin: 20px auto 0;
 
-          background:
-            #c62828;
+          background: #c62828;
         }
 
-        /* =========================================
-           MERCH GRID
-        ========================================= */
+        .section-description {
+          max-width: 620px;
+
+          margin: 18px auto 0;
+
+          color:
+            rgba(255,255,255,0.55);
+
+          font-size: 14px;
+          line-height: 1.7;
+        }
+
+        /* CATEGORY FILTER */
+
+        .category-filter {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+
+          gap: 8px;
+
+          margin-bottom: 35px;
+        }
+
+        .category-button {
+          padding: 9px 14px;
+
+          border:
+            1px solid
+            rgba(242,201,76,0.35);
+
+          background: transparent;
+
+          color:
+            rgba(255,255,255,0.65);
+
+          font-size: 9px;
+          font-weight: 900;
+
+          letter-spacing: 0.15em;
+
+          text-transform: uppercase;
+
+          cursor: pointer;
+        }
+
+        .category-button:hover,
+        .category-button.active {
+          border-color: var(--gold);
+          background: #750000;
+          color: var(--gold);
+        }
+
+        /* GRID */
 
         .merch-grid {
           display: grid;
 
           grid-template-columns:
-            repeat(
-              3,
-              minmax(0, 1fr)
-            );
+            repeat(3, minmax(0, 1fr));
 
           gap: 30px;
         }
@@ -706,16 +1210,11 @@ export default function MerchandisePage() {
         }
 
         .merch-card:hover {
-          transform:
-            translateY(-8px);
-
-          filter:
-            brightness(1.08);
+          transform: translateY(-8px);
+          filter: brightness(1.08);
         }
 
-        /* =========================================
-           FRAMES
-        ========================================= */
+        /* FRAMES */
 
         .gold-frame {
           padding: 7px;
@@ -731,15 +1230,8 @@ export default function MerchandisePage() {
             );
 
           box-shadow:
-            0
-            12px
-            30px
-            rgba(
-              0,
-              0,
-              0,
-              0.65
-            );
+            0 12px 30px
+            rgba(0,0,0,0.65);
         }
 
         .red-frame {
@@ -759,35 +1251,22 @@ export default function MerchandisePage() {
             0
             0
             2px
-            rgba(
-              0,
-              0,
-              0,
-              0.5
-            );
+            rgba(0,0,0,0.5);
         }
 
-        /* =========================================
-           PRODUCT IMAGE
-        ========================================= */
+        /* PRODUCT IMAGE */
 
         .product-image {
           width: 100%;
 
-          aspect-ratio:
-            1 / 1;
+          aspect-ratio: 1 / 1;
 
           overflow: hidden;
 
           background:
             radial-gradient(
               circle at center,
-              rgba(
-                242,
-                201,
-                76,
-                0.18
-              ),
+              rgba(242,201,76,0.18),
               transparent 55%
             ),
             linear-gradient(
@@ -797,132 +1276,145 @@ export default function MerchandisePage() {
             );
 
           display: flex;
-
           align-items: center;
-
           justify-content: center;
 
           text-align: center;
         }
 
+        .product-image img {
+          display: block;
+
+          width: 100%;
+          height: 100%;
+
+          object-fit: cover;
+        }
+
         .product-placeholder {
           width: 80%;
-
           min-height: 70%;
 
           padding: 25px;
 
           border:
-            1px
-            solid
-            rgba(
-              242,
-              201,
-              76,
-              0.3
-            );
+            1px solid
+            rgba(242,201,76,0.3);
 
           display: flex;
-
           flex-direction: column;
 
           align-items: center;
-
           justify-content: center;
 
           gap: 12px;
         }
 
         .product-placeholder span {
-          color:
-            #c62828;
+          color: #c62828;
 
           font-size: 9px;
-
           font-weight: 900;
 
-          letter-spacing:
-            0.3em;
+          letter-spacing: 0.3em;
         }
 
         .product-placeholder strong {
           color: #fff;
 
           font-size:
-            clamp(
-              24px,
-              3vw,
-              36px
-            );
+            clamp(24px, 3vw, 36px);
 
-          line-height:
-            0.95;
+          line-height: 0.95;
 
           font-weight: 900;
         }
 
         .product-placeholder small {
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 8px;
-
           font-weight: 800;
 
-          letter-spacing:
-            0.22em;
+          letter-spacing: 0.22em;
         }
 
-        /* =========================================
-           PRODUCT INFO
-        ========================================= */
+        /* PRODUCT INFO */
 
         .product-info {
           padding:
-            20px
+            18px
             15px
             22px;
 
-          text-align:
-            center;
+          text-align: center;
 
-          background:
-            #750000;
+          background: #750000;
+        }
+
+        .featured-label {
+          display: inline-flex;
+
+          margin-bottom: 8px;
+
+          padding: 5px 9px;
+
+          border:
+            1px solid
+            rgba(242,201,76,0.45);
+
+          color: var(--gold);
+
+          font-size: 7px;
+          font-weight: 900;
+
+          letter-spacing: 0.2em;
+        }
+
+        .product-category {
+          margin: 0 0 6px;
+
+          color:
+            rgba(255,255,255,0.45);
+
+          font-size: 8px;
+          font-weight: 900;
+
+          letter-spacing: 0.18em;
+
+          text-transform: uppercase;
         }
 
         .product-info h3 {
           margin: 0;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 20px;
 
           font-weight: 900;
-
-          letter-spacing:
-            0.5px;
         }
 
-        .product-info p {
+        .product-description {
           min-height: 42px;
 
-          margin:
-            9px
-            0
-            0;
+          margin: 9px 0 0;
 
           color:
-            rgba(
-              255,
-              255,
-              255,
-              0.78
-            );
+            rgba(255,255,255,0.78);
 
           font-size: 12px;
 
           line-height: 1.5;
+        }
+
+        .product-price {
+          margin-top: 15px;
+
+          color: #fff;
+
+          font-size: 20px;
+          font-weight: 900;
         }
 
         .coming-soon {
@@ -930,133 +1422,105 @@ export default function MerchandisePage() {
 
           margin-top: 16px;
 
-          padding:
-            9px
-            14px;
+          padding: 9px 14px;
 
           border:
-            1px
-            solid
-            rgba(
-              242,
-              201,
-              76,
-              0.6
-            );
+            1px solid
+            rgba(242,201,76,0.6);
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 9px;
-
           font-weight: 900;
 
-          letter-spacing:
-            0.2em;
+          letter-spacing: 0.2em;
         }
 
-        /* =========================================
-           FEATURE SECTION
-        ========================================= */
+        .add-cart-button {
+          margin-top: 16px;
+
+          padding: 11px 18px;
+
+          border:
+            1px solid
+            var(--gold);
+
+          background: #000;
+
+          color: var(--gold);
+
+          font-size: 9px;
+          font-weight: 900;
+
+          letter-spacing: 0.18em;
+
+          cursor: pointer;
+
+          transition:
+            background 0.2s ease,
+            color 0.2s ease;
+        }
+
+        .add-cart-button:hover {
+          background: var(--gold);
+          color: #000;
+        }
+
+        /* FEATURE */
 
         .feature-section {
-          padding:
-            110px
-            30px;
+          padding: 110px 30px;
 
           border-top:
-            1px
-            solid
-            rgba(
-              242,
-              201,
-              76,
-              0.12
-            );
+            1px solid
+            rgba(242,201,76,0.12);
 
           border-bottom:
-            1px
-            solid
-            rgba(
-              242,
-              201,
-              76,
-              0.12
-            );
+            1px solid
+            rgba(242,201,76,0.12);
 
           background:
             radial-gradient(
               circle at center,
-              rgba(
-                139,
-                0,
-                0,
-                0.16
-              ),
+              rgba(139,0,0,0.16),
               transparent 50%
             );
         }
 
         .feature-content {
-          width:
-            min(
-              760px,
-              100%
-            );
+          width: min(760px, 100%);
+          margin: 0 auto;
 
-          margin:
-            0
-            auto;
-
-          text-align:
-            center;
+          text-align: center;
         }
 
         .feature-content h2 {
-          margin:
-            18px
-            0
-            0;
+          margin: 18px 0 0;
 
           color: #fff;
 
           font-size:
-            clamp(
-              48px,
-              7vw,
-              82px
-            );
+            clamp(48px, 7vw, 82px);
 
-          line-height:
-            0.9;
+          line-height: 0.9;
 
           font-weight: 900;
 
           text-shadow:
-            4px 4px 0
-            #8b0000;
+            4px 4px 0 #8b0000;
         }
 
         .feature-line {
-          margin:
-            32px
-            auto;
+          margin: 32px auto;
         }
 
         .feature-content > p:not(.eyebrow) {
           max-width: 650px;
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
           color:
-            rgba(
-              255,
-              255,
-              255,
-              0.62
-            );
+            rgba(255,255,255,0.62);
 
           font-size: 16px;
 
@@ -1068,62 +1532,42 @@ export default function MerchandisePage() {
 
           margin-top: 32px;
 
-          padding:
-            13px
-            22px;
+          padding: 13px 22px;
 
           border:
-            1px
-            solid
+            1px solid
             var(--gold);
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 10px;
-
           font-weight: 900;
 
-          letter-spacing:
-            0.25em;
+          letter-spacing: 0.25em;
         }
 
-        /* =========================================
-           FOOTER
-        ========================================= */
+        /* FOOTER */
 
         .site-footer {
-          padding:
-            28px
-            42px;
+          padding: 28px 42px;
 
           display: flex;
-
           align-items: center;
-
           justify-content: space-between;
 
           gap: 25px;
 
           border-top:
-            1px
-            solid
-            rgba(
-              242,
-              201,
-              76,
-              0.15
-            );
+            1px solid
+            rgba(242,201,76,0.15);
 
-          background:
-            #050505;
+          background: #050505;
         }
 
         .site-footer img {
           display: block;
 
           width: 110px;
-
           height: auto;
 
           object-fit: contain;
@@ -1134,58 +1578,386 @@ export default function MerchandisePage() {
           margin: 0;
 
           color:
-            rgba(
-              255,
-              255,
-              255,
-              0.35
-            );
+            rgba(255,255,255,0.35);
 
           font-size: 9px;
-
           font-weight: 700;
 
-          letter-spacing:
-            0.2em;
+          letter-spacing: 0.2em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .site-footer span {
           color:
-            rgba(
-              242,
-              201,
-              76,
-              0.8
-            );
+            rgba(242,201,76,0.8);
         }
 
-     .company-link {
-  color: #4da3ff;
-  text-decoration: none;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  transition: color 0.2s ease;
-}
+        .company-link {
+          color: #4da3ff;
 
-.company-link:hover {
-  color: #7fc1ff;
-  text-decoration: underline;
-}
+          text-decoration: none;
 
-        /* =========================================
-           TABLET
-        ========================================= */
+          font-size: 9px;
+          font-weight: 400;
+
+          letter-spacing: 0.12em;
+
+          transition: color 0.2s ease;
+        }
+
+        .company-link:hover {
+          color: #7fc1ff;
+          text-decoration: underline;
+        }
+
+        /* CART */
+
+        .cart-overlay {
+          position: fixed;
+          inset: 0;
+
+          z-index: 100;
+
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .cart-backdrop {
+          position: absolute;
+          inset: 0;
+
+          border: 0;
+
+          background:
+            rgba(0,0,0,0.72);
+
+          cursor: pointer;
+        }
+
+        .cart-drawer {
+          position: relative;
+          z-index: 2;
+
+          width: min(470px, 94vw);
+          height: 100%;
+
+          overflow-y: auto;
+
+          padding: 28px;
+
+          border-left:
+            1px solid
+            rgba(242,201,76,0.45);
+
+          background:
+            linear-gradient(
+              180deg,
+              #090909,
+              #050505
+            );
+
+          box-shadow:
+            -20px 0 60px
+            rgba(0,0,0,0.6);
+        }
+
+        .cart-header {
+          display: flex;
+
+          align-items: flex-start;
+          justify-content: space-between;
+
+          padding-bottom: 20px;
+
+          border-bottom:
+            1px solid
+            rgba(255,255,255,0.1);
+        }
+
+        .cart-header h2 {
+          margin: 8px 0 0;
+
+          font-size: 26px;
+
+          font-weight: 900;
+        }
+
+        .cart-close {
+          width: 40px;
+          height: 40px;
+
+          border:
+            1px solid
+            rgba(242,201,76,0.4);
+
+          background: transparent;
+
+          color: var(--gold);
+
+          font-size: 28px;
+
+          cursor: pointer;
+        }
+
+        .cart-items {
+          padding-top: 10px;
+        }
+
+        .cart-item {
+          display: flex;
+          gap: 14px;
+
+          padding: 18px 0;
+
+          border-bottom:
+            1px solid
+            rgba(255,255,255,0.08);
+        }
+
+        .cart-item-image {
+          width: 82px;
+          height: 82px;
+
+          flex-shrink: 0;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          overflow: hidden;
+
+          border:
+            1px solid
+            rgba(242,201,76,0.4);
+
+          background: #151515;
+
+          color: var(--gold);
+
+          font-size: 10px;
+          font-weight: 900;
+        }
+
+        .cart-item-image img {
+          width: 100%;
+          height: 100%;
+
+          object-fit: cover;
+        }
+
+        .cart-item-details {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .cart-item-details h3 {
+          margin: 0;
+
+          color: #fff;
+
+          font-size: 14px;
+          font-weight: 900;
+        }
+
+        .cart-item-details > p {
+          margin: 5px 0 0;
+
+          color: var(--gold);
+
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .quantity-row {
+          display: flex;
+          align-items: center;
+
+          gap: 7px;
+
+          margin-top: 12px;
+        }
+
+        .quantity-row > button:not(.remove-item) {
+          width: 28px;
+          height: 28px;
+
+          border:
+            1px solid
+            rgba(242,201,76,0.35);
+
+          background: #111;
+
+          color: #fff;
+
+          cursor: pointer;
+        }
+
+        .quantity-row > span {
+          min-width: 24px;
+
+          text-align: center;
+
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .remove-item {
+          margin-left: auto;
+
+          border: 0;
+
+          background: transparent;
+
+          color:
+            rgba(255,255,255,0.35);
+
+          font-size: 8px;
+          font-weight: 900;
+
+          letter-spacing: 0.12em;
+
+          cursor: pointer;
+        }
+
+        .remove-item:hover {
+          color: #e11d22;
+        }
+
+        .cart-summary {
+          margin-top: 25px;
+
+          padding-top: 22px;
+
+          border-top:
+            1px solid
+            rgba(242,201,76,0.25);
+        }
+
+        .cart-summary > div {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .cart-summary > div span {
+          color:
+            rgba(255,255,255,0.55);
+
+          font-size: 10px;
+          font-weight: 900;
+
+          letter-spacing: 0.18em;
+        }
+
+        .cart-summary > div strong {
+          color: var(--gold);
+
+          font-size: 24px;
+          font-weight: 900;
+        }
+
+        .cart-summary > p {
+          margin: 10px 0 0;
+
+          color:
+            rgba(255,255,255,0.4);
+
+          font-size: 11px;
+          line-height: 1.5;
+        }
+
+        .checkout-button {
+          width: 100%;
+
+          margin-top: 20px;
+
+          padding: 15px;
+
+          border: 0;
+
+          background: #8b0000;
+
+          color: #fff;
+
+          font-size: 10px;
+          font-weight: 900;
+
+          letter-spacing: 0.2em;
+
+          cursor: not-allowed;
+
+          opacity: 0.65;
+        }
+
+        .cart-summary small {
+          display: block;
+
+          margin-top: 12px;
+
+          color:
+            rgba(255,255,255,0.3);
+
+          font-size: 9px;
+          line-height: 1.5;
+
+          text-align: center;
+        }
+
+        .empty-cart {
+          padding: 80px 20px;
+
+          text-align: center;
+        }
+
+        .empty-cart p {
+          margin: 0;
+
+          color: var(--gold);
+
+          font-size: 13px;
+          font-weight: 900;
+
+          letter-spacing: 0.2em;
+        }
+
+        .empty-cart span {
+          display: block;
+
+          margin-top: 12px;
+
+          color:
+            rgba(255,255,255,0.4);
+
+          font-size: 12px;
+        }
+
+        .continue-shopping {
+          margin-top: 25px;
+
+          padding: 12px 18px;
+
+          border:
+            1px solid
+            var(--gold);
+
+          background: transparent;
+
+          color: var(--gold);
+
+          font-size: 9px;
+          font-weight: 900;
+
+          letter-spacing: 0.16em;
+
+          cursor: pointer;
+        }
+
+        /* TABLET */
 
         @media (max-width: 900px) {
           .hero {
-            grid-template-columns:
-              45%
-              55%;
-
+            grid-template-columns: 45% 55%;
             min-height: 450px;
           }
 
@@ -1199,20 +1971,13 @@ export default function MerchandisePage() {
 
           .merch-grid {
             grid-template-columns:
-              repeat(
-                2,
-                minmax(0, 1fr)
-              );
+              repeat(2, minmax(0, 1fr));
           }
         }
 
-        /* =========================================
-           MOBILE PORTRAIT
-           LOGO ABOVE EVERYTHING
-        ========================================= */
+        /* MOBILE */
 
         @media (max-width: 650px) {
-
           .site-header {
             min-height: auto;
 
@@ -1223,33 +1988,24 @@ export default function MerchandisePage() {
 
             display: flex;
 
-            flex-direction:
-              column;
+            flex-direction: column;
 
-            justify-content:
-              flex-start;
+            justify-content: flex-start;
 
-            align-items:
-              center;
+            align-items: center;
           }
 
-          /* Logo is the first visible element */
           .mobile-logo {
             display: block;
 
             width: 78%;
-
             max-width: 330px;
 
-            margin:
-              0
-              auto
-              18px;
+            margin: 0 auto 18px;
           }
 
           .mobile-logo a {
             display: block;
-
             line-height: 0;
           }
 
@@ -1257,7 +2013,6 @@ export default function MerchandisePage() {
             display: block;
 
             width: 100%;
-
             height: auto;
 
             object-fit: contain;
@@ -1267,29 +2022,23 @@ export default function MerchandisePage() {
             width: 100%;
 
             display: flex;
-
             flex-wrap: wrap;
 
-            justify-content:
-              center;
+            justify-content: center;
 
             gap: 3px;
 
             padding: 7px;
 
-            border-radius:
-              18px;
+            border-radius: 18px;
           }
 
-          .site-nav a {
+          .site-nav a,
+          .cart-button {
             font-size: 10px;
-
-            padding:
-              6px
-              8px;
+            padding: 6px 8px;
           }
 
-          /* Hide desktop hero logo */
           .desktop-logo {
             display: none;
           }
@@ -1307,46 +2056,37 @@ export default function MerchandisePage() {
 
           .hero-copy {
             width: 100%;
-
             max-width: 600px;
 
-            margin:
-              0
-              auto;
+            margin: 0 auto;
 
             padding: 0;
 
-            text-align:
-              center;
+            text-align: center;
           }
 
           .eyebrow {
             font-size: 8px;
-
-            letter-spacing:
-              0.25em;
+            letter-spacing: 0.25em;
           }
 
           .hero h1 {
             font-size: 43px;
-
-            letter-spacing:
-              -1.5px;
+            letter-spacing: -1.5px;
           }
 
           .hero-subtitle {
             font-size: 12px;
+            line-height: 1.6;
+          }
 
-            line-height:
-              1.6;
+          .hero-shop-button {
+            width: 100%;
           }
 
           .gold-line {
             width: 90%;
-
-            margin:
-              20px
-              auto;
+            margin: 20px auto;
           }
 
           .merch-section {
@@ -1361,14 +2101,11 @@ export default function MerchandisePage() {
           }
 
           .merch-grid {
-            grid-template-columns:
-              1fr;
+            grid-template-columns: 1fr;
 
             max-width: 430px;
 
-            margin:
-              0
-              auto;
+            margin: 0 auto;
 
             gap: 30px;
           }
@@ -1392,13 +2129,11 @@ export default function MerchandisePage() {
               30px
               20px;
 
-            flex-direction:
-              column;
+            flex-direction: column;
 
             gap: 15px;
 
-            text-align:
-              center;
+            text-align: center;
           }
 
           .site-footer img {
@@ -1407,6 +2142,11 @@ export default function MerchandisePage() {
 
           .company-link {
             font-size: 10px;
+          }
+
+          .cart-drawer {
+            width: 100%;
+            max-width: none;
           }
         }
       `}</style>
