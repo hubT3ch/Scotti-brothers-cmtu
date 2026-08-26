@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { randomUUID } from "crypto";
 
 import { getSupabaseAdminClient } from "@/lib/supabase-server";
 import {
@@ -9,7 +10,10 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-function mapProduct(product: any, images: any[] = []) {
+function mapProduct(
+  product: any,
+  images: any[] = [],
+) {
   return {
     id: product.id,
     name: product.name,
@@ -24,16 +28,42 @@ function mapProduct(product: any, images: any[] = []) {
     images: images
       .sort(
         (a, b) =>
-          a.display_order - b.display_order,
+          a.display_order -
+          b.display_order,
       )
-      .map((image) => image.public_url),
+      .map(
+        (image) =>
+          image.public_url,
+      ),
     active: product.active,
-    publicDisplay: product.public_display,
+    publicDisplay:
+      product.public_display,
     featured: product.featured,
     inventoryQuantity:
       product.inventory_quantity,
-    displayOrder: product.display_order,
+    displayOrder:
+      product.display_order,
   };
+}
+
+/**
+ * Attach public Storage URLs to image rows.
+ */
+function mapImages(
+  supabase: ReturnType<
+    typeof getSupabaseAdminClient
+  >,
+  images: any[],
+) {
+  return images.map((image) => ({
+    ...image,
+    public_url:
+      supabase.storage
+        .from("cmtu-merchandise")
+        .getPublicUrl(
+          image.storage_path,
+        ).data.publicUrl,
+  }));
 }
 
 /*
@@ -42,6 +72,7 @@ function mapProduct(product: any, images: any[] = []) {
  * GET /api/merchandise
  *
  * Returns only products that are:
+ *
  *   active = true
  *   public_display = true
  */
@@ -50,15 +81,25 @@ export async function GET() {
     const supabase =
       getSupabaseAdminClient();
 
-    const { data: products, error } =
-      await supabase
-        .from("merchandise_products")
-        .select("*")
-        .eq("active", true)
-        .eq("public_display", true)
-        .order("display_order", {
+    const {
+      data: products,
+      error,
+    } = await supabase
+      .from(
+        "merchandise_products",
+      )
+      .select("*")
+      .eq("active", true)
+      .eq(
+        "public_display",
+        true,
+      )
+      .order(
+        "display_order",
+        {
           ascending: true,
-        });
+        },
+      );
 
     if (error) {
       console.error(
@@ -71,69 +112,69 @@ export async function GET() {
           error:
             "Unable to load merchandise catalog.",
         },
-        { status: 500 },
+        {
+          status: 500,
+        },
       );
     }
 
     const productIds =
       (products ?? []).map(
-        (product) => product.id,
+        (product) =>
+          product.id,
       );
 
     let images: any[] = [];
 
-    if (productIds.length > 0) {
-      const { data: imageRows } =
-        await supabase
-          .from(
-            "merchandise_product_images",
-          )
-          .select("*")
-          .in(
-            "product_id",
-            productIds,
-          )
-          .order("display_order", {
-            ascending: true,
-          });
-
-      images = imageRows ?? [];
-
+    if (
+      productIds.length > 0
+    ) {
       const {
-        data: publicBucket,
-      } = await supabase.storage
-        .from("cmtu-merchandise")
-        .list();
+        data: imageRows,
+        error: imageError,
+      } = await supabase
+        .from(
+          "merchandise_product_images",
+        )
+        .select("*")
+        .in(
+          "product_id",
+          productIds,
+        )
+        .order(
+          "display_order",
+          {
+            ascending: true,
+          },
+        );
 
-      void publicBucket;
+      if (imageError) {
+        console.error(
+          "Merchandise image lookup error:",
+          imageError,
+        );
+      }
+
+      images =
+        imageRows ?? [];
     }
 
     const mapped =
       (products ?? []).map(
         (product) => {
           const productImages =
-            images
-              .filter(
-                (image) =>
-                  image.product_id ===
-                  product.id,
-              )
-              .map((image) => ({
-                ...image,
-                public_url:
-                  supabase.storage
-                    .from(
-                      "cmtu-merchandise",
-                    )
-                    .getPublicUrl(
-                      image.storage_path,
-                    ).data
-                    .publicUrl,
-              }));
+            images.filter(
+              (image) =>
+                image.product_id ===
+                product.id,
+            );
 
           return mapProduct(
             product,
-            productImages,
+            mapImages(
+              supabase,
+              productImages,
+            ),
           );
         },
       );
@@ -152,7 +193,9 @@ export async function GET() {
         error:
           "Merchandise service is not configured.",
       },
-      { status: 503 },
+      {
+        status: 503,
+      },
     );
   }
 }
@@ -163,6 +206,13 @@ export async function GET() {
  * POST /api/merchandise
  *
  * Used by the protected Merchandise Desk.
+ *
+ * Rules:
+ *
+ *   1. Existing products retain their UUID.
+ *   2. New products receive a real UUID.
+ *   3. Only one Featured product is allowed
+ *      within a category.
  */
 export async function POST(
   request: Request,
@@ -185,7 +235,9 @@ export async function POST(
         error:
           "Authentication required.",
       },
-      { status: 401 },
+      {
+        status: 401,
+      },
     );
   }
 
@@ -196,95 +248,247 @@ export async function POST(
     const supabase =
       getSupabaseAdminClient();
 
-    const product = {
-      id: body.id,
-      name:
-        String(body.name ?? "").trim(),
-      description:
-        String(
-          body.description ?? "",
-        ),
-      sku:
-        String(body.sku ?? "").trim(),
-      category:
-        String(
-          body.category ??
-            "Apparel",
-        ),
-      price:
-        Number(body.price ?? 0),
-      sale_price:
-        body.salePrice ===
+    const existingId =
+      typeof body.id ===
+        "string" &&
+      body.id.trim()
+        ? body.id.trim()
+        : null;
+
+    const productId =
+      existingId ??
+      randomUUID();
+
+    const name =
+      String(
+        body.name ?? "",
+      ).trim();
+
+    const description =
+      String(
+        body.description ?? "",
+      );
+
+    const sku =
+      String(
+        body.sku ?? "",
+      ).trim();
+
+    const category =
+      String(
+        body.category ??
+          "Apparel",
+      ).trim() ||
+      "Apparel";
+
+    const price =
+      Number(
+        body.price ?? 0,
+      );
+
+    const salePrice =
+      body.salePrice ===
         null ||
-        body.salePrice ===
-          undefined ||
-        body.salePrice ===
-          ""
-          ? null
-          : Number(
-              body.salePrice,
-            ),
-      active:
-        Boolean(body.active),
-      public_display:
-        Boolean(
-          body.publicDisplay,
-        ),
-      featured:
-        Boolean(body.featured),
-      inventory_quantity:
-        Math.max(
-          0,
-          Number(
-            body.inventoryQuantity ??
-              0,
-          ),
-        ),
-      display_order:
+      body.salePrice ===
+        undefined ||
+      body.salePrice ===
+        ""
+        ? null
+        : Number(
+            body.salePrice,
+          );
+
+    const active =
+      Boolean(
+        body.active,
+      );
+
+    const publicDisplay =
+      Boolean(
+        body.publicDisplay,
+      );
+
+    const featured =
+      Boolean(
+        body.featured,
+      );
+
+    const inventoryQuantity =
+      Math.max(
+        0,
         Number(
-          body.displayOrder ??
+          body.inventoryQuantity ??
             0,
         ),
-    };
+      );
 
-    if (
-      !product.name ||
-      !product.sku
-    ) {
+    const displayOrder =
+      Number(
+        body.displayOrder ??
+          0,
+      );
+
+    if (!name || !sku) {
       return Response.json(
         {
           error:
             "Product name and SKU are required.",
         },
-        { status: 400 },
+        {
+          status: 400,
+        },
       );
     }
 
     if (
       !Number.isFinite(
-        product.price,
+        price,
       ) ||
-      product.price < 0
+      price < 0
     ) {
       return Response.json(
         {
           error:
             "Invalid product price.",
         },
-        { status: 400 },
+        {
+          status: 400,
+        },
       );
     }
 
-    const { data, error } =
-      await supabase
+    if (
+      salePrice !== null &&
+      (!Number.isFinite(
+        salePrice,
+      ) ||
+        salePrice < 0)
+    ) {
+      return Response.json(
+        {
+          error:
+            "Invalid sale price.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    if (
+      !Number.isFinite(
+        inventoryQuantity,
+      )
+    ) {
+      return Response.json(
+        {
+          error:
+            "Invalid inventory quantity.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    if (
+      !Number.isFinite(
+        displayOrder,
+      )
+    ) {
+      return Response.json(
+        {
+          error:
+            "Invalid display order.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    /*
+     * If this product is being made Featured,
+     * remove Featured from every other product
+     * in the same category.
+     */
+    if (featured) {
+      const {
+        error:
+          clearFeaturedError,
+      } = await supabase
         .from(
           "merchandise_products",
         )
-        .upsert(product, {
-          onConflict: "id",
+        .update({
+          featured: false,
         })
-        .select("*")
-        .single();
+        .eq(
+          "category",
+          category,
+        )
+        .neq(
+          "id",
+          productId,
+        );
+
+      if (
+        clearFeaturedError
+      ) {
+        console.error(
+          "Featured product update error:",
+          clearFeaturedError,
+        );
+
+        return Response.json(
+          {
+            error:
+              "Unable to update the featured product for this category.",
+          },
+          {
+            status: 500,
+          },
+        );
+      }
+    }
+
+    /*
+     * Save the product.
+     */
+    const product = {
+      id: productId,
+      name,
+      description,
+      sku,
+      category,
+      price,
+      sale_price:
+        salePrice,
+      active,
+      public_display:
+        publicDisplay,
+      featured,
+      inventory_quantity:
+        inventoryQuantity,
+      display_order:
+        displayOrder,
+    };
+
+    const {
+      data,
+      error,
+    } = await supabase
+      .from(
+        "merchandise_products",
+      )
+      .upsert(
+        product,
+        {
+          onConflict: "id",
+        },
+      )
+      .select("*")
+      .single();
 
     if (error) {
       console.error(
@@ -295,16 +499,58 @@ export async function POST(
       return Response.json(
         {
           error:
-            "Product could not be saved.",
+            error.code ===
+            "23505"
+              ? "A product with this SKU already exists."
+              : "Product could not be saved.",
         },
-        { status: 500 },
+        {
+          status: 500,
+        },
       );
     }
+
+    /*
+     * Return the saved product with its
+     * current permanent images.
+     */
+    const {
+      data: imageRows,
+      error: imageError,
+    } = await supabase
+      .from(
+        "merchandise_product_images",
+      )
+      .select("*")
+      .eq(
+        "product_id",
+        data.id,
+      )
+      .order(
+        "display_order",
+        {
+          ascending: true,
+        },
+      );
+
+    if (imageError) {
+      console.error(
+        "Merchandise saved-image lookup error:",
+        imageError,
+      );
+    }
+
+    const productImages =
+      mapImages(
+        supabase,
+        imageRows ??
+          [],
+      );
 
     return Response.json({
       product: mapProduct(
         data,
-        [],
+        productImages,
       ),
     });
   } catch (error) {
@@ -318,7 +564,9 @@ export async function POST(
         error:
           "Invalid merchandise request.",
       },
-      { status: 400 },
+      {
+        status: 400,
+      },
     );
   }
 }
@@ -349,12 +597,16 @@ export async function DELETE(
         error:
           "Authentication required.",
       },
-      { status: 401 },
+      {
+        status: 401,
+      },
     );
   }
 
   const url =
-    new URL(request.url);
+    new URL(
+      request.url,
+    );
 
   const id =
     url.searchParams.get(
@@ -367,7 +619,9 @@ export async function DELETE(
         error:
           "Product ID is required.",
       },
-      { status: 400 },
+      {
+        status: 400,
+      },
     );
   }
 
@@ -375,13 +629,14 @@ export async function DELETE(
     const supabase =
       getSupabaseAdminClient();
 
-    const { error } =
-      await supabase
-        .from(
-          "merchandise_products",
-        )
-        .delete()
-        .eq("id", id);
+    const {
+      error,
+    } = await supabase
+      .from(
+        "merchandise_products",
+      )
+      .delete()
+      .eq("id", id);
 
     if (error) {
       console.error(
@@ -394,7 +649,9 @@ export async function DELETE(
           error:
             "Product could not be deleted.",
         },
-        { status: 500 },
+        {
+          status: 500,
+        },
       );
     }
 
@@ -412,7 +669,9 @@ export async function DELETE(
         error:
           "Merchandise service is not configured.",
       },
-      { status: 503 },
+      {
+        status: 503,
+      },
     );
   }
 }
