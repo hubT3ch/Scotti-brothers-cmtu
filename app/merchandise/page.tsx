@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   formatMoney,
-  getPublicMerchandiseCatalog,
   type MerchandiseProduct,
 } from "@/lib/commerce";
 
@@ -21,6 +20,10 @@ const GOLD = "#F2C94C";
 type CartItem = {
   product: MerchandiseProduct;
   quantity: number;
+};
+
+type MerchandiseApiResponse = {
+  products?: MerchandiseProduct[];
 };
 
 function MobileLogo() {
@@ -40,31 +43,100 @@ function MobileLogo() {
 }
 
 export default function MerchandisePage() {
+  const [products, setProducts] = useState<
+    MerchandiseProduct[]
+  >([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [loadError, setLoadError] =
+    useState<string | null>(null);
+
+  const [cart, setCart] =
+    useState<CartItem[]>([]);
+
+  const [cartOpen, setCartOpen] =
+    useState(false);
+
+  const [category, setCategory] =
+    useState("All");
+
   /*
    * PUBLIC MERCHANDISE CATALOG
    *
-   * This page now uses the same merchandise catalog
-   * used by the CMTU Merchandise Desk.
+   * Products are loaded from the CMTU
+   * merchandise API.
    *
-   * Product visibility is controlled by:
-   *   active
-   *   publicDisplay
-   *   displayOrder
+   * The API is responsible for returning
+   * the public catalog.
    *
-   * Product images come from:
-   *   product.images[]
-   *
-   * The existing gallery images are NOT deleted,
-   * moved, or modified.
+   * This keeps the public-facing page
+   * separate from the Management Desk.
    */
-  const products = useMemo(
-    () => getPublicMerchandiseCatalog(),
-    [],
-  );
+  useEffect(() => {
+    let cancelled = false;
 
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [category, setCategory] = useState("All");
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        setLoadError(null);
+
+        const response =
+          await fetch(
+            "/api/merchandise",
+            {
+              method: "GET",
+              cache: "no-store",
+            },
+          );
+
+        if (!response.ok) {
+          throw new Error(
+            `Merchandise request failed with status ${response.status}.`,
+          );
+        }
+
+        const data =
+          (await response.json()) as MerchandiseApiResponse;
+
+        if (cancelled) {
+          return;
+        }
+
+        setProducts(
+          Array.isArray(data.products)
+            ? data.products
+            : [],
+        );
+      } catch (error) {
+        if (cancelled) {
+          return;
+        }
+
+        console.error(
+          "Unable to load public merchandise catalog:",
+          error,
+        );
+
+        setProducts([]);
+
+        setLoadError(
+          "The merchandise collection is temporarily unavailable.",
+        );
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const categories = useMemo(() => {
     return [
@@ -390,192 +462,231 @@ export default function MerchandisePage() {
 
           {/* CATEGORY FILTER */}
 
-          {categories.length > 1 && (
-            <div className="category-filter">
-              {categories.map(
-                (item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() =>
-                      setCategory(
-                        item,
-                      )
-                    }
-                    className={
-                      category ===
-                      item
-                        ? "category-button active"
-                        : "category-button"
-                    }
-                  >
-                    {item}
-                  </button>
-                ),
-              )}
+          {!loading &&
+            !loadError &&
+            categories.length > 1 && (
+              <div className="category-filter">
+                {categories.map(
+                  (item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() =>
+                        setCategory(
+                          item,
+                        )
+                      }
+                      className={
+                        category ===
+                        item
+                          ? "category-button active"
+                          : "category-button"
+                      }
+                    >
+                      {item}
+                    </button>
+                  ),
+                )}
+              </div>
+            )}
+
+          {/* LOADING */}
+
+          {loading && (
+            <div className="catalog-status">
+              <p>
+                LOADING THE
+                COLLECTION
+              </p>
+
+              <span>
+                Please wait while
+                the official
+                merchandise catalog
+                loads.
+              </span>
             </div>
           )}
 
-          {/* PRODUCT GRID */}
+          {/* ERROR */}
 
-          <div className="merch-grid">
-            {visibleProducts.map(
-              (product) => {
-                const customerPrice =
-                  getCustomerPrice(
-                    product,
-                  );
-
-                const available =
-                  product.inventoryQuantity >
-                    0 &&
-                  customerPrice > 0;
-
-                const primaryImage =
-                  product.images[0] ??
-                  null;
-
-                const hasSale =
-                  product.salePrice !==
-                    null &&
-                  product.salePrice <
-                    product.price;
-
-                return (
-                  <article
-                    className="merch-card"
-                    key={product.id}
-                  >
-                    <div className="gold-frame">
-                      <div className="red-frame">
-                        {/* PRODUCT IMAGE */}
-
-                        <div className="product-image">
-                          {primaryImage ? (
-                            <img
-                              src={
-                                primaryImage
-                              }
-                              alt={
-                                product.name
-                              }
-                            />
-                          ) : (
-                            <div className="product-placeholder">
-                              <span>
-                                SCOTTI
-                                BROTHERS
-                              </span>
-
-                              <strong>
-                                CAN&apos;T
-                                MAKE
-                                <br />
-                                THIS UP!
-                              </strong>
-
-                              <small>
-                                OFFICIAL
-                                MERCHANDISE
-                              </small>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* PRODUCT INFORMATION */}
-
-                        <div className="product-info">
-                          {product.featured && (
-                            <div className="featured-label">
-                              FEATURED
-                            </div>
-                          )}
-
-                          <p className="product-category">
-                            {
-                              product.category
-                            }
-                          </p>
-
-                          <h3>
-                            {
-                              product.name
-                            }
-                          </h3>
-
-                          <p className="product-description">
-                            {
-                              product.description
-                            }
-                          </p>
-
-                          <div className="product-price">
-                            {customerPrice >
-                            0 ? (
-                              <>
-                                {hasSale && (
-                                  <span className="regular-price">
-                                    {formatMoney(
-                                      product.price,
-                                    )}
-                                  </span>
-                                )}
-
-                                <span>
-                                  {formatMoney(
-                                    customerPrice,
-                                  )}
-                                </span>
-                              </>
-                            ) : (
-                              "COMING SOON"
-                            )}
-                          </div>
-
-                          {available ? (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                addToCart(
-                                  product,
-                                )
-                              }
-                              className="add-cart-button"
-                            >
-                              ADD TO CART
-                            </button>
-                          ) : (
-                            <div className="coming-soon">
-                              {product.inventoryQuantity ===
-                              0
-                                ? "SOLD OUT"
-                                : "COMING SOON"}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                );
-              },
-            )}
-
-            {visibleProducts.length ===
-              0 && (
-              <div className="empty-catalog">
+          {!loading &&
+            loadError && (
+              <div className="catalog-status error">
                 <p>
-                  MERCHANDISE COMING
-                  SOON
+                  MERCHANDISE
+                  TEMPORARILY
+                  UNAVAILABLE
                 </p>
 
                 <span>
-                  The official
-                  collection is being
-                  prepared.
+                  {loadError}
                 </span>
               </div>
             )}
-          </div>
+
+          {/* PRODUCT GRID */}
+
+          {!loading &&
+            !loadError && (
+              <div className="merch-grid">
+                {visibleProducts.map(
+                  (product) => {
+                    const customerPrice =
+                      getCustomerPrice(
+                        product,
+                      );
+
+                    const available =
+                      product.inventoryQuantity >
+                        0 &&
+                      customerPrice > 0;
+
+                    const primaryImage =
+                      product
+                        .images[0] ??
+                      null;
+
+                    const hasSale =
+                      product.salePrice !==
+                        null &&
+                      product.salePrice <
+                        product.price;
+
+                    return (
+                      <article
+                        className="merch-card"
+                        key={
+                          product.id
+                        }
+                      >
+                        <div className="gold-frame">
+                          <div className="red-frame">
+                            <div className="product-image">
+                              {primaryImage ? (
+                                <img
+                                  src={
+                                    primaryImage
+                                  }
+                                  alt={
+                                    product.name
+                                  }
+                                />
+                              ) : (
+                                <div className="product-placeholder">
+                                  <span>
+                                    SCOTTI
+                                    BROTHERS
+                                  </span>
+
+                                  <strong>
+                                    CAN&apos;T
+                                    MAKE
+                                    <br />
+                                    THIS UP!
+                                  </strong>
+
+                                  <small>
+                                    OFFICIAL
+                                    MERCHANDISE
+                                  </small>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="product-info">
+                              {product.featured && (
+                                <div className="featured-label">
+                                  FEATURED
+                                </div>
+                              )}
+
+                              <p className="product-category">
+                                {
+                                  product.category
+                                }
+                              </p>
+
+                              <h3>
+                                {
+                                  product.name
+                                }
+                              </h3>
+
+                              <p className="product-description">
+                                {
+                                  product.description
+                                }
+                              </p>
+
+                              <div className="product-price">
+                                {customerPrice >
+                                0 ? (
+                                  <>
+                                    {hasSale && (
+                                      <span className="regular-price">
+                                        {formatMoney(
+                                          product.price,
+                                        )}
+                                      </span>
+                                    )}
+
+                                    <span>
+                                      {formatMoney(
+                                        customerPrice,
+                                      )}
+                                    </span>
+                                  </>
+                                ) : (
+                                  "COMING SOON"
+                                )}
+                              </div>
+
+                              {available ? (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    addToCart(
+                                      product,
+                                    )
+                                  }
+                                  className="add-cart-button"
+                                >
+                                  ADD TO CART
+                                </button>
+                              ) : (
+                                <div className="coming-soon">
+                                  {product.inventoryQuantity ===
+                                  0
+                                    ? "SOLD OUT"
+                                    : "COMING SOON"}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  },
+                )}
+
+                {visibleProducts.length ===
+                  0 && (
+                  <div className="empty-catalog">
+                    <p>
+                      MERCHANDISE
+                      COMING SOON
+                    </p>
+
+                    <span>
+                      The official
+                      collection is
+                      being prepared.
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
         </section>
 
         {/* =========================================
@@ -957,8 +1068,6 @@ export default function MerchandisePage() {
           width: 100%;
         }
 
-        /* HEADER */
-
         .site-header {
           min-height: 82px;
           padding: 24px 42px;
@@ -1052,8 +1161,6 @@ export default function MerchandisePage() {
           font-size: 9px;
           font-weight: 900;
         }
-
-        /* HERO */
 
         .hero {
           width: min(1280px, 100%);
@@ -1202,8 +1309,6 @@ export default function MerchandisePage() {
           background: #a80000;
         }
 
-        /* MERCH SECTION */
-
         .merch-section {
           width: min(1250px, 100%);
 
@@ -1256,8 +1361,6 @@ export default function MerchandisePage() {
           line-height: 1.7;
         }
 
-        /* CATEGORY FILTER */
-
         .category-filter {
           display: flex;
           flex-wrap: wrap;
@@ -1297,8 +1400,6 @@ export default function MerchandisePage() {
           color: var(--gold);
         }
 
-        /* GRID */
-
         .merch-grid {
           display: grid;
 
@@ -1320,8 +1421,6 @@ export default function MerchandisePage() {
           transform: translateY(-8px);
           filter: brightness(1.08);
         }
-
-        /* FRAMES */
 
         .gold-frame {
           padding: 7px;
@@ -1360,8 +1459,6 @@ export default function MerchandisePage() {
             2px
             rgba(0,0,0,0.5);
         }
-
-        /* PRODUCT IMAGE */
 
         .product-image {
           width: 100%;
@@ -1445,8 +1542,6 @@ export default function MerchandisePage() {
 
           letter-spacing: 0.22em;
         }
-
-        /* PRODUCT INFO */
 
         .product-info {
           padding:
@@ -1588,7 +1683,8 @@ export default function MerchandisePage() {
           color: #000;
         }
 
-        .empty-catalog {
+        .empty-catalog,
+        .catalog-status {
           grid-column: 1 / -1;
 
           padding: 80px 20px;
@@ -1603,7 +1699,17 @@ export default function MerchandisePage() {
           text-align: center;
         }
 
-        .empty-catalog p {
+        .catalog-status {
+          margin-top: 10px;
+        }
+
+        .catalog-status.error {
+          border-color:
+            rgba(198,40,40,0.45);
+        }
+
+        .empty-catalog p,
+        .catalog-status p {
           margin: 0;
 
           color: var(--gold);
@@ -1614,7 +1720,12 @@ export default function MerchandisePage() {
           letter-spacing: 0.22em;
         }
 
-        .empty-catalog span {
+        .catalog-status.error p {
+          color: #e11d22;
+        }
+
+        .empty-catalog span,
+        .catalog-status span {
           display: block;
 
           margin-top: 12px;
@@ -1624,8 +1735,6 @@ export default function MerchandisePage() {
 
           font-size: 12px;
         }
-
-        /* FEATURE */
 
         .feature-section {
           padding: 110px 30px;
@@ -1705,8 +1814,6 @@ export default function MerchandisePage() {
           letter-spacing: 0.25em;
         }
 
-        /* FOOTER */
-
         .site-footer {
           padding: 28px 42px;
 
@@ -1770,8 +1877,6 @@ export default function MerchandisePage() {
           color: #7fc1ff;
           text-decoration: underline;
         }
-
-        /* CART */
 
         .cart-overlay {
           position: fixed;
@@ -2113,8 +2218,6 @@ export default function MerchandisePage() {
           cursor: pointer;
         }
 
-        /* TABLET */
-
         @media (max-width: 900px) {
           .hero {
             grid-template-columns: 45% 55%;
@@ -2134,8 +2237,6 @@ export default function MerchandisePage() {
               repeat(2, minmax(0, 1fr));
           }
         }
-
-        /* MOBILE */
 
         @media (max-width: 650px) {
           .site-header {
