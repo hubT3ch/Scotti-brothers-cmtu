@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   formatMoney,
-  getPublicMerchandiseCatalog,
   type MerchandiseProduct,
 } from "@/lib/commerce";
 
@@ -107,11 +110,9 @@ function ProductCard({
             </div>
 
             <div className="product-info">
-              {product.featured && (
-                <div className="featured-label">
-                  FEATURED
-                </div>
-              )}
+              <div className="featured-label">
+                FEATURED
+              </div>
 
               <p className="product-category">
                 {product.category}
@@ -172,9 +173,107 @@ function ProductCard({
 }
 
 export default function MerchandisePage() {
-  const products = useMemo(
-    () =>
-      getPublicMerchandiseCatalog()
+  const [products, setProducts] =
+    useState<MerchandiseProduct[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState<string | null>(null);
+
+  /*
+   * LOAD THE REAL PUBLIC CATALOG
+   *
+   * Merchandise page
+   *        ↓
+   * /api/merchandise
+   *        ↓
+   * Supabase
+   *        ↓
+   * merchandise_products
+   *        +
+   * merchandise_product_images
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCatalog() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response =
+          await fetch(
+            "/api/merchandise",
+            {
+              method: "GET",
+              cache: "no-store",
+            },
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data?.error ||
+              "Unable to load merchandise catalog.",
+          );
+        }
+
+        const loadedProducts =
+          Array.isArray(data?.products)
+            ? data.products
+            : [];
+
+        if (!cancelled) {
+          setProducts(
+            loadedProducts,
+          );
+        }
+      } catch (loadError) {
+        console.error(
+          "Public merchandise catalog error:",
+          loadError,
+        );
+
+        if (!cancelled) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Unable to load merchandise catalog.",
+          );
+
+          setProducts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadCatalog();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /*
+   * PUBLIC PRODUCTS
+   *
+   * The API already limits the response
+   * to active/public products.
+   *
+   * We also enforce the rule here so this
+   * page can never accidentally render a
+   * product that should not be public.
+   */
+  const publicProducts =
+    useMemo(() => {
+      return products
         .filter(
           (product) =>
             product.active &&
@@ -184,9 +283,61 @@ export default function MerchandisePage() {
           (a, b) =>
             a.displayOrder -
             b.displayOrder,
-        ),
-    [],
-  );
+        );
+    }, [products]);
+
+  /*
+   * FEATURED-BY-CATEGORY
+   *
+   * Only ONE featured product may appear
+   * for each category on the main
+   * Merchandise page.
+   *
+   * If multiple products in the same
+   * category have featured=true, the one
+   * with the lowest displayOrder wins.
+   *
+   * Other products remain in the catalog
+   * and are available through their
+   * category pages.
+   */
+  const featuredProducts =
+    useMemo(() => {
+      const byCategory =
+        new Map<
+          string,
+          MerchandiseProduct
+        >();
+
+      for (const product of publicProducts) {
+        if (!product.featured) {
+          continue;
+        }
+
+        const category =
+          product.category?.trim() ||
+          "Uncategorized";
+
+        if (
+          !byCategory.has(
+            category,
+          )
+        ) {
+          byCategory.set(
+            category,
+            product,
+          );
+        }
+      }
+
+      return Array.from(
+        byCategory.values(),
+      ).sort(
+        (a, b) =>
+          a.displayOrder -
+          b.displayOrder,
+      );
+    }, [publicProducts]);
 
   return (
     <main className="merchandise-page">
@@ -329,7 +480,7 @@ export default function MerchandisePage() {
           </div>
         </section>
 
-        {/* FEATURED / CURRENT PRODUCTS */}
+        {/* FEATURED MERCHANDISE */}
 
         <section className="merch-section">
           <div className="section-heading">
@@ -342,15 +493,39 @@ export default function MerchandisePage() {
             <div className="red-line" />
 
             <p className="section-description">
-              Browse the merchandise
-              currently published to
-              the public store.
+              One featured product from
+              each merchandise category.
+              Explore the category pages
+              to see the complete
+              collection.
             </p>
           </div>
 
           <div className="merch-grid">
-            {products.length > 0 ? (
-              products.map(
+            {loading ? (
+              <div className="empty-catalog">
+                <p>
+                  LOADING MERCHANDISE
+                </p>
+
+                <span>
+                  Loading the official
+                  CMTU collection.
+                </span>
+              </div>
+            ) : error ? (
+              <div className="empty-catalog">
+                <p>
+                  MERCHANDISE UNAVAILABLE
+                </p>
+
+                <span>
+                  {error}
+                </span>
+              </div>
+            ) : featuredProducts.length >
+              0 ? (
+              featuredProducts.map(
                 (product) => (
                   <ProductCard
                     key={product.id}
