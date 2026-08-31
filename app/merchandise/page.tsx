@@ -110,9 +110,11 @@ function ProductCard({
             </div>
 
             <div className="product-info">
-              <div className="featured-label">
-                FEATURED
-              </div>
+             {product.featured && (
+  <div className="featured-label">
+    FEATURED
+  </div>
+)}
 
               <p className="product-category">
                 {product.category}
