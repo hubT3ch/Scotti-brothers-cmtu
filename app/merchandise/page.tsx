@@ -110,11 +110,9 @@ function ProductCard({
             </div>
 
             <div className="product-info">
-            {product.featured && (
-  <div className="featured-label">
-    FEATURED
-  </div>
-)}
+              <div className="featured-label">
+                FEATURED
+              </div>
 
               <p className="product-category">
                 {product.category}
@@ -269,9 +267,9 @@ export default function MerchandisePage() {
    * The API already limits the response
    * to active/public products.
    *
-   * We also enforce the rule here so this
-   * page can never accidentally render a
-   * product that should not be public.
+   * We enforce the same rule here so
+   * private/inactive products can never
+   * accidentally appear on the page.
    */
   const publicProducts =
     useMemo(() => {
@@ -291,17 +289,16 @@ export default function MerchandisePage() {
   /*
    * FEATURED-BY-CATEGORY
    *
-   * Only ONE featured product may appear
-   * for each category on the main
-   * Merchandise page.
+   * Only products specifically marked
+   * featured=true are displayed here.
    *
-   * If multiple products in the same
-   * category have featured=true, the one
-   * with the lowest displayOrder wins.
+   * One featured product is displayed
+   * per category.
    *
-   * Other products remain in the catalog
-   * and are available through their
-   * category pages.
+   * If the database contains multiple
+   * featured products in the same category,
+   * the product with the lowest
+   * displayOrder wins.
    */
   const featuredProducts =
     useMemo(() => {
@@ -354,6 +351,7 @@ export default function MerchandisePage() {
       />
 
       <div className="page-content">
+
         {/* HEADER */}
 
         <header className="site-header">
@@ -463,18 +461,27 @@ export default function MerchandisePage() {
                   className="category-card"
                 >
                   <div className="category-card-inner">
+
                     <span className="category-kicker">
                       SCOTTI BROTHERS
                     </span>
 
-                    <h3>
-                      {category.label}
-                    </h3>
+                    <div className="category-title-wrap">
+                      <h3>
+                        {category.label}
+                      </h3>
+                    </div>
 
                     <div className="category-arrow">
-                      EXPLORE
-                      <span>→</span>
+                      <span className="explore-label">
+                        EXPLORE
+                      </span>
+
+                      <span className="arrow">
+                        →
+                      </span>
                     </div>
+
                   </div>
                 </Link>
               ),
@@ -490,7 +497,9 @@ export default function MerchandisePage() {
               CURRENTLY AVAILABLE
             </p>
 
-            <h2>FEATURED MERCHANDISE</h2>
+            <h2>
+              FEATURED MERCHANDISE
+            </h2>
 
             <div className="red-line" />
 
@@ -504,6 +513,7 @@ export default function MerchandisePage() {
           </div>
 
           <div className="merch-grid">
+
             {loading ? (
               <div className="empty-catalog">
                 <p>
@@ -549,6 +559,7 @@ export default function MerchandisePage() {
                 </span>
               </div>
             )}
+
           </div>
         </section>
 
@@ -556,6 +567,7 @@ export default function MerchandisePage() {
 
         <section className="feature-section">
           <div className="feature-content">
+
             <p className="eyebrow">
               THE OFFICIAL COLLECTION
             </p>
@@ -584,6 +596,7 @@ export default function MerchandisePage() {
             <div className="feature-badge">
               OFFICIAL SCOTTI BROTHERS
             </div>
+
           </div>
         </section>
 
@@ -615,9 +628,11 @@ export default function MerchandisePage() {
             CAN&apos;T MAKE THIS UP!
           </span>
         </footer>
+
       </div>
 
       <style>{`
+
         * {
           box-sizing: border-box;
         }
@@ -630,7 +645,9 @@ export default function MerchandisePage() {
           --gold: ${GOLD};
 
           min-height: 100vh;
+
           position: relative;
+
           overflow-x: hidden;
 
           background:
@@ -662,7 +679,9 @@ export default function MerchandisePage() {
         .background,
         .grid-overlay {
           position: fixed;
+
           inset: 0;
+
           pointer-events: none;
         }
 
@@ -684,6 +703,7 @@ export default function MerchandisePage() {
 
         .grid-overlay {
           z-index: 1;
+
           opacity: 0.25;
 
           background-image:
@@ -702,7 +722,9 @@ export default function MerchandisePage() {
 
         .page-content {
           position: relative;
+
           z-index: 2;
+
           width: 100%;
         }
 
@@ -710,10 +732,13 @@ export default function MerchandisePage() {
 
         .site-header {
           min-height: 82px;
+
           padding: 24px 42px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: flex-end;
         }
 
@@ -723,7 +748,9 @@ export default function MerchandisePage() {
 
         .site-nav {
           display: flex;
+
           align-items: center;
+
           gap: 5px;
 
           padding: 8px 10px;
@@ -738,12 +765,16 @@ export default function MerchandisePage() {
             rgba(255,255,255,0.12);
 
           backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
+
+          -webkit-backdrop-filter:
+            blur(6px);
         }
 
         .site-nav a {
           display: inline-flex;
+
           align-items: center;
+
           justify-content: center;
 
           padding: 8px 12px;
@@ -755,6 +786,7 @@ export default function MerchandisePage() {
           text-decoration: none;
 
           font-size: 14px;
+
           font-weight: 800;
 
           white-space: nowrap;
@@ -770,44 +802,60 @@ export default function MerchandisePage() {
 
         .site-nav a.active {
           background: #8b0000;
+
           color: #fff;
         }
 
         /* HERO */
 
         .hero {
-          width: min(1280px, 100%);
+          width:
+            min(1280px, 100%);
+
           min-height: 500px;
 
           margin: 0 auto;
 
-          padding: 45px 45px 75px;
+          padding:
+            45px
+            45px
+            75px;
 
           display: grid;
-          grid-template-columns: 48% 52%;
+
+          grid-template-columns:
+            48%
+            52%;
 
           align-items: center;
         }
 
         .desktop-logo {
-          width: min(100%, 560px);
+          width:
+            min(100%, 560px);
+
           justify-self: start;
         }
 
         .desktop-logo a {
           display: block;
+
           line-height: 0;
         }
 
         .desktop-logo img {
           display: block;
+
           width: 100%;
+
           height: auto;
+
           object-fit: contain;
         }
 
         .hero-copy {
           width: 100%;
+
           max-width: 650px;
 
           justify-self: end;
@@ -823,6 +871,7 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 11px;
+
           font-weight: 900;
 
           letter-spacing: 0.42em;
@@ -831,7 +880,10 @@ export default function MerchandisePage() {
         }
 
         .hero h1 {
-          margin: 17px 0 0;
+          margin:
+            17px
+            0
+            0;
 
           color: #fff;
 
@@ -848,21 +900,28 @@ export default function MerchandisePage() {
 
           text-shadow:
             4px 4px 0 #8b0000,
-            8px 8px 0 rgba(242,201,76,0.30);
+            8px 8px 0
+            rgba(242,201,76,0.30);
         }
 
         .gold-line {
           display: flex;
+
           align-items: center;
+
           gap: 16px;
 
-          width: min(500px, 90%);
+          width:
+            min(500px, 90%);
 
-          margin: 28px auto;
+          margin:
+            28px
+            auto;
         }
 
         .gold-line span {
           flex: 1;
+
           height: 1px;
 
           background:
@@ -871,6 +930,7 @@ export default function MerchandisePage() {
 
         .gold-line b {
           color: var(--gold);
+
           font-size: 14px;
         }
 
@@ -883,6 +943,7 @@ export default function MerchandisePage() {
             rgba(255,255,255,0.78);
 
           font-size: 16px;
+
           line-height: 1.8;
 
           font-weight: 600;
@@ -894,12 +955,16 @@ export default function MerchandisePage() {
 
         .hero-shop-button {
           display: inline-flex;
+
           align-items: center;
+
           justify-content: center;
 
           margin-top: 28px;
 
-          padding: 14px 24px;
+          padding:
+            14px
+            24px;
 
           border:
             1px solid
@@ -912,6 +977,7 @@ export default function MerchandisePage() {
           text-decoration: none;
 
           font-size: 10px;
+
           font-weight: 900;
 
           letter-spacing: 0.2em;
@@ -922,7 +988,9 @@ export default function MerchandisePage() {
         }
 
         .hero-shop-button:hover {
-          transform: translateY(-2px);
+          transform:
+            translateY(-2px);
+
           background: #a80000;
         }
 
@@ -930,7 +998,8 @@ export default function MerchandisePage() {
 
         .category-section,
         .merch-section {
-          width: min(1250px, 100%);
+          width:
+            min(1250px, 100%);
 
           margin: 0 auto;
 
@@ -942,11 +1011,15 @@ export default function MerchandisePage() {
 
         .section-heading {
           margin-bottom: 35px;
+
           text-align: center;
         }
 
         .section-heading h2 {
-          margin: 9px 0 0;
+          margin:
+            9px
+            0
+            0;
 
           color: #fff;
 
@@ -962,9 +1035,13 @@ export default function MerchandisePage() {
 
         .red-line {
           width: 65px;
+
           height: 4px;
 
-          margin: 20px auto 0;
+          margin:
+            20px
+            auto
+            0;
 
           background: #c62828;
         }
@@ -972,12 +1049,16 @@ export default function MerchandisePage() {
         .section-description {
           max-width: 620px;
 
-          margin: 18px auto 0;
+          margin:
+            18px
+            auto
+            0;
 
           color:
             rgba(255,255,255,0.55);
 
           font-size: 14px;
+
           line-height: 1.7;
         }
 
@@ -987,12 +1068,19 @@ export default function MerchandisePage() {
           display: grid;
 
           grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+            repeat(
+              4,
+              minmax(0, 1fr)
+            );
 
           gap: 20px;
+
+          align-items: stretch;
         }
 
         .category-card {
+          min-width: 0;
+
           min-height: 220px;
 
           display: flex;
@@ -1021,18 +1109,31 @@ export default function MerchandisePage() {
         }
 
         .category-card:hover {
-          transform: translateY(-7px);
-          filter: brightness(1.12);
+          transform:
+            translateY(-7px);
+
+          filter:
+            brightness(1.12);
         }
 
         .category-card-inner {
           width: 100%;
 
+          min-width: 0;
+
+          min-height: 206px;
+
           display: flex;
+
           flex-direction: column;
+
+          align-items: stretch;
+
           justify-content: space-between;
 
-          padding: 24px;
+          padding:
+            24px
+            18px;
 
           background:
             linear-gradient(
@@ -1045,36 +1146,108 @@ export default function MerchandisePage() {
           border:
             2px solid
             rgba(0,0,0,0.45);
+
+          text-align: center;
         }
 
         .category-kicker {
+          display: block;
+
+          width: 100%;
+
           color:
             rgba(242,201,76,0.8);
 
           font-size: 8px;
+
           font-weight: 900;
 
           letter-spacing: 0.28em;
+
+          text-align: center;
+        }
+
+        /*
+         * Dedicated title wrapper gives all
+         * category cards the same heading area.
+         */
+
+        .category-title-wrap {
+          width: 100%;
+
+          min-height: 76px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          padding:
+            0
+            4px;
         }
 
         .category-card h3 {
-          margin: 20px 0;
+          width: 100%;
+
+          margin: 0;
 
           color: #fff;
 
           font-size:
-            clamp(24px, 2.4vw, 34px);
+            clamp(
+              20px,
+              2.05vw,
+              32px
+            );
 
-          line-height: 0.95;
+          line-height: 0.98;
 
           font-weight: 900;
 
+          letter-spacing: -0.02em;
+
+          text-align: center;
+
           text-transform: uppercase;
+
+          overflow-wrap: normal;
+
+          word-break: normal;
+        }
+
+        /*
+         * Longest title receives slightly
+         * smaller type so it remains inside
+         * the card at desktop widths.
+         */
+
+        .category-card:nth-child(1) h3 {
+          font-size:
+            clamp(
+              19px,
+              1.95vw,
+              30px
+            );
+        }
+
+        .category-card:nth-child(4) h3 {
+          font-size:
+            clamp(
+              18px,
+              1.8vw,
+              29px
+            );
         }
 
         .category-arrow {
+          width: 100%;
+
           display: flex;
+
           align-items: center;
+
           justify-content: space-between;
 
           padding-top: 15px;
@@ -1086,13 +1259,25 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 9px;
+
           font-weight: 900;
 
           letter-spacing: 0.18em;
+
+          text-align: left;
         }
 
-        .category-arrow span {
+        .explore-label {
+          flex: 1;
+
+          text-align: left;
+        }
+
+        .arrow {
+          flex: 0 0 auto;
+
           font-size: 20px;
+
           line-height: 1;
         }
 
@@ -1102,9 +1287,14 @@ export default function MerchandisePage() {
           display: grid;
 
           grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+            repeat(
+              3,
+              minmax(0, 1fr)
+            );
 
           gap: 30px;
+
+          align-items: start;
         }
 
         .merch-card {
@@ -1116,8 +1306,11 @@ export default function MerchandisePage() {
         }
 
         .merch-card:hover {
-          transform: translateY(-8px);
-          filter: brightness(1.08);
+          transform:
+            translateY(-8px);
+
+          filter:
+            brightness(1.08);
         }
 
         .product-link {
@@ -1190,7 +1383,9 @@ export default function MerchandisePage() {
             );
 
           display: flex;
+
           align-items: center;
+
           justify-content: center;
 
           text-align: center;
@@ -1200,6 +1395,7 @@ export default function MerchandisePage() {
           display: block;
 
           width: 100%;
+
           height: 100%;
 
           object-fit: cover;
@@ -1207,6 +1403,7 @@ export default function MerchandisePage() {
 
         .product-placeholder {
           width: 80%;
+
           min-height: 70%;
 
           padding: 25px;
@@ -1216,9 +1413,11 @@ export default function MerchandisePage() {
             rgba(242,201,76,0.3);
 
           display: flex;
+
           flex-direction: column;
 
           align-items: center;
+
           justify-content: center;
 
           gap: 12px;
@@ -1228,6 +1427,7 @@ export default function MerchandisePage() {
           color: #c62828;
 
           font-size: 9px;
+
           font-weight: 900;
 
           letter-spacing: 0.3em;
@@ -1237,7 +1437,11 @@ export default function MerchandisePage() {
           color: #fff;
 
           font-size:
-            clamp(24px, 3vw, 36px);
+            clamp(
+              24px,
+              3vw,
+              36px
+            );
 
           line-height: 0.95;
 
@@ -1248,6 +1452,7 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 8px;
+
           font-weight: 800;
 
           letter-spacing: 0.22em;
@@ -1271,7 +1476,9 @@ export default function MerchandisePage() {
 
           margin-bottom: 8px;
 
-          padding: 5px 9px;
+          padding:
+            5px
+            9px;
 
           border:
             1px solid
@@ -1280,18 +1487,23 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 7px;
+
           font-weight: 900;
 
           letter-spacing: 0.2em;
         }
 
         .product-category {
-          margin: 0 0 6px;
+          margin:
+            0
+            0
+            6px;
 
           color:
             rgba(255,255,255,0.45);
 
           font-size: 8px;
+
           font-weight: 900;
 
           letter-spacing: 0.18em;
@@ -1312,7 +1524,10 @@ export default function MerchandisePage() {
         .product-description {
           min-height: 42px;
 
-          margin: 9px 0 0;
+          margin:
+            9px
+            0
+            0;
 
           color:
             rgba(255,255,255,0.78);
@@ -1326,14 +1541,19 @@ export default function MerchandisePage() {
           margin-top: 15px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: center;
+
           flex-wrap: wrap;
+
           gap: 8px;
 
           color: #fff;
 
           font-size: 20px;
+
           font-weight: 900;
         }
 
@@ -1352,7 +1572,9 @@ export default function MerchandisePage() {
 
           margin-top: 16px;
 
-          padding: 10px 16px;
+          padding:
+            10px
+            16px;
 
           border:
             1px solid
@@ -1361,6 +1583,7 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 9px;
+
           font-weight: 900;
 
           letter-spacing: 0.18em;
@@ -1377,13 +1600,16 @@ export default function MerchandisePage() {
         .product-link:hover
           .view-product-button {
           background: var(--gold);
+
           color: #000;
         }
 
         .empty-catalog {
           grid-column: 1 / -1;
 
-          padding: 80px 20px;
+          padding:
+            80px
+            20px;
 
           border:
             1px solid
@@ -1401,6 +1627,7 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 14px;
+
           font-weight: 900;
 
           letter-spacing: 0.22em;
@@ -1420,7 +1647,9 @@ export default function MerchandisePage() {
         /* FEATURE */
 
         .feature-section {
-          padding: 110px 30px;
+          padding:
+            110px
+            30px;
 
           border-top:
             1px solid
@@ -1439,19 +1668,28 @@ export default function MerchandisePage() {
         }
 
         .feature-content {
-          width: min(760px, 100%);
+          width:
+            min(760px, 100%);
+
           margin: 0 auto;
 
           text-align: center;
         }
 
         .feature-content h2 {
-          margin: 18px 0 0;
+          margin:
+            18px
+            0
+            0;
 
           color: #fff;
 
           font-size:
-            clamp(48px, 7vw, 82px);
+            clamp(
+              48px,
+              7vw,
+              82px
+            );
 
           line-height: 0.9;
 
@@ -1462,10 +1700,13 @@ export default function MerchandisePage() {
         }
 
         .feature-line {
-          margin: 32px auto;
+          margin:
+            32px
+            auto;
         }
 
-        .feature-content > p:not(.eyebrow) {
+        .feature-content >
+          p:not(.eyebrow) {
           max-width: 650px;
 
           margin: 0 auto;
@@ -1483,7 +1724,9 @@ export default function MerchandisePage() {
 
           margin-top: 32px;
 
-          padding: 13px 22px;
+          padding:
+            13px
+            22px;
 
           border:
             1px solid
@@ -1492,6 +1735,7 @@ export default function MerchandisePage() {
           color: var(--gold);
 
           font-size: 10px;
+
           font-weight: 900;
 
           letter-spacing: 0.25em;
@@ -1500,10 +1744,14 @@ export default function MerchandisePage() {
         /* FOOTER */
 
         .site-footer {
-          padding: 28px 42px;
+          padding:
+            28px
+            42px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: space-between;
 
           gap: 25px;
@@ -1519,6 +1767,7 @@ export default function MerchandisePage() {
           display: block;
 
           width: 110px;
+
           height: auto;
 
           object-fit: contain;
@@ -1532,6 +1781,7 @@ export default function MerchandisePage() {
             rgba(255,255,255,0.35);
 
           font-size: 9px;
+
           font-weight: 700;
 
           letter-spacing: 0.2em;
@@ -1550,6 +1800,7 @@ export default function MerchandisePage() {
           text-decoration: none;
 
           font-size: 9px;
+
           font-weight: 400;
 
           letter-spacing: 0.12em;
@@ -1557,26 +1808,63 @@ export default function MerchandisePage() {
 
         .company-link:hover {
           color: #7fc1ff;
+
           text-decoration: underline;
         }
 
         /* TABLET */
 
         @media (max-width: 1000px) {
+
           .category-grid {
             grid-template-columns:
-              repeat(2, minmax(0, 1fr));
+              repeat(
+                2,
+                minmax(0, 1fr)
+              );
+          }
+
+          .category-card h3 {
+            font-size:
+              clamp(
+                22px,
+                3vw,
+                30px
+              );
+          }
+
+          .category-card:nth-child(1) h3,
+          .category-card:nth-child(4) h3 {
+            font-size:
+              clamp(
+                21px,
+                2.8vw,
+                29px
+              );
+          }
+
+          .category-card-inner {
+            padding:
+              22px
+              18px;
           }
 
           .merch-grid {
             grid-template-columns:
-              repeat(2, minmax(0, 1fr));
+              repeat(
+                2,
+                minmax(0, 1fr)
+              );
           }
         }
 
         @media (max-width: 900px) {
+
           .hero {
-            grid-template-columns: 45% 55%;
+            grid-template-columns:
+              45%
+              55%;
+
             min-height: 450px;
           }
 
@@ -1592,6 +1880,7 @@ export default function MerchandisePage() {
         /* MOBILE */
 
         @media (max-width: 650px) {
+
           .site-header {
             min-height: auto;
 
@@ -1602,7 +1891,8 @@ export default function MerchandisePage() {
 
             flex-direction: column;
 
-            justify-content: flex-start;
+            justify-content:
+              flex-start;
 
             align-items: center;
           }
@@ -1611,13 +1901,18 @@ export default function MerchandisePage() {
             display: block;
 
             width: 78%;
+
             max-width: 330px;
 
-            margin: 0 auto 18px;
+            margin:
+              0
+              auto
+              18px;
           }
 
           .mobile-logo a {
             display: block;
+
             line-height: 0;
           }
 
@@ -1625,6 +1920,7 @@ export default function MerchandisePage() {
             display: block;
 
             width: 100%;
+
             height: auto;
 
             object-fit: contain;
@@ -1646,7 +1942,10 @@ export default function MerchandisePage() {
 
           .site-nav a {
             font-size: 10px;
-            padding: 6px 8px;
+
+            padding:
+              6px
+              8px;
           }
 
           .desktop-logo {
@@ -1666,6 +1965,7 @@ export default function MerchandisePage() {
 
           .hero-copy {
             width: 100%;
+
             max-width: 600px;
 
             margin: 0 auto;
@@ -1677,16 +1977,19 @@ export default function MerchandisePage() {
 
           .eyebrow {
             font-size: 8px;
+
             letter-spacing: 0.25em;
           }
 
           .hero h1 {
             font-size: 43px;
+
             letter-spacing: -1.5px;
           }
 
           .hero-subtitle {
             font-size: 12px;
+
             line-height: 1.6;
           }
 
@@ -1696,7 +1999,10 @@ export default function MerchandisePage() {
 
           .gold-line {
             width: 90%;
-            margin: 20px auto;
+
+            margin:
+              20px
+              auto;
           }
 
           .category-section,
@@ -1723,6 +2029,36 @@ export default function MerchandisePage() {
             min-height: 180px;
           }
 
+          .category-card-inner {
+            min-height: 166px;
+
+            padding:
+              22px
+              20px;
+          }
+
+          .category-title-wrap {
+            min-height: 62px;
+
+            padding:
+              0
+              8px;
+          }
+
+          .category-card h3,
+          .category-card:nth-child(1) h3,
+          .category-card:nth-child(4) h3 {
+            font-size: 28px;
+
+            line-height: 0.95;
+
+            text-align: center;
+          }
+
+          .category-arrow {
+            padding-top: 13px;
+          }
+
           .merch-grid {
             grid-template-columns: 1fr;
 
@@ -1743,7 +2079,8 @@ export default function MerchandisePage() {
             font-size: 48px;
           }
 
-          .feature-content > p:not(.eyebrow) {
+          .feature-content >
+            p:not(.eyebrow) {
             font-size: 14px;
           }
 
@@ -1767,6 +2104,7 @@ export default function MerchandisePage() {
             font-size: 10px;
           }
         }
+
       `}</style>
     </main>
   );
