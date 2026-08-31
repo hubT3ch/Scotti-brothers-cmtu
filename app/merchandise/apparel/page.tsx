@@ -111,7 +111,7 @@ function ProductCard({
 
               <p className="product-description">
                 {product.description ||
-                  "Official Scotti Brothers apparel."}
+                  "Official Scotti Brothers merchandise."}
               </p>
 
               <div className="product-price">
@@ -168,6 +168,22 @@ export default function ApparelPage() {
   const [error, setError] =
     useState<string | null>(null);
 
+  /*
+   * LOAD THE REAL PUBLIC CATALOG
+   *
+   * Apparel page
+   *      ↓
+   * /api/merchandise
+   *      ↓
+   * Supabase
+   *      ↓
+   * merchandise_products
+   *      +
+   * merchandise_product_images
+   *
+   * The API already restricts the response
+   * to active + public products.
+   */
   useEffect(() => {
     let cancelled = false;
 
@@ -176,13 +192,14 @@ export default function ApparelPage() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(
-          "/api/merchandise",
-          {
-            method: "GET",
-            cache: "no-store",
-          },
-        );
+        const response =
+          await fetch(
+            "/api/merchandise",
+            {
+              method: "GET",
+              cache: "no-store",
+            },
+          );
 
         const data =
           await response.json();
@@ -195,7 +212,9 @@ export default function ApparelPage() {
         }
 
         const loadedProducts =
-          Array.isArray(data?.products)
+          Array.isArray(
+            data?.products,
+          )
             ? data.products
             : [];
 
@@ -233,6 +252,15 @@ export default function ApparelPage() {
     };
   }, []);
 
+  /*
+   * APPAREL PRODUCTS
+   *
+   * Only products whose actual database
+   * category is Apparel are displayed here.
+   *
+   * This page does NOT use the old
+   * hard-coded merchandiseProducts array.
+   */
   const apparelProducts =
     useMemo(() => {
       return products
@@ -265,6 +293,8 @@ export default function ApparelPage() {
       />
 
       <div className="page-content">
+
+        {/* HEADER */}
 
         <header className="site-header">
           <div className="mobile-logo">
@@ -301,6 +331,8 @@ export default function ApparelPage() {
             )}
           </nav>
         </header>
+
+        {/* HERO */}
 
         <section className="hero">
           <div className="desktop-logo">
@@ -346,6 +378,8 @@ export default function ApparelPage() {
           </div>
         </section>
 
+        {/* CATEGORY NAVIGATION */}
+
         <section className="category-nav-section">
           <div className="category-nav">
             {categories.map(
@@ -366,6 +400,8 @@ export default function ApparelPage() {
             )}
           </div>
         </section>
+
+        {/* APPAREL PRODUCTS */}
 
         <section
           id="apparel"
@@ -445,6 +481,8 @@ export default function ApparelPage() {
           </div>
         </section>
 
+        {/* FOOTER */}
+
         <footer className="site-footer">
           <img
             src="/images/logo.png"
@@ -473,11 +511,6 @@ export default function ApparelPage() {
         </footer>
 
       </div>
-
-      {/* KEEP THE EXISTING STYLE BLOCK EXACTLY AS IT IS */}
-    </main>
-  );
-}
 
       <style>{`
         * {
@@ -568,6 +601,8 @@ export default function ApparelPage() {
           width: 100%;
         }
 
+        /* HEADER */
+
         .site-header {
           min-height: 82px;
           padding: 24px 42px;
@@ -611,6 +646,7 @@ export default function ApparelPage() {
           border-radius: 999px;
 
           color: #fff;
+
           text-decoration: none;
 
           font-size: 14px;
@@ -631,6 +667,8 @@ export default function ApparelPage() {
           background: #8b0000;
           color: #fff;
         }
+
+        /* HERO */
 
         .hero {
           width: min(1280px, 100%);
@@ -768,7 +806,18 @@ export default function ApparelPage() {
           font-weight: 900;
 
           letter-spacing: 0.2em;
+
+          transition:
+            transform 0.2s ease,
+            background 0.2s ease;
         }
+
+        .hero-shop-button:hover {
+          transform: translateY(-2px);
+          background: #a80000;
+        }
+
+        /* CATEGORY NAVIGATION */
 
         .category-nav-section {
           width: min(1250px, 100%);
@@ -784,6 +833,7 @@ export default function ApparelPage() {
         .category-nav {
           display: flex;
           flex-wrap: wrap;
+
           justify-content: center;
 
           gap: 8px;
@@ -796,33 +846,58 @@ export default function ApparelPage() {
         }
 
         .category-nav-link {
-          padding: 10px 16px;
+          display: inline-flex;
+
+          align-items: center;
+          justify-content: center;
+
+          padding:
+            10px
+            16px;
 
           border:
             1px solid
-            rgba(242,201,76,0.35);
+            rgba(242,201,76,0.25);
+
+          background:
+            rgba(0,0,0,0.35);
 
           color:
-            rgba(255,255,255,0.65);
+            rgba(255,255,255,0.55);
 
           text-decoration: none;
 
           font-size: 9px;
+
           font-weight: 900;
 
-          letter-spacing: 0.16em;
+          letter-spacing: 0.15em;
 
           text-transform: uppercase;
+
+          transition:
+            color 0.2s ease,
+            background 0.2s ease,
+            border-color 0.2s ease;
         }
 
-        .category-nav-link:hover,
-        .category-nav-link.active {
-          border-color: var(--gold);
+        .category-nav-link:hover {
+          color: var(--gold);
 
-          background: #750000;
+          border-color:
+            rgba(242,201,76,0.6);
+        }
+
+        .category-nav-link.active {
+          background: #8b0000;
+
+          border-color:
+            var(--gold);
 
           color: var(--gold);
         }
+
+        /* SECTIONS */
 
         .merch-section {
           width: min(1250px, 100%);
@@ -832,7 +907,7 @@ export default function ApparelPage() {
           padding:
             20px
             32px
-            100px;
+            80px;
         }
 
         .section-heading {
@@ -877,6 +952,8 @@ export default function ApparelPage() {
           line-height: 1.7;
         }
 
+        /* PRODUCT GRID */
+
         .merch-grid {
           display: grid;
 
@@ -896,6 +973,7 @@ export default function ApparelPage() {
 
         .merch-card:hover {
           transform: translateY(-8px);
+
           filter: brightness(1.08);
         }
 
@@ -903,8 +981,11 @@ export default function ApparelPage() {
           display: block;
 
           color: inherit;
+
           text-decoration: none;
         }
+
+        /* FRAMES */
 
         .gold-frame {
           padding: 7px;
@@ -934,7 +1015,17 @@ export default function ApparelPage() {
               #650000 55%,
               #9b0000
             );
+
+          box-shadow:
+            inset
+            0
+            0
+            0
+            2px
+            rgba(0,0,0,0.5);
         }
+
+        /* PRODUCT IMAGE */
 
         .product-image {
           width: 100%;
@@ -942,10 +1033,6 @@ export default function ApparelPage() {
           aspect-ratio: 1 / 1;
 
           overflow: hidden;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
 
           background:
             radial-gradient(
@@ -958,6 +1045,11 @@ export default function ApparelPage() {
               #181818,
               #050505
             );
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
 
           text-align: center;
         }
@@ -982,6 +1074,7 @@ export default function ApparelPage() {
             rgba(242,201,76,0.3);
 
           display: flex;
+
           flex-direction: column;
 
           align-items: center;
@@ -1019,15 +1112,17 @@ export default function ApparelPage() {
           letter-spacing: 0.22em;
         }
 
+        /* PRODUCT INFO */
+
         .product-info {
           padding:
             18px
             15px
             22px;
 
-          background: #750000;
-
           text-align: center;
+
+          background: #750000;
         }
 
         .featured-label {
@@ -1069,6 +1164,7 @@ export default function ApparelPage() {
           color: var(--gold);
 
           font-size: 20px;
+
           font-weight: 900;
         }
 
@@ -1081,6 +1177,7 @@ export default function ApparelPage() {
             rgba(255,255,255,0.78);
 
           font-size: 12px;
+
           line-height: 1.5;
         }
 
@@ -1088,7 +1185,9 @@ export default function ApparelPage() {
           margin-top: 15px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: center;
 
           flex-wrap: wrap;
@@ -1098,6 +1197,7 @@ export default function ApparelPage() {
           color: #fff;
 
           font-size: 20px;
+
           font-weight: 900;
         }
 
@@ -1132,11 +1232,16 @@ export default function ApparelPage() {
 
         .view-product-button {
           background: #000;
+
+          transition:
+            background 0.2s ease,
+            color 0.2s ease;
         }
 
         .product-link:hover
           .view-product-button {
           background: var(--gold);
+
           color: #000;
         }
 
@@ -1161,6 +1266,7 @@ export default function ApparelPage() {
           color: var(--gold);
 
           font-size: 14px;
+
           font-weight: 900;
 
           letter-spacing: 0.22em;
@@ -1169,19 +1275,19 @@ export default function ApparelPage() {
         .empty-catalog span {
           display: block;
 
-          max-width: 500px;
-
-          margin: 12px auto 0;
+          margin-top: 12px;
 
           color:
             rgba(255,255,255,0.4);
 
           font-size: 12px;
-          line-height: 1.6;
         }
 
         .back-button {
           display: inline-flex;
+
+          align-items: center;
+          justify-content: center;
 
           margin-top: 25px;
 
@@ -1191,21 +1297,38 @@ export default function ApparelPage() {
             1px solid
             var(--gold);
 
+          background: #8b0000;
+
           color: var(--gold);
 
           text-decoration: none;
 
           font-size: 9px;
+
           font-weight: 900;
 
           letter-spacing: 0.16em;
+
+          transition:
+            background 0.2s ease,
+            color 0.2s ease;
         }
+
+        .back-button:hover {
+          background: var(--gold);
+
+          color: #000;
+        }
+
+        /* FOOTER */
 
         .site-footer {
           padding: 28px 42px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: space-between;
 
           gap: 25px;
@@ -1221,7 +1344,10 @@ export default function ApparelPage() {
           display: block;
 
           width: 110px;
+
           height: auto;
+
+          object-fit: contain;
         }
 
         .site-footer p,
@@ -1232,6 +1358,7 @@ export default function ApparelPage() {
             rgba(255,255,255,0.35);
 
           font-size: 9px;
+
           font-weight: 700;
 
           letter-spacing: 0.2em;
@@ -1250,20 +1377,45 @@ export default function ApparelPage() {
           text-decoration: none;
 
           font-size: 9px;
+
+          font-weight: 400;
+
           letter-spacing: 0.12em;
         }
 
-        @media (max-width: 900px) {
-          .hero {
-            grid-template-columns: 45% 55%;
-            min-height: 450px;
-          }
+        .company-link:hover {
+          color: #7fc1ff;
 
+          text-decoration: underline;
+        }
+
+        /* TABLET */
+
+        @media (max-width: 1000px) {
           .merch-grid {
             grid-template-columns:
               repeat(2, minmax(0, 1fr));
           }
         }
+
+        @media (max-width: 900px) {
+          .hero {
+            grid-template-columns:
+              45% 55%;
+
+            min-height: 450px;
+          }
+
+          .desktop-logo {
+            width: 100%;
+          }
+
+          .hero-copy {
+            padding: 10px;
+          }
+        }
+
+        /* MOBILE */
 
         @media (max-width: 650px) {
           .site-header {
@@ -1275,19 +1427,28 @@ export default function ApparelPage() {
               10px;
 
             flex-direction: column;
+
+            justify-content: flex-start;
+
+            align-items: center;
           }
 
           .mobile-logo {
             display: block;
 
             width: 78%;
+
             max-width: 330px;
 
-            margin: 0 auto 18px;
+            margin:
+              0
+              auto
+              18px;
           }
 
           .mobile-logo a {
             display: block;
+
             line-height: 0;
           }
 
@@ -1295,7 +1456,10 @@ export default function ApparelPage() {
             display: block;
 
             width: 100%;
+
             height: auto;
+
+            object-fit: contain;
           }
 
           .site-nav {
@@ -1314,7 +1478,10 @@ export default function ApparelPage() {
 
           .site-nav a {
             font-size: 10px;
-            padding: 6px 8px;
+
+            padding:
+              6px
+              8px;
           }
 
           .desktop-logo {
@@ -1335,6 +1502,8 @@ export default function ApparelPage() {
           .hero-copy {
             width: 100%;
 
+            max-width: 600px;
+
             margin: 0 auto;
 
             padding: 0;
@@ -1342,12 +1511,21 @@ export default function ApparelPage() {
             text-align: center;
           }
 
+          .eyebrow {
+            font-size: 8px;
+
+            letter-spacing: 0.25em;
+          }
+
           .hero h1 {
             font-size: 43px;
+
+            letter-spacing: -1.5px;
           }
 
           .hero-subtitle {
             font-size: 12px;
+
             line-height: 1.6;
           }
 
@@ -1355,17 +1533,40 @@ export default function ApparelPage() {
             width: 100%;
           }
 
-          .category-nav-section,
+          .gold-line {
+            width: 90%;
+
+            margin:
+              20px
+              auto;
+          }
+
+          .category-nav-section {
+            padding:
+              0
+              16px
+              10px;
+          }
+
+          .category-nav {
+            gap: 5px;
+
+            padding-bottom: 18px;
+          }
+
+          .category-nav-link {
+            padding:
+              8px
+              10px;
+
+            font-size: 8px;
+          }
+
           .merch-section {
             padding:
               10px
               16px
               70px;
-          }
-
-          .category-nav-link {
-            font-size: 8px;
-            padding: 9px 10px;
           }
 
           .section-heading h2 {
@@ -1382,6 +1583,18 @@ export default function ApparelPage() {
             gap: 30px;
           }
 
+          .empty-catalog {
+            padding:
+              60px
+              18px;
+          }
+
+          .feature-section {
+            padding:
+              80px
+              20px;
+          }
+
           .site-footer {
             padding:
               30px
@@ -1392,6 +1605,14 @@ export default function ApparelPage() {
             gap: 15px;
 
             text-align: center;
+          }
+
+          .site-footer img {
+            width: 110px;
+          }
+
+          .company-link {
+            font-size: 10px;
           }
         }
       `}</style>
