@@ -21,8 +21,8 @@ const navigation = [
 
 const categories = [
   {
-    label: "All Merchandise",
-    href: "/merchandise",
+    label: "All Products",
+    href: "/merchandise/all",
   },
   {
     label: "Apparel",
