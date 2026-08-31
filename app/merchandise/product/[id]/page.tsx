@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  formatMoney,
-  getPublicMerchandiseCatalog,
-  type MerchandiseProduct,
-} from "@/lib/commerce";
+
+import { getSupabaseAdminClient } from "@/lib/supabase-server";
+import { formatMoney } from "@/lib/commerce";
 
 type ProductPageProps = {
   params: Promise<{
@@ -12,29 +10,154 @@ type ProductPageProps = {
   }>;
 };
 
+type MerchandiseProduct = {
+  id: string;
+  name: string;
+  description: string;
+  sku: string;
+  category: string;
+  price: number;
+  salePrice: number | null;
+  images: string[];
+  active: boolean;
+  publicDisplay: boolean;
+  featured: boolean;
+  inventoryQuantity: number;
+  displayOrder: number;
+};
+
+/**
+ * Load one real public merchandise product
+ * directly from Supabase.
+ *
+ * This replaces the old hard-coded
+ * getPublicMerchandiseCatalog() lookup.
+ */
+async function getPublicProduct(
+  id: string,
+): Promise<MerchandiseProduct | null> {
+  const supabase =
+    getSupabaseAdminClient();
+
+  const {
+    data: product,
+    error: productError,
+  } = await supabase
+    .from("merchandise_products")
+    .select("*")
+    .eq("id", id)
+    .eq("active", true)
+    .eq("public_display", true)
+    .maybeSingle();
+
+  if (productError) {
+    console.error(
+      "Merchandise product lookup error:",
+      productError,
+    );
+
+    return null;
+  }
+
+  if (!product) {
+    return null;
+  }
+
+  const {
+    data: imageRows,
+    error: imageError,
+  } = await supabase
+    .from(
+      "merchandise_product_images",
+    )
+    .select("*")
+    .eq("product_id", product.id)
+    .order("display_order", {
+      ascending: true,
+    });
+
+  if (imageError) {
+    console.error(
+      "Merchandise product image lookup error:",
+      imageError,
+    );
+  }
+
+  const images =
+    (imageRows ?? [])
+      .map((image: any) =>
+        supabase.storage
+          .from("cmtu-merchandise")
+          .getPublicUrl(
+            image.storage_path,
+          ).data.publicUrl,
+      )
+      .filter(
+        (url: string) =>
+          Boolean(url),
+      );
+
+  return {
+    id: product.id,
+    name: product.name,
+    description:
+      product.description ?? "",
+    sku: product.sku ?? "",
+    category:
+      product.category ?? "Collection",
+    price: Number(
+      product.price ?? 0,
+    ),
+    salePrice:
+      product.sale_price === null ||
+      product.sale_price === undefined
+        ? null
+        : Number(
+            product.sale_price,
+          ),
+    images,
+    active: Boolean(
+      product.active,
+    ),
+    publicDisplay: Boolean(
+      product.public_display,
+    ),
+    featured: Boolean(
+      product.featured,
+    ),
+    inventoryQuantity: Math.max(
+      0,
+      Number(
+        product.inventory_quantity ??
+          0,
+      ),
+    ),
+    displayOrder: Number(
+      product.display_order ?? 0,
+    ),
+  };
+}
+
 export default async function ProductPage({
   params,
 }: ProductPageProps) {
   const { id } = await params;
 
-  const product: MerchandiseProduct | undefined =
-    getPublicMerchandiseCatalog().find(
-      (item) =>
-        item.id === id &&
-        item.active &&
-        item.publicDisplay,
-    );
+  const product =
+    await getPublicProduct(id);
 
   if (!product) {
     notFound();
   }
 
   const customerPrice =
-    product.salePrice ?? product.price;
+    product.salePrice ??
+    product.price;
 
   const hasSale =
     product.salePrice !== null &&
-    product.salePrice < product.price;
+    product.salePrice <
+      product.price;
 
   const available =
     product.inventoryQuantity > 0 &&
@@ -44,6 +167,11 @@ export default async function ProductPage({
     product.images.length > 0
       ? product.images
       : [];
+
+  const category =
+    categoryPath(
+      product.category,
+    );
 
   return (
     <main className="product-page">
@@ -58,6 +186,7 @@ export default async function ProductPage({
       />
 
       <div className="page-content">
+
         {/* HEADER */}
 
         <header className="site-header">
@@ -80,21 +209,27 @@ export default async function ProductPage({
           </Link>
 
           <Link
-            href="/merchandise"
+            href={`/merchandise/${category}`}
             className="cart-link"
           >
-            MERCHANDISE
+            {product.category.toUpperCase()}
           </Link>
         </header>
 
         {/* PRODUCT */}
 
         <section className="product-section">
+
+          {/* GALLERY */}
+
           <div className="product-gallery">
             {images.length > 0 ? (
               <div className="image-grid">
                 {images.map(
-                  (image, index) => (
+                  (
+                    image,
+                    index,
+                  ) => (
                     <div
                       className="image-frame"
                       key={`${image}-${index}`}
@@ -138,12 +273,17 @@ export default async function ProductPage({
             )}
           </div>
 
+          {/* DETAILS */}
+
           <div className="product-details">
+
             <p className="eyebrow">
               {product.category}
             </p>
 
-            <h1>{product.name}</h1>
+            <h1>
+              {product.name}
+            </h1>
 
             <div className="gold-line">
               <span />
@@ -161,6 +301,8 @@ export default async function ProductPage({
               {product.description ||
                 "Official Scotti Brothers merchandise from Can't Make This Up!"}
             </p>
+
+            {/* PRICE */}
 
             <div className="price">
               {hasSale && (
@@ -184,6 +326,8 @@ export default async function ProductPage({
               )}
             </div>
 
+            {/* AVAILABILITY */}
+
             <div className="availability">
               {available ? (
                 <>
@@ -204,6 +348,8 @@ export default async function ProductPage({
               )}
             </div>
 
+            {/* CHECKOUT PLACEHOLDER */}
+
             {available && (
               <button
                 type="button"
@@ -218,7 +364,10 @@ export default async function ProductPage({
               </button>
             )}
 
+            {/* PRODUCT META */}
+
             <div className="product-meta">
+
               <div>
                 <span>
                   CATEGORY
@@ -230,7 +379,9 @@ export default async function ProductPage({
               </div>
 
               <div>
-                <span>SKU</span>
+                <span>
+                  SKU
+                </span>
 
                 <strong>
                   {product.sku}
@@ -252,25 +403,26 @@ export default async function ProductPage({
                   </strong>
                 </div>
               )}
+
             </div>
 
+            {/* CATEGORY LINK */}
+
             <Link
-              href={`/merchandise/${
-                categoryPath(
-                  product.category,
-                )
-              }`}
+              href={`/merchandise/${category}`}
               className="category-link"
             >
               ← VIEW MORE{" "}
               {product.category.toUpperCase()}
             </Link>
+
           </div>
         </section>
 
         {/* SHOP MORE */}
 
         <section className="shop-more">
+
           <p className="eyebrow">
             OFFICIAL COLLECTION
           </p>
@@ -289,6 +441,7 @@ export default async function ProductPage({
           </p>
 
           <div className="shop-links">
+
             <Link href="/merchandise">
               ALL MERCHANDISE
             </Link>
@@ -304,19 +457,22 @@ export default async function ProductPage({
             <Link href="/merchandise/collectibles">
               COLLECTIBLES
             </Link>
+
           </div>
         </section>
 
         {/* FOOTER */}
 
         <footer className="site-footer">
+
           <img
             src="/images/logo.png"
             alt="Scotti Brothers Entertainment"
           />
 
           <p>
-            © {new Date().getFullYear()}{" "}
+            ©{" "}
+            {new Date().getFullYear()}{" "}
             Scotti Brothers Ent.
             All rights reserved.
           </p>
@@ -325,6 +481,7 @@ export default async function ProductPage({
             href="https://scottibrothersent.com"
             target="_blank"
             rel="noopener noreferrer"
+            className="company-link"
           >
             SCOTTIBROTHERSENT.COM
           </a>
@@ -332,10 +489,13 @@ export default async function ProductPage({
           <span>
             CAN&apos;T MAKE THIS UP!
           </span>
+
         </footer>
+
       </div>
 
       <style>{`
+
         * {
           box-sizing: border-box;
         }
@@ -435,7 +595,8 @@ export default async function ProductPage({
         .site-header {
           min-height: 90px;
 
-          padding: 20px 42px;
+          padding:
+            20px 42px;
 
           display: grid;
 
@@ -584,7 +745,8 @@ export default async function ProductPage({
         .no-image {
           min-height: 600px;
 
-          padding: 50px 30px;
+          padding:
+            50px 30px;
 
           display: flex;
 
@@ -1004,7 +1166,7 @@ export default async function ProductPage({
 
           margin:
             20px auto;
-          
+
           background: #c62828;
         }
 
@@ -1235,14 +1397,19 @@ export default async function ProductPage({
             gap: 15px;
           }
         }
+
       `}</style>
     </main>
   );
 }
 
+/**
+ * Convert the database category into
+ * the public category URL.
+ */
 function categoryPath(
   category: string,
-) {
+): string {
   const normalized =
     category
       .trim()
@@ -1268,8 +1435,9 @@ function categoryPath(
     normalized.includes(
       "collection",
     )
-  )
+  ) {
     return "collection";
+  }
 
   return "collection";
 }
