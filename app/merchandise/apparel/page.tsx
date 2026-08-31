@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   formatMoney,
-  getPublicMerchandiseCatalog,
   type MerchandiseProduct,
 } from "@/lib/commerce";
 
@@ -156,24 +159,98 @@ function ProductCard({
 }
 
 export default function ApparelPage() {
-  const products = useMemo(
-    () =>
-      getPublicMerchandiseCatalog()
+  const [products, setProducts] =
+    useState<MerchandiseProduct[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCatalog() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(
+          "/api/merchandise",
+          {
+            method: "GET",
+            cache: "no-store",
+          },
+        );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data?.error ||
+              "Unable to load merchandise catalog.",
+          );
+        }
+
+        const loadedProducts =
+          Array.isArray(data?.products)
+            ? data.products
+            : [];
+
+        if (!cancelled) {
+          setProducts(
+            loadedProducts,
+          );
+        }
+      } catch (loadError) {
+        console.error(
+          "Public apparel catalog error:",
+          loadError,
+        );
+
+        if (!cancelled) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Unable to load merchandise catalog.",
+          );
+
+          setProducts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadCatalog();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const apparelProducts =
+    useMemo(() => {
+      return products
         .filter(
           (product) =>
             product.active &&
             product.publicDisplay &&
             product.category
-              .toLowerCase()
-              .includes("apparel"),
+              ?.trim()
+              .toLowerCase() ===
+              "apparel",
         )
         .sort(
           (a, b) =>
             a.displayOrder -
             b.displayOrder,
-        ),
-    [],
-  );
+        );
+    }, [products]);
 
   return (
     <main className="merchandise-page">
@@ -188,6 +265,7 @@ export default function ApparelPage() {
       />
 
       <div className="page-content">
+
         <header className="site-header">
           <div className="mobile-logo">
             <Link
@@ -310,8 +388,31 @@ export default function ApparelPage() {
           </div>
 
           <div className="merch-grid">
-            {products.length > 0 ? (
-              products.map(
+
+            {loading ? (
+              <div className="empty-catalog">
+                <p>
+                  LOADING APPAREL
+                </p>
+
+                <span>
+                  Loading the official
+                  CMTU apparel collection.
+                </span>
+              </div>
+            ) : error ? (
+              <div className="empty-catalog">
+                <p>
+                  APPAREL UNAVAILABLE
+                </p>
+
+                <span>
+                  {error}
+                </span>
+              </div>
+            ) : apparelProducts.length >
+              0 ? (
+              apparelProducts.map(
                 (product) => (
                   <ProductCard
                     key={product.id}
@@ -340,6 +441,7 @@ export default function ApparelPage() {
                 </Link>
               </div>
             )}
+
           </div>
         </section>
 
@@ -369,7 +471,13 @@ export default function ApparelPage() {
             CAN&apos;T MAKE THIS UP!
           </span>
         </footer>
+
       </div>
+
+      {/* KEEP THE EXISTING STYLE BLOCK EXACTLY AS IT IS */}
+    </main>
+  );
+}
 
       <style>{`
         * {
