@@ -64,16 +64,16 @@ function formatAirDate(value: string | null) {
 }
 
 /* =========================================================
-   COMING SOON CHECK
+   COMING SOON LOGIC
 ========================================================= */
 
 /*
- * COMING SOON rules:
+ * Published guest:
  *
- * No air date yet  -> SHOW
- * Future air date  -> SHOW
- * Today            -> HIDE
- * Past date        -> HIDE
+ * No air date       -> COMING SOON
+ * Future air date   -> COMING SOON
+ * Today             -> NO COMING SOON
+ * Past air date     -> NO COMING SOON
  */
 function isComingSoon(airDate: string | null) {
   if (!airDate) {
@@ -109,13 +109,17 @@ export default function GuestsPage() {
         setError(null);
 
         /*
-         * The public Guests page and API are part of the
-         * same Scotti-brothers-cmtu application.
+         * The public Guests page and public Guests API
+         * are part of the same Scotti-brothers-cmtu
+         * application.
          */
-        const response = await fetch("/api/public/guests", {
-          method: "GET",
-          cache: "no-store",
-        });
+        const response = await fetch(
+          "/api/public/guests",
+          {
+            method: "GET",
+            cache: "no-store",
+          },
+        );
 
         if (!response.ok) {
           throw new Error(
@@ -160,7 +164,9 @@ export default function GuestsPage() {
 
   return (
     <main className="guests-page">
-      {/* BACKGROUND */}
+      {/* =================================================
+          BACKGROUND
+      ================================================= */}
 
       <div
         className="background"
@@ -205,6 +211,8 @@ export default function GuestsPage() {
         ================================================= */}
 
         <section className="hero">
+          {/* Desktop / Tablet Logo */}
+
           <div className="desktop-logo">
             <Link
               href="/"
@@ -216,6 +224,8 @@ export default function GuestsPage() {
               />
             </Link>
           </div>
+
+          {/* Hero Copy */}
 
           <div className="hero-copy">
             <p className="eyebrow">
@@ -326,10 +336,7 @@ export default function GuestsPage() {
                         </div>
 
                         {/* =================================================
-                            ORNATE COMING SOON BANNER
-
-                            This sits BETWEEN the photo and
-                            the guest name.
+                            ORNATE COMING SOON PLAQUE
                         ================================================= */}
 
                         {comingSoon && (
@@ -337,19 +344,31 @@ export default function GuestsPage() {
                             className="coming-soon-banner"
                             aria-label="Coming soon"
                           >
-                            <span className="coming-soon-ornament left">
+                            <span
+                              className="coming-soon-ornament"
+                              aria-hidden="true"
+                            >
                               ◆
                             </span>
 
-                            <span className="coming-soon-line left-line" />
+                            <span
+                              className="coming-soon-line"
+                              aria-hidden="true"
+                            />
 
                             <span className="coming-soon-text">
                               COMING SOON
                             </span>
 
-                            <span className="coming-soon-line right-line" />
+                            <span
+                              className="coming-soon-line right-line"
+                              aria-hidden="true"
+                            />
 
-                            <span className="coming-soon-ornament right">
+                            <span
+                              className="coming-soon-ornament"
+                              aria-hidden="true"
+                            >
                               ◆
                             </span>
                           </div>
@@ -998,7 +1017,7 @@ export default function GuestsPage() {
         }
 
         /* =========================================
-           ORNATE COMING SOON BANNER
+           ORNATE COMING SOON PLAQUE
            WHITE / BLACK / GOLD
         ========================================= */
 
@@ -1007,119 +1026,114 @@ export default function GuestsPage() {
 
           width: 100%;
 
-          min-height: 52px;
+          min-height: 58px;
 
           padding:
-            9px
-            18px;
+            10px
+            14px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
-          gap: 9px;
+          gap: 8px;
 
           background:
             linear-gradient(
               180deg,
               #ffffff 0%,
-              #f8f8f5 45%,
-              #eeeeea 100%
+              #fffdf7 42%,
+              #eee9dc 100%
             );
 
           color: #050505;
 
+          /*
+           * Bright gold outer trim
+           */
           border-top:
-            3px
+            4px
             solid
-            var(--gold);
+            #f2c94c;
 
           border-bottom:
-            3px
+            4px
             solid
-            var(--gold);
+            #b58a16;
 
+          /*
+           * Black definition + gold inner edge
+           */
           box-shadow:
             inset
             0
             0
             0
             1px
-            rgba(
-              0,
-              0,
-              0,
-              0.3
-            ),
+            #111111,
+
             inset
             0
-            3px
             0
-            rgba(
-              255,
-              255,
-              255,
-              0.95
-            ),
             0
-            3px
-            8px
+            4px
+            #f2c94c,
+
+            0
+            5px
+            14px
             rgba(
               0,
               0,
               0,
-              0.35
+              0.65
             );
 
           overflow: hidden;
+
+          z-index: 3;
         }
 
         /*
-         * Fine inner gold frame.
+         * Inner gold frame
          */
-
         .coming-soon-banner::before {
           content: "";
 
           position: absolute;
 
-          left: 7px;
-          right: 7px;
-
           top: 6px;
+          right: 7px;
           bottom: 6px;
+          left: 7px;
 
           border:
             1px
             solid
-            #b58a16;
+            #a77a10;
 
           pointer-events: none;
         }
 
         /*
-         * Small black ornamental center rule.
+         * Small center ornamental rule
          */
-
         .coming-soon-banner::after {
           content: "";
 
           position: absolute;
 
           left: 50%;
+          bottom: 4px;
 
-          bottom: 5px;
-
-          width: 32px;
-          height: 1px;
+          width: 42px;
+          height: 2px;
 
           transform:
             translateX(-50%);
 
           background:
-            #050505;
-
-          opacity: 0.5;
+            #b58a16;
 
           pointer-events: none;
         }
@@ -1130,51 +1144,62 @@ export default function GuestsPage() {
 
         .coming-soon-text {
           position: relative;
-          z-index: 2;
+
+          z-index: 4;
+
+          display: inline-block;
 
           color: #050505;
 
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1;
 
           font-weight: 950;
 
+          /*
+           * Keep the complete phrase on one line.
+           */
+          white-space: nowrap;
+
           letter-spacing:
-            0.20em;
+            0.13em;
 
           text-transform: uppercase;
+
+          text-align: center;
 
           text-shadow:
             0
             1px
             0
-            rgba(
-              255,
-              255,
-              255,
-              0.9
-            );
+            #ffffff;
         }
 
         /* =========================================
-           COMING SOON ORNAMENTS
+           GOLD DIAMOND ORNAMENTS
         ========================================= */
 
         .coming-soon-ornament {
           position: relative;
-          z-index: 2;
+
+          z-index: 4;
+
+          flex:
+            0
+            0
+            auto;
 
           display: inline-flex;
 
           align-items: center;
           justify-content: center;
 
-          width: 13px;
-          height: 13px;
+          width: 15px;
+          height: 15px;
 
           color: #b58a16;
 
-          font-size: 8px;
+          font-size: 10px;
 
           line-height: 1;
 
@@ -1186,16 +1211,27 @@ export default function GuestsPage() {
               0,
               0,
               0,
-              0.25
+              0.4
             );
         }
 
+        /* =========================================
+           GOLD SIDE RULES
+        ========================================= */
+
         .coming-soon-line {
           position: relative;
-          z-index: 2;
 
-          width: 22px;
-          height: 1px;
+          z-index: 4;
+
+          flex:
+            1
+            1
+            auto;
+
+          min-width: 15px;
+
+          height: 2px;
 
           background:
             linear-gradient(
@@ -1690,21 +1726,30 @@ export default function GuestsPage() {
               auto;
           }
 
+          /* =====================================
+             MOBILE COMING SOON
+          ===================================== */
+
           .coming-soon-banner {
-            min-height: 46px;
+            min-height: 52px;
 
             padding:
               8px
-              12px;
+              10px;
 
-            gap: 6px;
+            gap: 5px;
+
+            border-top-width: 3px;
+            border-bottom-width: 3px;
           }
 
           .coming-soon-text {
             font-size: 11px;
 
             letter-spacing:
-              0.15em;
+              0.10em;
+
+            white-space: nowrap;
           }
 
           .coming-soon-ornament {
@@ -1715,7 +1760,7 @@ export default function GuestsPage() {
           }
 
           .coming-soon-line {
-            width: 12px;
+            min-width: 8px;
           }
 
           .empty-inner {
