@@ -32,6 +32,31 @@ function getSupabaseAdmin() {
   );
 }
 
+function publicHeaders() {
+  return {
+    "Cache-Control": "no-store, max-age=0",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
+
+/*
+ * Public guest endpoint.
+ *
+ * This endpoint intentionally exposes ONLY guests that have
+ * been marked published in cmtu_public_guests.
+ *
+ * It does not read from or modify the guest submission process.
+ */
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: publicHeaders(),
+  });
+}
+
 export async function GET() {
   try {
     const supabase = getSupabaseAdmin();
@@ -49,7 +74,7 @@ export async function GET() {
 
     if (error) {
       console.error(
-        "[SCOTTI BROTHERS] Public guest query failed:",
+        "[CMTU] Public guest query failed:",
         error,
       );
 
@@ -59,6 +84,7 @@ export async function GET() {
         },
         {
           status: 500,
+          headers: publicHeaders(),
         },
       );
     }
@@ -79,14 +105,12 @@ export async function GET() {
       },
       {
         status: 200,
-        headers: {
-          "Cache-Control": "no-store, max-age=0",
-        },
+        headers: publicHeaders(),
       },
     );
   } catch (error) {
     console.error(
-      "[SCOTTI BROTHERS] Public guests API failed:",
+      "[CMTU] Public guests API failed:",
       error,
     );
 
@@ -96,6 +120,7 @@ export async function GET() {
       },
       {
         status: 500,
+        headers: publicHeaders(),
       },
     );
   }
