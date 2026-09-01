@@ -49,7 +49,7 @@ export async function GET() {
 
     if (error) {
       console.error(
-        "[CMTU] Public guest query failed:",
+        "[SCOTTI BROTHERS] Public guest query failed:",
         error,
       );
 
@@ -80,14 +80,13 @@ export async function GET() {
       {
         status: 200,
         headers: {
-          "Cache-Control":
-            "no-store, max-age=0",
+          "Cache-Control": "no-store, max-age=0",
         },
       },
     );
   } catch (error) {
     console.error(
-      "[CMTU] Public guests API failed:",
+      "[SCOTTI BROTHERS] Public guests API failed:",
       error,
     );
 
