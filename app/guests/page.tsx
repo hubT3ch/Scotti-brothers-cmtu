@@ -76,10 +76,6 @@ function formatAirDate(value: string | null) {
  * Past date        -> HIDE
  */
 function isComingSoon(airDate: string | null) {
-  /*
-   * A published guest without an air date is still
-   * considered COMING SOON.
-   */
   if (!airDate) {
     return true;
   }
@@ -330,8 +326,10 @@ export default function GuestsPage() {
                         </div>
 
                         {/* =================================================
-                            COMING SOON BANNER
-                            BETWEEN PHOTO AND NAME
+                            ORNATE COMING SOON BANNER
+
+                            This sits BETWEEN the photo and
+                            the guest name.
                         ================================================= */}
 
                         {comingSoon && (
@@ -339,15 +337,19 @@ export default function GuestsPage() {
                             className="coming-soon-banner"
                             aria-label="Coming soon"
                           >
-                            <span className="coming-soon-diamond">
+                            <span className="coming-soon-ornament left">
                               ◆
                             </span>
+
+                            <span className="coming-soon-line left-line" />
 
                             <span className="coming-soon-text">
                               COMING SOON
                             </span>
 
-                            <span className="coming-soon-diamond">
+                            <span className="coming-soon-line right-line" />
+
+                            <span className="coming-soon-ornament right">
                               ◆
                             </span>
                           </div>
@@ -438,6 +440,10 @@ export default function GuestsPage() {
         * {
           box-sizing: border-box;
         }
+
+        /* =========================================
+           PAGE
+        ========================================= */
 
         .guests-page {
           --gold: ${GOLD};
@@ -992,40 +998,44 @@ export default function GuestsPage() {
         }
 
         /* =========================================
-           COMING SOON BANNER
-           BETWEEN PHOTO AND NAME
+           ORNATE COMING SOON BANNER
+           WHITE / BLACK / GOLD
         ========================================= */
 
         .coming-soon-banner {
+          position: relative;
+
           width: 100%;
 
-          min-height: 48px;
+          min-height: 52px;
 
           padding:
-            10px
-            14px;
+            9px
+            18px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
-          gap: 12px;
+          gap: 9px;
 
           background:
             linear-gradient(
-              90deg,
-              #650000,
-              #8b0000,
-              #650000
+              180deg,
+              #ffffff 0%,
+              #f8f8f5 45%,
+              #eeeeea 100%
             );
 
+          color: #050505;
+
           border-top:
-            2px
+            3px
             solid
             var(--gold);
 
           border-bottom:
-            2px
+            3px
             solid
             var(--gold);
 
@@ -1039,51 +1049,168 @@ export default function GuestsPage() {
               0,
               0,
               0,
-              0.5
+              0.3
+            ),
+            inset
+            0
+            3px
+            0
+            rgba(
+              255,
+              255,
+              255,
+              0.95
+            ),
+            0
+            3px
+            8px
+            rgba(
+              0,
+              0,
+              0,
+              0.35
             );
+
+          overflow: hidden;
         }
 
-        .coming-soon-text {
-          color: var(--gold);
+        /*
+         * Fine inner gold frame.
+         */
 
-          font-size: 13px;
+        .coming-soon-banner::before {
+          content: "";
+
+          position: absolute;
+
+          left: 7px;
+          right: 7px;
+
+          top: 6px;
+          bottom: 6px;
+
+          border:
+            1px
+            solid
+            #b58a16;
+
+          pointer-events: none;
+        }
+
+        /*
+         * Small black ornamental center rule.
+         */
+
+        .coming-soon-banner::after {
+          content: "";
+
+          position: absolute;
+
+          left: 50%;
+
+          bottom: 5px;
+
+          width: 32px;
+          height: 1px;
+
+          transform:
+            translateX(-50%);
+
+          background:
+            #050505;
+
+          opacity: 0.5;
+
+          pointer-events: none;
+        }
+
+        /* =========================================
+           COMING SOON TEXT
+        ========================================= */
+
+        .coming-soon-text {
+          position: relative;
+          z-index: 2;
+
+          color: #050505;
+
+          font-size: 14px;
           line-height: 1;
 
-          font-weight: 900;
+          font-weight: 950;
 
           letter-spacing:
-            0.18em;
+            0.20em;
 
           text-transform: uppercase;
 
           text-shadow:
-            1px
+            0
             1px
             0
             rgba(
-              0,
-              0,
-              0,
-              0.7
+              255,
+              255,
+              255,
+              0.9
             );
         }
 
-        .coming-soon-diamond {
-          color: #fff0a3;
+        /* =========================================
+           COMING SOON ORNAMENTS
+        ========================================= */
 
-          font-size: 9px;
+        .coming-soon-ornament {
+          position: relative;
+          z-index: 2;
+
+          display: inline-flex;
+
+          align-items: center;
+          justify-content: center;
+
+          width: 13px;
+          height: 13px;
+
+          color: #b58a16;
+
+          font-size: 8px;
 
           line-height: 1;
 
           text-shadow:
             0
-            0
-            8px
+            1px
+            1px
             rgba(
-              242,
-              201,
-              76,
-              0.8
+              0,
+              0,
+              0,
+              0.25
+            );
+        }
+
+        .coming-soon-line {
+          position: relative;
+          z-index: 2;
+
+          width: 22px;
+          height: 1px;
+
+          background:
+            linear-gradient(
+              90deg,
+              transparent,
+              #b58a16
+            );
+        }
+
+        .right-line {
+          background:
+            linear-gradient(
+              90deg,
+              #b58a16,
+              transparent
             );
         }
 
@@ -1564,24 +1691,31 @@ export default function GuestsPage() {
           }
 
           .coming-soon-banner {
-            min-height: 44px;
+            min-height: 46px;
 
             padding:
-              9px
-              10px;
+              8px
+              12px;
 
-            gap: 8px;
+            gap: 6px;
           }
 
           .coming-soon-text {
             font-size: 11px;
 
             letter-spacing:
-              0.13em;
+              0.15em;
           }
 
-          .coming-soon-diamond {
+          .coming-soon-ornament {
+            width: 11px;
+            height: 11px;
+
             font-size: 7px;
+          }
+
+          .coming-soon-line {
+            width: 12px;
           }
 
           .empty-inner {
