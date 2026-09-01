@@ -1,4 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import {
+  getSupabaseAdminClient,
+  SupabaseConfigurationError,
+} from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,26 +15,6 @@ type PublicGuestRow = {
   published: boolean;
 };
 
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Supabase server configuration is missing.");
-  }
-
-  return createClient(
-    supabaseUrl,
-    serviceRoleKey,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    },
-  );
-}
-
 function publicHeaders() {
   return {
     "Cache-Control": "no-store, max-age=0",
@@ -42,12 +25,21 @@ function publicHeaders() {
 }
 
 /*
- * Public guest endpoint.
+ * =========================================================
+ * PUBLIC GUESTS API
+ * =========================================================
  *
- * This endpoint intentionally exposes ONLY guests that have
- * been marked published in cmtu_public_guests.
+ * This endpoint reads ONLY from cmtu_public_guests.
  *
- * It does not read from or modify the guest submission process.
+ * Only guests with published = true are returned.
+ *
+ * The endpoint uses the application's existing
+ * server-side Supabase client so it uses the same
+ * SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY configuration
+ * already used by the CMTU Management Hub.
+ *
+ * It does not expose the service-role key to the browser.
+ * =========================================================
  */
 
 export async function OPTIONS() {
@@ -59,7 +51,7 @@ export async function OPTIONS() {
 
 export async function GET() {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = getSupabaseAdminClient();
 
     const { data, error } = await supabase
       .from("cmtu_public_guests")
@@ -113,6 +105,18 @@ export async function GET() {
       "[CMTU] Public guests API failed:",
       error,
     );
+
+    if (error instanceof SupabaseConfigurationError) {
+      return Response.json(
+        {
+          error: "Public guest storage is not configured.",
+        },
+        {
+          status: 503,
+          headers: publicHeaders(),
+        },
+      );
+    }
 
     return Response.json(
       {
