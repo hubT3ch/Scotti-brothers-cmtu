@@ -9,6 +9,10 @@ type Guest = {
 };
 
 /*
+ * =========================================================
+ * CONFIRMED GUESTS
+ * =========================================================
+ *
  * NO GUEST IS CURRENTLY CONFIRMED.
  *
  * When the first guest is confirmed, add the guest here.
@@ -34,10 +38,17 @@ const navigation = [
 
 const GOLD = "#F2C94C";
 
+/* =========================================================
+   MOBILE LOGO
+========================================================= */
+
 function MobileLogo() {
   return (
     <div className="mobile-logo">
-      <Link href="/" aria-label="Scotti Brothers Can't Make This Up!">
+      <Link
+        href="/"
+        aria-label="Scotti Brothers Can't Make This Up!"
+      >
         <img
           src="/images/logo.png"
           alt="Scotti Brothers Can't Make This Up!"
@@ -47,25 +58,45 @@ function MobileLogo() {
   );
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
+
 export default function GuestsPage() {
   return (
     <main className="guests-page">
       {/* BACKGROUND */}
-      <div className="background" aria-hidden="true" />
-      <div className="grid-overlay" aria-hidden="true" />
+      <div
+        className="background"
+        aria-hidden="true"
+      />
+
+      <div
+        className="grid-overlay"
+        aria-hidden="true"
+      />
 
       <div className="page-content">
-        {/* HEADER / NAVIGATION */}
+        {/* =================================================
+            HEADER / NAVIGATION
+        ================================================= */}
+
         <header className="site-header">
-          {/* Mobile logo appears above navigation */}
           <MobileLogo />
 
-          <nav className="site-nav" aria-label="Main navigation">
+          <nav
+            className="site-nav"
+            aria-label="Main navigation"
+          >
             {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={item.href === "/guests" ? "active" : ""}
+                className={
+                  item.href === "/guests"
+                    ? "active"
+                    : ""
+                }
               >
                 {item.label}
               </Link>
@@ -73,9 +104,12 @@ export default function GuestsPage() {
           </nav>
         </header>
 
-        {/* HERO */}
+        {/* =================================================
+            HERO
+        ================================================= */}
+
         <section className="hero">
-          {/* Desktop/tablet logo */}
+          {/* Desktop / Tablet Logo */}
           <div className="desktop-logo">
             <Link
               href="/"
@@ -88,9 +122,11 @@ export default function GuestsPage() {
             </Link>
           </div>
 
-          {/* Hero text */}
+          {/* Hero Copy */}
           <div className="hero-copy">
-            <p className="eyebrow">SCOTTI BROTHERS</p>
+            <p className="eyebrow">
+              SCOTTI BROTHERS
+            </p>
 
             <h1>GUESTS</h1>
 
@@ -101,14 +137,19 @@ export default function GuestsPage() {
             </div>
 
             <p className="hero-subtitle">
-              Meet the artists, entertainers, creators, and personalities
+              Meet the artists, entertainers, creators,
+              and personalities
               <br />
-              with unbelievable stories of their industry encounters.
+              with unbelievable stories of their
+              industry encounters.
             </p>
           </div>
         </section>
 
-        {/* GUEST GALLERY */}
+        {/* =================================================
+            GUEST GALLERY
+        ================================================= */}
+
         <section className="gallery-section">
           <div className="section-heading">
             <p className="eyebrow">
@@ -152,13 +193,17 @@ export default function GuestsPage() {
             <div className="gallery-empty">
               <div className="empty-frame">
                 <div className="empty-inner">
-                  <div className="empty-icon">+</div>
+                  <div className="empty-icon">
+                    +
+                  </div>
 
-                  <h3>GUESTS COMING SOON</h3>
+                  <h3>
+                    GUESTS COMING SOON
+                  </h3>
 
                   <p>
-                    New guest portraits will appear here as the
-                    stories unfold.
+                    New guest portraits will appear
+                    here as the stories unfold.
                   </p>
                 </div>
               </div>
@@ -166,7 +211,10 @@ export default function GuestsPage() {
           )}
         </section>
 
-        {/* FOOTER */}
+        {/* =================================================
+            FOOTER
+        ================================================= */}
+
         <footer className="site-footer">
           <img
             src="/images/logo.png"
@@ -174,8 +222,8 @@ export default function GuestsPage() {
           />
 
           <p>
-            © {new Date().getFullYear()} Scotti Brothers Ent. All rights
-            reserved.
+            © {new Date().getFullYear()} Scotti Brothers
+            Ent. All rights reserved.
           </p>
 
           <a
@@ -187,9 +235,15 @@ export default function GuestsPage() {
             SCOTTIBROTHERSENT.COM
           </a>
 
-          <span>CAN&apos;T MAKE THIS UP!</span>
+          <span>
+            CAN&apos;T MAKE THIS UP!
+          </span>
         </footer>
       </div>
+
+      {/* =================================================
+          PAGE STYLES
+      ================================================= */}
 
       <style>{`
         * {
@@ -204,9 +258,7 @@ export default function GuestsPage() {
           --gold: ${GOLD};
 
           min-height: 100vh;
-
           position: relative;
-
           overflow-x: hidden;
 
           background:
@@ -238,9 +290,7 @@ export default function GuestsPage() {
         .background,
         .grid-overlay {
           position: fixed;
-
           inset: 0;
-
           pointer-events: none;
         }
 
@@ -262,7 +312,6 @@ export default function GuestsPage() {
 
         .grid-overlay {
           z-index: 1;
-
           opacity: 0.25;
 
           background-image:
@@ -281,9 +330,7 @@ export default function GuestsPage() {
 
         .page-content {
           position: relative;
-
           z-index: 2;
-
           width: 100%;
         }
 
@@ -299,9 +346,7 @@ export default function GuestsPage() {
             42px;
 
           display: flex;
-
           justify-content: flex-end;
-
           align-items: center;
         }
 
@@ -311,9 +356,7 @@ export default function GuestsPage() {
 
         .site-nav {
           display: flex;
-
           align-items: center;
-
           gap: 5px;
 
           padding:
@@ -349,9 +392,7 @@ export default function GuestsPage() {
 
         .site-nav a {
           display: inline-flex;
-
           align-items: center;
-
           justify-content: center;
 
           padding:
@@ -361,13 +402,10 @@ export default function GuestsPage() {
           border-radius: 999px;
 
           color: #fff;
-
           text-decoration: none;
 
           font-size: 14px;
-
           font-weight: 800;
-
           white-space: nowrap;
 
           transition:
@@ -381,7 +419,6 @@ export default function GuestsPage() {
 
         .site-nav a.active {
           background: #8b0000;
-
           color: #fff;
         }
 
@@ -432,17 +469,13 @@ export default function GuestsPage() {
 
         .desktop-logo a {
           display: block;
-
           line-height: 0;
         }
 
         .desktop-logo img {
           display: block;
-
           width: 100%;
-
           height: auto;
-
           object-fit: contain;
         }
 
@@ -452,7 +485,6 @@ export default function GuestsPage() {
 
         .hero-copy {
           width: 100%;
-
           max-width: 620px;
 
           justify-self: end;
@@ -468,14 +500,12 @@ export default function GuestsPage() {
           color: var(--gold);
 
           font-size: 11px;
-
           font-weight: 900;
 
           letter-spacing:
             0.42em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .hero h1 {
@@ -494,14 +524,12 @@ export default function GuestsPage() {
             );
 
           line-height: 0.9;
-
           font-weight: 900;
 
           letter-spacing:
             -0.045em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
 
           text-shadow:
             4px 4px 0 #8b0000,
@@ -516,9 +544,7 @@ export default function GuestsPage() {
 
         .gold-line {
           display: flex;
-
           align-items: center;
-
           gap: 16px;
 
           width:
@@ -548,7 +574,6 @@ export default function GuestsPage() {
 
         .gold-line b {
           color: var(--gold);
-
           font-size: 14px;
         }
 
@@ -568,9 +593,7 @@ export default function GuestsPage() {
             );
 
           font-size: 16px;
-
           line-height: 1.8;
-
           font-weight: 600;
         }
 
@@ -597,7 +620,6 @@ export default function GuestsPage() {
 
         .section-heading {
           margin-bottom: 32px;
-
           text-align: center;
         }
 
@@ -610,21 +632,16 @@ export default function GuestsPage() {
           color: #fff;
 
           font-size: 42px;
-
           line-height: 1;
-
           font-weight: 900;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
 
-          letter-spacing:
-            -1px;
+          letter-spacing: -1px;
         }
 
         .red-line {
           width: 65px;
-
           height: 4px;
 
           margin:
@@ -632,8 +649,7 @@ export default function GuestsPage() {
             auto
             0;
 
-          background:
-            #c62828;
+          background: #c62828;
         }
 
         /* =========================================
@@ -650,7 +666,6 @@ export default function GuestsPage() {
             );
 
           gap: 30px;
-
           align-items: start;
         }
 
@@ -744,13 +759,11 @@ export default function GuestsPage() {
 
           overflow: hidden;
 
-          background:
-            #151515;
+          background: #151515;
         }
 
         .guest-photo img {
           width: 100%;
-
           height: 100%;
 
           display: block;
@@ -777,30 +790,22 @@ export default function GuestsPage() {
             12px
             16px;
 
-          text-align:
-            center;
+          text-align: center;
 
-          background:
-            #750000;
+          background: #750000;
         }
 
         .guest-info h3 {
           margin: 0;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 21px;
-
           line-height: 1.05;
-
           font-weight: 900;
 
-          text-transform:
-            uppercase;
-
-          letter-spacing:
-            0.5px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .guest-info p {
@@ -818,16 +823,11 @@ export default function GuestsPage() {
             );
 
           font-size: 11px;
-
           line-height: 1.3;
-
           font-weight: 800;
 
-          letter-spacing:
-            1.5px;
-
-          text-transform:
-            uppercase;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
         }
 
         /* =========================================
@@ -838,9 +838,7 @@ export default function GuestsPage() {
           width: 100%;
 
           display: flex;
-
-          justify-content:
-            center;
+          justify-content: center;
 
           padding:
             10px
@@ -850,7 +848,6 @@ export default function GuestsPage() {
 
         .empty-frame {
           width: 100%;
-
           max-width: 540px;
 
           padding: 8px;
@@ -885,18 +882,12 @@ export default function GuestsPage() {
             30px;
 
           display: flex;
+          flex-direction: column;
 
-          flex-direction:
-            column;
+          align-items: center;
+          justify-content: center;
 
-          align-items:
-            center;
-
-          justify-content:
-            center;
-
-          text-align:
-            center;
+          text-align: center;
 
           background:
             linear-gradient(
@@ -913,30 +904,22 @@ export default function GuestsPage() {
 
         .empty-icon {
           width: 52px;
-
           height: 52px;
 
           display: flex;
-
-          align-items:
-            center;
-
-          justify-content:
-            center;
+          align-items: center;
+          justify-content: center;
 
           border:
             2px
             solid
             var(--gold);
 
-          border-radius:
-            50%;
+          border-radius: 50%;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 32px;
-
           font-weight: 300;
         }
 
@@ -946,15 +929,12 @@ export default function GuestsPage() {
             0
             0;
 
-          color:
-            var(--gold);
+          color: var(--gold);
 
           font-size: 27px;
-
           font-weight: 900;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .empty-inner p {
@@ -974,7 +954,6 @@ export default function GuestsPage() {
             );
 
           font-size: 14px;
-
           line-height: 1.5;
         }
 
@@ -988,9 +967,7 @@ export default function GuestsPage() {
             42px;
 
           display: flex;
-
           align-items: center;
-
           justify-content: space-between;
 
           gap: 25px;
@@ -1005,15 +982,13 @@ export default function GuestsPage() {
               0.15
             );
 
-          background:
-            #050505;
+          background: #050505;
         }
 
         .site-footer img {
           display: block;
 
           width: 110px;
-
           height: auto;
 
           object-fit: contain;
@@ -1032,14 +1007,12 @@ export default function GuestsPage() {
             );
 
           font-size: 9px;
-
           font-weight: 700;
 
           letter-spacing:
             0.2em;
 
-          text-transform:
-            uppercase;
+          text-transform: uppercase;
         }
 
         .site-footer span {
@@ -1052,19 +1025,25 @@ export default function GuestsPage() {
             );
         }
 
-       .company-link {
-  color: #4da3ff;
-  text-decoration: none;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  transition: color 0.2s ease;
-}
+        .company-link {
+          color: #4da3ff;
 
-.company-link:hover {
-  color: #7fc1ff;
-  text-decoration: underline;
-}
+          text-decoration: none;
+
+          font-size: 9px;
+          font-weight: 400;
+
+          letter-spacing:
+            0.12em;
+
+          transition:
+            color 0.2s ease;
+        }
+
+        .company-link:hover {
+          color: #7fc1ff;
+          text-decoration: underline;
+        }
 
         /* =========================================
            TABLET
@@ -1102,11 +1081,9 @@ export default function GuestsPage() {
 
         /* =========================================
            MOBILE PORTRAIT
-           LOGO ABOVE EVERYTHING
         ========================================= */
 
         @media (max-width: 650px) {
-
           .site-header {
             min-height: auto;
 
@@ -1116,22 +1093,16 @@ export default function GuestsPage() {
               10px;
 
             display: flex;
+            flex-direction: column;
 
-            flex-direction:
-              column;
-
-            justify-content:
-              flex-start;
-
-            align-items:
-              center;
+            justify-content: flex-start;
+            align-items: center;
           }
 
           .mobile-logo {
             display: block;
 
             width: 78%;
-
             max-width: 330px;
 
             margin:
@@ -1142,7 +1113,6 @@ export default function GuestsPage() {
 
           .mobile-logo a {
             display: block;
-
             line-height: 0;
           }
 
@@ -1150,7 +1120,6 @@ export default function GuestsPage() {
             display: block;
 
             width: 100%;
-
             height: auto;
 
             object-fit: contain;
@@ -1160,18 +1129,15 @@ export default function GuestsPage() {
             width: 100%;
 
             display: flex;
-
             flex-wrap: wrap;
 
-            justify-content:
-              center;
+            justify-content: center;
 
             gap: 3px;
 
             padding: 7px;
 
-            border-radius:
-              18px;
+            border-radius: 18px;
           }
 
           .site-nav a {
@@ -1183,6 +1149,7 @@ export default function GuestsPage() {
           }
 
           /* Hide desktop hero logo on mobile */
+
           .desktop-logo {
             display: none;
           }
@@ -1200,7 +1167,6 @@ export default function GuestsPage() {
 
           .hero-copy {
             width: 100%;
-
             max-width: 600px;
 
             margin:
@@ -1209,8 +1175,7 @@ export default function GuestsPage() {
 
             padding: 0;
 
-            text-align:
-              center;
+            text-align: center;
           }
 
           .eyebrow {
@@ -1254,8 +1219,7 @@ export default function GuestsPage() {
           }
 
           .guest-gallery {
-            grid-template-columns:
-              1fr;
+            grid-template-columns: 1fr;
 
             gap: 30px;
 
@@ -1274,7 +1238,7 @@ export default function GuestsPage() {
               auto;
           }
 
-          .empty-frame-inner {
+          .empty-inner {
             min-height: 240px;
 
             padding:
@@ -1283,18 +1247,17 @@ export default function GuestsPage() {
           }
 
           /* Mobile footer */
+
           .site-footer {
             padding:
               30px
               20px;
 
-            flex-direction:
-              column;
+            flex-direction: column;
 
             gap: 15px;
 
-            text-align:
-              center;
+            text-align: center;
           }
 
           .site-footer img {
