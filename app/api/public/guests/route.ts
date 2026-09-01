@@ -86,7 +86,11 @@ export async function GET() {
         id: guest.id,
         guestId: guest.guest_id,
         name: guest.guest_name,
-        image: guest.guest_image_path,
+        image: guest.guest_image_path
+  ? `/api/public/guest-image/${encodeURIComponent(
+      guest.guest_id,
+    )}`
+  : null,
         airDate: guest.air_date,
       }),
     );
