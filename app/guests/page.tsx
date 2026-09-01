@@ -68,14 +68,20 @@ function formatAirDate(value: string | null) {
 ========================================================= */
 
 /*
- * Air dates are stored as YYYY-MM-DD.
+ * COMING SOON rules:
  *
- * Compare calendar dates rather than timestamps so the
- * COMING SOON banner disappears on the air date itself.
+ * No air date yet  -> SHOW
+ * Future air date  -> SHOW
+ * Today            -> HIDE
+ * Past date        -> HIDE
  */
 function isComingSoon(airDate: string | null) {
+  /*
+   * A published guest without an air date is still
+   * considered COMING SOON.
+   */
   if (!airDate) {
-    return false;
+    return true;
   }
 
   const today = new Date();
@@ -107,16 +113,8 @@ export default function GuestsPage() {
         setError(null);
 
         /*
-         * IMPORTANT:
-         *
-         * The public Guests page and the public Guests API
-         * are both part of the same Scotti-brothers-cmtu
-         * application.
-         *
-         * Do NOT use a Vercel deployment URL here.
-         * Using the relative path guarantees that the page
-         * calls the API on the same deployment that is
-         * currently serving this page.
+         * The public Guests page and API are part of the
+         * same Scotti-brothers-cmtu application.
          */
         const response = await fetch("/api/public/guests", {
           method: "GET",
@@ -211,8 +209,6 @@ export default function GuestsPage() {
         ================================================= */}
 
         <section className="hero">
-          {/* Desktop / Tablet Logo */}
-
           <div className="desktop-logo">
             <Link
               href="/"
@@ -224,8 +220,6 @@ export default function GuestsPage() {
               />
             </Link>
           </div>
-
-          {/* Hero Copy */}
 
           <div className="hero-copy">
             <p className="eyebrow">
@@ -316,6 +310,7 @@ export default function GuestsPage() {
                   >
                     <div className="gold-frame">
                       <div className="red-frame">
+
                         {/* =================================================
                             PHOTO
                         ================================================= */}
@@ -332,32 +327,31 @@ export default function GuestsPage() {
                               <span>GUEST</span>
                             </div>
                           )}
-
-                          {/* =================================================
-                              COMING SOON BANNER
-                          ================================================= */}
-
-                          {comingSoon && (
-                            <div
-                              className="coming-soon-banner"
-                              aria-label={`Coming soon. Air date ${formatAirDate(
-                                guest.airDate,
-                              )}`}
-                            >
-                              <span className="coming-soon-diamond">
-                                ◆
-                              </span>
-
-                              <span className="coming-soon-text">
-                                COMING SOON
-                              </span>
-
-                              <span className="coming-soon-diamond">
-                                ◆
-                              </span>
-                            </div>
-                          )}
                         </div>
+
+                        {/* =================================================
+                            COMING SOON BANNER
+                            BETWEEN PHOTO AND NAME
+                        ================================================= */}
+
+                        {comingSoon && (
+                          <div
+                            className="coming-soon-banner"
+                            aria-label="Coming soon"
+                          >
+                            <span className="coming-soon-diamond">
+                              ◆
+                            </span>
+
+                            <span className="coming-soon-text">
+                              COMING SOON
+                            </span>
+
+                            <span className="coming-soon-diamond">
+                              ◆
+                            </span>
+                          </div>
+                        )}
 
                         {/* =================================================
                             GUEST INFORMATION
@@ -377,6 +371,7 @@ export default function GuestsPage() {
                             </p>
                           )}
                         </div>
+
                       </div>
                     </div>
                   </article>
@@ -443,10 +438,6 @@ export default function GuestsPage() {
         * {
           box-sizing: border-box;
         }
-
-        /* =========================================
-           PAGE
-        ========================================= */
 
         .guests-page {
           --gold: ${GOLD};
@@ -646,10 +637,6 @@ export default function GuestsPage() {
 
           align-items: center;
         }
-
-        /* =========================================
-           DESKTOP LOGO
-        ========================================= */
 
         .desktop-logo {
           width:
@@ -1006,16 +993,11 @@ export default function GuestsPage() {
 
         /* =========================================
            COMING SOON BANNER
+           BETWEEN PHOTO AND NAME
         ========================================= */
 
         .coming-soon-banner {
-          position: absolute;
-
-          left: 0;
-          right: 0;
-          bottom: 0;
-
-          z-index: 5;
+          width: 100%;
 
           min-height: 48px;
 
@@ -1032,9 +1014,9 @@ export default function GuestsPage() {
           background:
             linear-gradient(
               90deg,
-              rgba(101, 0, 0, 0.97),
-              rgba(139, 0, 0, 0.98),
-              rgba(101, 0, 0, 0.97)
+              #650000,
+              #8b0000,
+              #650000
             );
 
           border-top:
@@ -1048,17 +1030,17 @@ export default function GuestsPage() {
             var(--gold);
 
           box-shadow:
+            inset
             0
-            -5px
-            18px
+            0
+            0
+            1px
             rgba(
               0,
               0,
               0,
-              0.65
+              0.5
             );
-
-          pointer-events: none;
         }
 
         .coming-soon-text {
