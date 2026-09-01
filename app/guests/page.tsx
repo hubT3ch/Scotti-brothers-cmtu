@@ -11,6 +11,19 @@ type Guest = {
   airDate: string | null;
 };
 
+/*
+ * =========================================================
+ * CMTU PUBLIC GUEST API
+ * =========================================================
+ *
+ * The CMTU Management Hub controls which guests are
+ * published. This page only displays guests returned by
+ * the public CMTU endpoint.
+ */
+
+const CMTU_PUBLIC_GUESTS_API =
+  "https://scotti-brothers-cmtu-73z6s7707-hubtechnologies.vercel.app/api/public/guests";
+
 const navigation = [
   { label: "Home", href: "/" },
   { label: "Episodes", href: "/episodes" },
@@ -80,13 +93,18 @@ export default function GuestsPage() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/public/guests", {
-          method: "GET",
-          cache: "no-store",
-        });
+        const response = await fetch(
+          CMTU_PUBLIC_GUESTS_API,
+          {
+            method: "GET",
+            cache: "no-store",
+          },
+        );
 
         if (!response.ok) {
-          throw new Error("Unable to load guests.");
+          throw new Error(
+            `Unable to load guests. (${response.status})`,
+          );
         }
 
         const payload = (await response.json()) as {
@@ -102,7 +120,7 @@ export default function GuestsPage() {
         }
       } catch (loadError) {
         console.error(
-          "[SCOTTI BROTHERS] Guest gallery failed:",
+          "[SCOTTI BROTHERS] CMTU guest gallery failed:",
           loadError,
         );
 
@@ -171,8 +189,6 @@ export default function GuestsPage() {
         ================================================= */}
 
         <section className="hero">
-          {/* Desktop / Tablet Logo */}
-
           <div className="desktop-logo">
             <Link
               href="/"
@@ -184,8 +200,6 @@ export default function GuestsPage() {
               />
             </Link>
           </div>
-
-          {/* Hero Copy */}
 
           <div className="hero-copy">
             <p className="eyebrow">
@@ -373,10 +387,6 @@ export default function GuestsPage() {
           box-sizing: border-box;
         }
 
-        /* =========================================
-           PAGE
-        ========================================= */
-
         .guests-page {
           --gold: ${GOLD};
 
@@ -457,16 +467,9 @@ export default function GuestsPage() {
           width: 100%;
         }
 
-        /* =========================================
-           HEADER
-        ========================================= */
-
         .site-header {
           min-height: 82px;
-
-          padding:
-            24px
-            42px;
+          padding: 24px 42px;
 
           display: flex;
           justify-content: flex-end;
@@ -482,9 +485,7 @@ export default function GuestsPage() {
           align-items: center;
           gap: 5px;
 
-          padding:
-            8px
-            10px;
+          padding: 8px 10px;
 
           border-radius: 999px;
 
@@ -506,11 +507,8 @@ export default function GuestsPage() {
               0.12
             );
 
-          backdrop-filter:
-            blur(6px);
-
-          -webkit-backdrop-filter:
-            blur(6px);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
         }
 
         .site-nav a {
@@ -518,9 +516,7 @@ export default function GuestsPage() {
           align-items: center;
           justify-content: center;
 
-          padding:
-            8px
-            12px;
+          padding: 8px 12px;
 
           border-radius: 999px;
 
@@ -545,48 +541,24 @@ export default function GuestsPage() {
           color: #fff;
         }
 
-        /* =========================================
-           HERO
-        ========================================= */
-
         .hero {
-          width:
-            min(
-              1280px,
-              100%
-            );
+          width: min(1280px, 100%);
 
           min-height: 500px;
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
-          padding:
-            45px
-            45px
-            75px;
+          padding: 45px 45px 75px;
 
           display: grid;
 
-          grid-template-columns:
-            48%
-            52%;
+          grid-template-columns: 48% 52%;
 
           align-items: center;
         }
 
-        /* =========================================
-           DESKTOP LOGO
-        ========================================= */
-
         .desktop-logo {
-          width:
-            min(
-              100%,
-              560px
-            );
-
+          width: min(100%, 560px);
           justify-self: start;
         }
 
@@ -601,10 +573,6 @@ export default function GuestsPage() {
           height: auto;
           object-fit: contain;
         }
-
-        /* =========================================
-           HERO COPY
-        ========================================= */
 
         .hero-copy {
           width: 100%;
@@ -625,17 +593,13 @@ export default function GuestsPage() {
           font-size: 11px;
           font-weight: 900;
 
-          letter-spacing:
-            0.42em;
+          letter-spacing: 0.42em;
 
           text-transform: uppercase;
         }
 
         .hero h1 {
-          margin:
-            17px
-            0
-            0;
+          margin: 17px 0 0;
 
           color: #fff;
 
@@ -649,8 +613,7 @@ export default function GuestsPage() {
           line-height: 0.9;
           font-weight: 900;
 
-          letter-spacing:
-            -0.045em;
+          letter-spacing: -0.045em;
 
           text-transform: uppercase;
 
@@ -670,20 +633,13 @@ export default function GuestsPage() {
           align-items: center;
           gap: 16px;
 
-          width:
-            min(
-              500px,
-              90%
-            );
+          width: min(500px, 90%);
 
-          margin:
-            28px
-            auto;
+          margin: 28px auto;
         }
 
         .gold-line span {
           flex: 1;
-
           height: 1px;
 
           background:
@@ -703,9 +659,7 @@ export default function GuestsPage() {
         .hero-subtitle {
           max-width: 650px;
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
           color:
             rgba(
@@ -720,25 +674,12 @@ export default function GuestsPage() {
           font-weight: 600;
         }
 
-        /* =========================================
-           GALLERY
-        ========================================= */
-
         .gallery-section {
-          width:
-            min(
-              1250px,
-              100%
-            );
+          width: min(1250px, 100%);
 
-          margin:
-            0
-            auto;
+          margin: 0 auto;
 
-          padding:
-            20px
-            32px
-            90px;
+          padding: 20px 32px 90px;
         }
 
         .section-heading {
@@ -747,10 +688,7 @@ export default function GuestsPage() {
         }
 
         .section-heading h2 {
-          margin:
-            8px
-            0
-            0;
+          margin: 8px 0 0;
 
           color: #fff;
 
@@ -767,17 +705,10 @@ export default function GuestsPage() {
           width: 65px;
           height: 4px;
 
-          margin:
-            20px
-            auto
-            0;
+          margin: 20px auto 0;
 
           background: #c62828;
         }
-
-        /* =========================================
-           GUEST GRID
-        ========================================= */
 
         .guest-gallery {
           display: grid;
@@ -789,6 +720,7 @@ export default function GuestsPage() {
             );
 
           gap: 30px;
+
           align-items: start;
         }
 
@@ -801,16 +733,9 @@ export default function GuestsPage() {
         }
 
         .guest-card:hover {
-          transform:
-            translateY(-8px);
-
-          filter:
-            brightness(1.08);
+          transform: translateY(-8px);
+          filter: brightness(1.08);
         }
-
-        /* =========================================
-           GOLD FRAME
-        ========================================= */
 
         .gold-frame {
           position: relative;
@@ -839,10 +764,6 @@ export default function GuestsPage() {
             );
         }
 
-        /* =========================================
-           RED FRAME
-        ========================================= */
-
         .red-frame {
           padding: 8px;
 
@@ -868,17 +789,12 @@ export default function GuestsPage() {
             );
         }
 
-        /* =========================================
-           PHOTO
-        ========================================= */
-
         .guest-photo {
           position: relative;
 
           width: 100%;
 
-          aspect-ratio:
-            4 / 5;
+          aspect-ratio: 4 / 5;
 
           overflow: hidden;
 
@@ -899,8 +815,7 @@ export default function GuestsPage() {
 
         .guest-card:hover
         .guest-photo img {
-          transform:
-            scale(1.05);
+          transform: scale(1.05);
         }
 
         .photo-placeholder {
@@ -929,19 +844,11 @@ export default function GuestsPage() {
           font-size: 12px;
           font-weight: 900;
 
-          letter-spacing:
-            0.25em;
+          letter-spacing: 0.25em;
         }
 
-        /* =========================================
-           NAME / AIR DATE PLATE
-        ========================================= */
-
         .guest-info {
-          padding:
-            18px
-            12px
-            16px;
+          padding: 18px 12px 16px;
 
           text-align: center;
 
@@ -962,10 +869,7 @@ export default function GuestsPage() {
         }
 
         .guest-info .air-date {
-          margin:
-            9px
-            0
-            0;
+          margin: 9px 0 0;
 
           color:
             rgba(
@@ -979,15 +883,10 @@ export default function GuestsPage() {
           line-height: 1.3;
           font-weight: 800;
 
-          letter-spacing:
-            1.4px;
+          letter-spacing: 1.4px;
 
           text-transform: uppercase;
         }
-
-        /* =========================================
-           EMPTY / LOADING GALLERY
-        ========================================= */
 
         .gallery-empty {
           width: 100%;
@@ -995,10 +894,7 @@ export default function GuestsPage() {
           display: flex;
           justify-content: center;
 
-          padding:
-            10px
-            0
-            20px;
+          padding: 10px 0 20px;
         }
 
         .empty-frame {
@@ -1032,9 +928,7 @@ export default function GuestsPage() {
         .empty-inner {
           min-height: 280px;
 
-          padding:
-            45px
-            30px;
+          padding: 45px 30px;
 
           display: flex;
           flex-direction: column;
@@ -1097,10 +991,7 @@ export default function GuestsPage() {
         }
 
         .empty-inner h3 {
-          margin:
-            18px
-            0
-            0;
+          margin: 18px 0 0;
 
           color: var(--gold);
 
@@ -1113,10 +1004,7 @@ export default function GuestsPage() {
         .empty-inner p {
           max-width: 350px;
 
-          margin:
-            10px
-            0
-            0;
+          margin: 10px 0 0;
 
           color:
             rgba(
@@ -1130,14 +1018,8 @@ export default function GuestsPage() {
           line-height: 1.5;
         }
 
-        /* =========================================
-           FOOTER
-        ========================================= */
-
         .site-footer {
-          padding:
-            28px
-            42px;
+          padding: 28px 42px;
 
           display: flex;
           align-items: center;
@@ -1182,8 +1064,7 @@ export default function GuestsPage() {
           font-size: 9px;
           font-weight: 700;
 
-          letter-spacing:
-            0.2em;
+          letter-spacing: 0.2em;
 
           text-transform: uppercase;
         }
@@ -1206,8 +1087,7 @@ export default function GuestsPage() {
           font-size: 9px;
           font-weight: 400;
 
-          letter-spacing:
-            0.12em;
+          letter-spacing: 0.12em;
 
           transition:
             color 0.2s ease;
@@ -1217,10 +1097,6 @@ export default function GuestsPage() {
           color: #7fc1ff;
           text-decoration: underline;
         }
-
-        /* =========================================
-           TABLET
-        ========================================= */
 
         @media (max-width: 1050px) {
           .guest-gallery {
@@ -1251,10 +1127,6 @@ export default function GuestsPage() {
             padding: 10px;
           }
         }
-
-        /* =========================================
-           MOBILE PORTRAIT
-        ========================================= */
 
         @media (max-width: 650px) {
           .site-header {
@@ -1340,9 +1212,7 @@ export default function GuestsPage() {
             width: 100%;
             max-width: 600px;
 
-            margin:
-              0
-              auto;
+            margin: 0 auto;
 
             padding: 0;
 
@@ -1352,30 +1222,25 @@ export default function GuestsPage() {
           .eyebrow {
             font-size: 8px;
 
-            letter-spacing:
-              0.25em;
+            letter-spacing: 0.25em;
           }
 
           .hero h1 {
             font-size: 48px;
 
-            letter-spacing:
-              -2px;
+            letter-spacing: -2px;
           }
 
           .hero-subtitle {
             font-size: 12px;
 
-            line-height:
-              1.6;
+            line-height: 1.6;
           }
 
           .gold-line {
             width: 90%;
 
-            margin:
-              20px
-              auto;
+            margin: 20px auto;
           }
 
           .gallery-section {
@@ -1396,17 +1261,13 @@ export default function GuestsPage() {
 
             max-width: 430px;
 
-            margin:
-              0
-              auto;
+            margin: 0 auto;
           }
 
           .guest-card {
             max-width: 430px;
 
-            margin:
-              0
-              auto;
+            margin: 0 auto;
           }
 
           .empty-inner {
