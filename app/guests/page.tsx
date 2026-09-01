@@ -1,32 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Guest = {
+  id: string;
+  guestId: string;
   name: string;
-  role: string;
-  image: string;
+  image: string | null;
+  airDate: string | null;
 };
-
-/*
- * =========================================================
- * CONFIRMED GUESTS
- * =========================================================
- *
- * NO GUEST IS CURRENTLY CONFIRMED.
- *
- * When the first guest is confirmed, add the guest here.
- *
- * Example:
- *
- * {
- *   name: "Guest Name",
- *   role: "Artist / Entertainer / Creator",
- *   image: "/images/guests/guest-name.jpg",
- * }
- */
-
-const guests: Guest[] = [];
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -59,13 +42,92 @@ function MobileLogo() {
 }
 
 /* =========================================================
+   DATE FORMATTER
+========================================================= */
+
+function formatAirDate(value: string | null) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
+
+/* =========================================================
    PAGE
 ========================================================= */
 
 export default function GuestsPage() {
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadGuests() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch("/api/public/guests", {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error("Unable to load guests.");
+        }
+
+        const payload = (await response.json()) as {
+          guests?: Guest[];
+        };
+
+        if (!cancelled) {
+          setGuests(
+            Array.isArray(payload.guests)
+              ? payload.guests
+              : [],
+          );
+        }
+      } catch (loadError) {
+        console.error(
+          "[SCOTTI BROTHERS] Guest gallery failed:",
+          loadError,
+        );
+
+        if (!cancelled) {
+          setError("Unable to load guests.");
+          setGuests([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadGuests();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <main className="guests-page">
       {/* BACKGROUND */}
+
       <div
         className="background"
         aria-hidden="true"
@@ -110,6 +172,7 @@ export default function GuestsPage() {
 
         <section className="hero">
           {/* Desktop / Tablet Logo */}
+
           <div className="desktop-logo">
             <Link
               href="/"
@@ -123,6 +186,7 @@ export default function GuestsPage() {
           </div>
 
           {/* Hero Copy */}
+
           <div className="hero-copy">
             <p className="eyebrow">
               SCOTTI BROTHERS
@@ -161,27 +225,86 @@ export default function GuestsPage() {
             <div className="red-line" />
           </div>
 
-          {guests.length > 0 ? (
+          {loading ? (
+            <div className="gallery-empty">
+              <div className="empty-frame">
+                <div className="empty-inner">
+                  <div className="empty-icon loading-icon">
+                    ◆
+                  </div>
+
+                  <h3>
+                    LOADING GUESTS
+                  </h3>
+
+                  <p>
+                    Please wait while the guest gallery
+                    is loaded.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="gallery-empty">
+              <div className="empty-frame">
+                <div className="empty-inner">
+                  <div className="empty-icon">
+                    !
+                  </div>
+
+                  <h3>
+                    GUESTS UNAVAILABLE
+                  </h3>
+
+                  <p>
+                    {error}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : guests.length > 0 ? (
             <div className="guest-gallery">
-              {guests.map((guest, index) => (
+              {guests.map((guest) => (
                 <article
-                  key={`${guest.name}-${index}`}
+                  key={guest.id}
                   className="guest-card"
                 >
                   <div className="gold-frame">
                     <div className="red-frame">
+                      {/* =================================================
+                          PHOTO
+                      ================================================= */}
+
                       <div className="guest-photo">
-                        <img
-                          src={guest.image}
-                          alt={guest.name}
-                        />
+                        {guest.image ? (
+                          <img
+                            src={guest.image}
+                            alt={guest.name}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="photo-placeholder">
+                            <span>GUEST</span>
+                          </div>
+                        )}
                       </div>
 
-                      <div className="guest-info">
-                        <h3>{guest.name}</h3>
+                      {/* =================================================
+                          GUEST INFORMATION
+                      ================================================= */}
 
-                        {guest.role && (
-                          <p>{guest.role}</p>
+                      <div className="guest-info">
+                        <h3>
+                          {guest.name}
+                        </h3>
+
+                        {guest.airDate && (
+                          <p className="air-date">
+                            AIR DATE:{" "}
+                            {formatAirDate(
+                              guest.airDate,
+                            )}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -780,8 +903,38 @@ export default function GuestsPage() {
             scale(1.05);
         }
 
+        .photo-placeholder {
+          width: 100%;
+          height: 100%;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          background:
+            linear-gradient(
+              145deg,
+              #1b1b1b,
+              #080808
+            );
+
+          color:
+            rgba(
+              242,
+              201,
+              76,
+              0.65
+            );
+
+          font-size: 12px;
+          font-weight: 900;
+
+          letter-spacing:
+            0.25em;
+        }
+
         /* =========================================
-           NAME PLATE
+           NAME / AIR DATE PLATE
         ========================================= */
 
         .guest-info {
@@ -808,9 +961,9 @@ export default function GuestsPage() {
           letter-spacing: 0.5px;
         }
 
-        .guest-info p {
+        .guest-info .air-date {
           margin:
-            7px
+            9px
             0
             0;
 
@@ -819,19 +972,21 @@ export default function GuestsPage() {
               255,
               255,
               255,
-              0.82
+              0.88
             );
 
-          font-size: 11px;
+          font-size: 10px;
           line-height: 1.3;
           font-weight: 800;
 
-          letter-spacing: 1.5px;
+          letter-spacing:
+            1.4px;
+
           text-transform: uppercase;
         }
 
         /* =========================================
-           EMPTY GALLERY
+           EMPTY / LOADING GALLERY
         ========================================= */
 
         .gallery-empty {
@@ -921,6 +1076,24 @@ export default function GuestsPage() {
 
           font-size: 32px;
           font-weight: 300;
+        }
+
+        .loading-icon {
+          font-size: 17px;
+
+          animation:
+            guest-loading 1.2s
+            linear infinite;
+        }
+
+        @keyframes guest-loading {
+          0% {
+            transform: rotate(0deg);
+          }
+
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
         .empty-inner h3 {
@@ -1148,8 +1321,6 @@ export default function GuestsPage() {
               8px;
           }
 
-          /* Hide desktop hero logo on mobile */
-
           .desktop-logo {
             display: none;
           }
@@ -1245,8 +1416,6 @@ export default function GuestsPage() {
               35px
               20px;
           }
-
-          /* Mobile footer */
 
           .site-footer {
             padding:
