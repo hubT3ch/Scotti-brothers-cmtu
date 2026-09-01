@@ -64,6 +64,32 @@ function formatAirDate(value: string | null) {
 }
 
 /* =========================================================
+   COMING SOON CHECK
+========================================================= */
+
+/*
+ * Air dates are stored as YYYY-MM-DD.
+ *
+ * Compare calendar dates rather than timestamps so the
+ * COMING SOON banner disappears on the air date itself.
+ */
+function isComingSoon(airDate: string | null) {
+  if (!airDate) {
+    return false;
+  }
+
+  const today = new Date();
+
+  const todayString = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  return airDate > todayString;
+}
+
+/* =========================================================
    PAGE
 ========================================================= */
 
@@ -278,53 +304,84 @@ export default function GuestsPage() {
             </div>
           ) : guests.length > 0 ? (
             <div className="guest-gallery">
-              {guests.map((guest) => (
-                <article
-                  key={guest.id}
-                  className="guest-card"
-                >
-                  <div className="gold-frame">
-                    <div className="red-frame">
-                      {/* =================================================
-                          PHOTO
-                      ================================================= */}
+              {guests.map((guest) => {
+                const comingSoon = isComingSoon(
+                  guest.airDate,
+                );
 
-                      <div className="guest-photo">
-                        {guest.image ? (
-                          <img
-                            src={guest.image}
-                            alt={guest.name}
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="photo-placeholder">
-                            <span>GUEST</span>
-                          </div>
-                        )}
-                      </div>
+                return (
+                  <article
+                    key={guest.id}
+                    className="guest-card"
+                  >
+                    <div className="gold-frame">
+                      <div className="red-frame">
+                        {/* =================================================
+                            PHOTO
+                        ================================================= */}
 
-                      {/* =================================================
-                          GUEST INFORMATION
-                      ================================================= */}
+                        <div className="guest-photo">
+                          {guest.image ? (
+                            <img
+                              src={guest.image}
+                              alt={guest.name}
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="photo-placeholder">
+                              <span>GUEST</span>
+                            </div>
+                          )}
 
-                      <div className="guest-info">
-                        <h3>
-                          {guest.name}
-                        </h3>
+                          {/* =================================================
+                              COMING SOON BANNER
+                          ================================================= */}
 
-                        {guest.airDate && (
-                          <p className="air-date">
-                            AIR DATE:{" "}
-                            {formatAirDate(
-                              guest.airDate,
-                            )}
-                          </p>
-                        )}
+                          {comingSoon && (
+                            <div
+                              className="coming-soon-banner"
+                              aria-label={`Coming soon. Air date ${formatAirDate(
+                                guest.airDate,
+                              )}`}
+                            >
+                              <span className="coming-soon-diamond">
+                                ◆
+                              </span>
+
+                              <span className="coming-soon-text">
+                                COMING SOON
+                              </span>
+
+                              <span className="coming-soon-diamond">
+                                ◆
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* =================================================
+                            GUEST INFORMATION
+                        ================================================= */}
+
+                        <div className="guest-info">
+                          <h3>
+                            {guest.name}
+                          </h3>
+
+                          {guest.airDate && (
+                            <p className="air-date">
+                              AIR DATE:{" "}
+                              {formatAirDate(
+                                guest.airDate,
+                              )}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           ) : (
             <div className="gallery-empty">
@@ -948,6 +1005,107 @@ export default function GuestsPage() {
         }
 
         /* =========================================
+           COMING SOON BANNER
+        ========================================= */
+
+        .coming-soon-banner {
+          position: absolute;
+
+          left: 0;
+          right: 0;
+          bottom: 0;
+
+          z-index: 5;
+
+          min-height: 48px;
+
+          padding:
+            10px
+            14px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          gap: 12px;
+
+          background:
+            linear-gradient(
+              90deg,
+              rgba(101, 0, 0, 0.97),
+              rgba(139, 0, 0, 0.98),
+              rgba(101, 0, 0, 0.97)
+            );
+
+          border-top:
+            2px
+            solid
+            var(--gold);
+
+          border-bottom:
+            2px
+            solid
+            var(--gold);
+
+          box-shadow:
+            0
+            -5px
+            18px
+            rgba(
+              0,
+              0,
+              0,
+              0.65
+            );
+
+          pointer-events: none;
+        }
+
+        .coming-soon-text {
+          color: var(--gold);
+
+          font-size: 13px;
+          line-height: 1;
+
+          font-weight: 900;
+
+          letter-spacing:
+            0.18em;
+
+          text-transform: uppercase;
+
+          text-shadow:
+            1px
+            1px
+            0
+            rgba(
+              0,
+              0,
+              0,
+              0.7
+            );
+        }
+
+        .coming-soon-diamond {
+          color: #fff0a3;
+
+          font-size: 9px;
+
+          line-height: 1;
+
+          text-shadow:
+            0
+            0
+            8px
+            rgba(
+              242,
+              201,
+              76,
+              0.8
+            );
+        }
+
+        /* =========================================
            NAME / AIR DATE PLATE
         ========================================= */
 
@@ -1421,6 +1579,27 @@ export default function GuestsPage() {
             margin:
               0
               auto;
+          }
+
+          .coming-soon-banner {
+            min-height: 44px;
+
+            padding:
+              9px
+              10px;
+
+            gap: 8px;
+          }
+
+          .coming-soon-text {
+            font-size: 11px;
+
+            letter-spacing:
+              0.13em;
+          }
+
+          .coming-soon-diamond {
+            font-size: 7px;
           }
 
           .empty-inner {
