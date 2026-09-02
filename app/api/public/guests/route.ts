@@ -10,6 +10,8 @@ type PublicGuestRow = {
   id: string;
   guest_id: string;
   guest_name: string;
+  guest_title: string | null;
+  guest_organization: string | null;
   guest_image_path: string | null;
   air_date: string | null;
   published: boolean;
@@ -56,7 +58,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("cmtu_public_guests")
       .select(
-        "id, guest_id, guest_name, guest_image_path, air_date, published",
+        "id, guest_id, guest_name, guest_title, guest_organization, guest_image_path, air_date, published",
       )
       .eq("published", true)
       .order("air_date", {
@@ -86,11 +88,13 @@ export async function GET() {
         id: guest.id,
         guestId: guest.guest_id,
         name: guest.guest_name,
+        title: guest.guest_title,
+        organization: guest.guest_organization,
         image: guest.guest_image_path
-  ? `/api/public/guest-image/${encodeURIComponent(
-      guest.guest_id,
-    )}`
-  : null,
+          ? `/api/public/guest-image/${encodeURIComponent(
+              guest.guest_id,
+            )}`
+          : null,
         airDate: guest.air_date,
       }),
     );
