@@ -7,6 +7,8 @@ type Guest = {
   id: string;
   guestId: string;
   name: string;
+  title: string | null;
+  organization: string | null;
   image: string | null;
   airDate: string | null;
 };
@@ -382,6 +384,18 @@ export default function GuestsPage() {
                           <h3>
                             {guest.name}
                           </h3>
+
+                          {guest.title && (
+                            <p className="guest-title">
+                              {guest.title}
+                            </p>
+                          )}
+
+                          {guest.organization && (
+                            <p className="guest-organization">
+                              {guest.organization}
+                            </p>
+                          )}
 
                           {guest.airDate && (
                             <p className="air-date">
@@ -1251,7 +1265,7 @@ export default function GuestsPage() {
         }
 
         /* =========================================
-           NAME / AIR DATE PLATE
+           NAME / TITLE / ORGANIZATION / AIR DATE
         ========================================= */
 
         .guest-info {
@@ -1276,6 +1290,50 @@ export default function GuestsPage() {
 
           text-transform: uppercase;
           letter-spacing: 0.5px;
+        }
+
+        .guest-info .guest-title {
+          margin:
+            8px
+            0
+            0;
+
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.96
+            );
+
+          font-size: 12px;
+          line-height: 1.35;
+          font-weight: 800;
+
+          letter-spacing:
+            0.4px;
+        }
+
+        .guest-info .guest-organization {
+          margin:
+            4px
+            0
+            0;
+
+          color:
+            rgba(
+              255,
+              255,
+              255,
+              0.78
+            );
+
+          font-size: 11px;
+          line-height: 1.35;
+          font-weight: 700;
+
+          letter-spacing:
+            0.3px;
         }
 
         .guest-info .air-date {
